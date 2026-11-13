@@ -1,0 +1,24 @@
+const timeoutMs = 30_000
+const retryMs = 500
+
+async function isReady(url: string) {
+  try {
+    await fetch(url, { signal: AbortSignal.timeout(2000) })
+    return true
+  } catch {
+    return false
+  }
+}
+
+export default async function waitForBrowserServer() {
+  const endpoint = new URL(process.env.BROWSER_WS_ENDPOINT ?? 'ws://127.0.0.1:6677/')
+  const url = `http://${endpoint.host}/`
+  const deadline = Date.now() + timeoutMs
+
+  while (Date.now() < deadline) {
+    if (await isReady(url)) return
+    await new Promise((resolve) => setTimeout(resolve, retryMs))
+  }
+
+  throw new Error(`No browser at ${endpoint.href}. Open Docker Desktop and run: npm run browser:up`)
+}

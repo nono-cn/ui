@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nono/ui</title>
+    <script type="module" src="./main.ts"></script>
+  </head>
+  <body>
+    <header class="docs-header">
+      <a href="./index.html" class="docs-brand">nono/ui</a>
+      <nav class="docs-nav" aria-label="Componentes"></nav>
+    </header>
+
+    <main class="docs-main">
+      <h1>nono/ui</h1>
+      <p>
+        Componentes sobre <a href="https://ui-sdk.dev">ui-sdk</a>. La lógica vive en
+        <code>@nono/ui/core</code> y cada framework tiene su adaptador.
+      </p>
+
+      <h2>Paquetes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Entrada</th>
+            <th>Contenido</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>@nono/ui/core</code></td>
+            <td>Constantes, attrs y features sin framework</td>
+          </tr>
+          <tr>
+            <td><code>@nono/ui/vue</code></td>
+            <td>Adaptador de Vue</td>
+          </tr>
+          <tr>
+            <td><code>@nono/ui/styles.css</code></td>
+            <td>Tokens y estilos por <code>data-slot</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+export { render } from 'vitest-browser-vue'
+export { avatarImage, page, userEvent } from '../shared'
+export { attrsTests } from './attrsTests'
+export { invalidValueTests } from './invalidValueTests'
+export { Part } from './Part'
+export { showcase } from './showcase'

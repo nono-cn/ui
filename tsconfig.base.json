@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@nono/ui/core": ["./src/core/index.ts"],
+      "@nono/ui/vue": ["./src/vue/index.ts"],
+      "@test/shared": ["./tests/shared/index.ts"],
+      "@test/vue": ["./tests/vue/index.ts"]
+    }
+  }
+}

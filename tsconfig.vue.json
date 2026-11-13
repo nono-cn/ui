@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "vue"
+  },
+  "include": [
+    "src/vue/**/*.ts",
+    "src/vue/**/*.tsx",
+    "src/vue/**/*.vue",
+    "tests/vue/**/*.ts",
+    "tests/vue/**/*.tsx",
+    "tests/setup/**/*.ts",
+    "docs/**/*.ts",
+    "docs/demos/vue/**/*.tsx",
+    "docs/demos/vue/**/*.vue",
+    "env.d.ts"
+  ]
+}
