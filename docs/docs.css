@@ -1,3 +1,9 @@
+@import 'tailwindcss';
+@import '@nono/ui/styles.css';
+/* Clases de los componentes de la librería (un consumidor externo apuntaría a node_modules/@nono/ui/dist) */
+@source '../src';
+@source '.';
+
 *,
 *::before,
 *::after {

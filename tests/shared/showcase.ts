@@ -81,7 +81,7 @@ export function showcaseSuite({ mount, mobile = false }: ShowcaseSuiteOptions) {
       'matches its reference screenshot in $theme.text theme on $viewport.text',
       async ({ theme, viewport }) => {
         await page.viewport(viewport.width, viewport.height)
-        document.documentElement.classList.toggle('dark', theme.dark)
+        document.documentElement.dataset.colorScheme = theme.dark ? 'dark' : 'light'
 
         try {
           const gallery = await mount()
