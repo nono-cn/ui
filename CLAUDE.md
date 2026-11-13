@@ -1,6 +1,6 @@
 # @nono/ui
 
-Component library on top of ui-sdk: framework-agnostic logic in `src/core`, adapters per framework (`src/vue`), Tailwind v4 styles. To build or change a component, use the `component` skill.
+Component library on top of ui-sdk: framework-agnostic logic in `src/core`, adapters per framework (`src/vue`), Tailwind v4 styles.
 
 ## Conventions
 
