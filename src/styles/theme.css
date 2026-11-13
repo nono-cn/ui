@@ -1,6 +1,3 @@
-/* Requiere Tailwind v4: se procesa en el CSS del consumidor, después de @import 'tailwindcss'. */
-
-/* `dark:` se activa con data-color-scheme="dark", y con "system" si el sistema está en oscuro. */
 @custom-variant dark {
   &:where([data-color-scheme='dark'], [data-color-scheme='dark'] *) {
     @slot;
@@ -12,7 +9,6 @@
   }
 }
 
-/* Expone la paleta a las utilidades: bg-primary, text-error-foreground, border-border… */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
