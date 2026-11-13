@@ -1,20 +1,147 @@
-:root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --border: #e4e4e7;
-  --primary: #18181b;
-  --primary-foreground: #fafafa;
-  --radius: 0.5rem;
+/*
+ * Esquema de color: `data-color-scheme="light|dark|system"` en cualquier elemento (normalmente
+ * <html>). Sin atributo, sigue al sistema. Cada color usa light-dark(claro, oscuro).
+ */
+:root,
+[data-color-scheme='system'] {
+  color-scheme: light dark;
 }
 
-.dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --border: #27272a;
-  --primary: #fafafa;
-  --primary-foreground: #18181b;
+[data-color-scheme='light'] {
+  color-scheme: light;
+}
+
+[data-color-scheme='dark'] {
+  color-scheme: dark;
+}
+
+/* Escala neutra. Se cambia con `data-neutral` (ver más abajo). */
+:root {
+  --neutral-50: var(--color-neutral-50, oklch(0.985 0 0));
+  --neutral-100: var(--color-neutral-100, oklch(0.97 0 0));
+  --neutral-200: var(--color-neutral-200, oklch(0.922 0 0));
+  --neutral-300: var(--color-neutral-300, oklch(0.87 0 0));
+  --neutral-400: var(--color-neutral-400, oklch(0.708 0 0));
+  --neutral-500: var(--color-neutral-500, oklch(0.556 0 0));
+  --neutral-600: var(--color-neutral-600, oklch(0.439 0 0));
+  --neutral-700: var(--color-neutral-700, oklch(0.371 0 0));
+  --neutral-800: var(--color-neutral-800, oklch(0.269 0 0));
+  --neutral-900: var(--color-neutral-900, oklch(0.205 0 0));
+  --neutral-950: var(--color-neutral-950, oklch(0.145 0 0));
+}
+
+/*
+ * Se declaran también en cada [data-color-scheme] para que un elemento con su propio esquema
+ * (p. ej. una barra lateral oscura) resuelva light-dark() con el suyo.
+ */
+:root,
+[data-color-scheme] {
+  --radius: 0.5rem;
+
+  /* Superficies */
+  --background: light-dark(var(--neutral-50), var(--neutral-950));
+  --foreground: light-dark(var(--neutral-950), var(--neutral-50));
+  --card: light-dark(var(--neutral-50), var(--neutral-900));
+  --card-foreground: var(--foreground);
+  --popover: light-dark(var(--neutral-50), var(--neutral-900));
+  --popover-foreground: var(--foreground);
+  --muted: light-dark(var(--neutral-100), var(--neutral-800));
+  --muted-foreground: light-dark(var(--neutral-500), var(--neutral-400));
+  --accent: light-dark(var(--neutral-100), var(--neutral-800));
+  --accent-foreground: light-dark(var(--neutral-900), var(--neutral-50));
+  --overlay: light-dark(oklch(1 0 0 / 0.7), oklch(0 0 0 / 0.7));
+
+  /* Bordes y foco */
+  --border: light-dark(var(--neutral-200), color-mix(in oklch, var(--neutral-50) 10%, transparent));
+  --input: light-dark(var(--neutral-200), color-mix(in oklch, var(--neutral-50) 15%, transparent));
+  --ring: light-dark(var(--neutral-400), var(--neutral-500));
+
+  /* Colores con significado: cada uno con su -foreground para el texto encima */
+  --primary: oklch(0.51 0.105 247.84);
+  --primary-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+  --secondary: light-dark(oklch(0.52 0.16 250), oklch(0.7 0.15 250));
+  --secondary-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
+  --neutral: var(--foreground);
+  --neutral-foreground: var(--background);
+  --info: light-dark(oklch(0.546 0.215 262.88), oklch(0.707 0.165 254.62));
+  --info-foreground: light-dark(oklch(0.985 0 0), oklch(0.145 0 0));
+  --success: light-dark(oklch(0.596 0.145 163.23), oklch(0.696 0.17 162.48));
+  --success-foreground: light-dark(oklch(0.985 0 0), oklch(0.145 0 0));
+  --warning: light-dark(oklch(0.563 0.159 45.85), oklch(0.7 0.17 48));
+  --warning-foreground: oklch(0.145 0 0);
+  --error: light-dark(oklch(0.577 0.245 27.33), oklch(0.704 0.191 22.22));
+  --error-foreground: oklch(0.985 0 0);
+  --destructive: var(--error);
+  --destructive-foreground: var(--error-foreground);
+  --enlace: light-dark(oklch(0.546 0.245 262.88), oklch(0.707 0.165 254.62));
+
+  /* ui-sdk lee estas variables: las apuntamos a nuestra paleta */
+  --ui-background: var(--background);
+  --ui-foreground: var(--foreground);
+  --ui-muted: var(--muted);
+  --ui-muted-foreground: var(--muted-foreground);
+  --ui-border: var(--border);
+  --ui-input: var(--input);
+  --ui-primary: var(--primary);
+  --ui-primary-foreground: var(--primary-foreground);
+  --ui-destructive: var(--error);
+  --ui-ring: var(--ring);
+  --ui-overlay: var(--overlay);
+  --ui-radius: var(--radius);
+}
+
+:root[data-neutral='slate'] {
+  --neutral-50: var(--color-slate-50);
+  --neutral-100: var(--color-slate-100);
+  --neutral-200: var(--color-slate-200);
+  --neutral-300: var(--color-slate-300);
+  --neutral-400: var(--color-slate-400);
+  --neutral-500: var(--color-slate-500);
+  --neutral-600: var(--color-slate-600);
+  --neutral-700: var(--color-slate-700);
+  --neutral-800: var(--color-slate-800);
+  --neutral-900: var(--color-slate-900);
+  --neutral-950: var(--color-slate-950);
+}
+
+:root[data-neutral='gray'] {
+  --neutral-50: var(--color-gray-50);
+  --neutral-100: var(--color-gray-100);
+  --neutral-200: var(--color-gray-200);
+  --neutral-300: var(--color-gray-300);
+  --neutral-400: var(--color-gray-400);
+  --neutral-500: var(--color-gray-500);
+  --neutral-600: var(--color-gray-600);
+  --neutral-700: var(--color-gray-700);
+  --neutral-800: var(--color-gray-800);
+  --neutral-900: var(--color-gray-900);
+  --neutral-950: var(--color-gray-950);
+}
+
+:root[data-neutral='zinc'] {
+  --neutral-50: var(--color-zinc-50);
+  --neutral-100: var(--color-zinc-100);
+  --neutral-200: var(--color-zinc-200);
+  --neutral-300: var(--color-zinc-300);
+  --neutral-400: var(--color-zinc-400);
+  --neutral-500: var(--color-zinc-500);
+  --neutral-600: var(--color-zinc-600);
+  --neutral-700: var(--color-zinc-700);
+  --neutral-800: var(--color-zinc-800);
+  --neutral-900: var(--color-zinc-900);
+  --neutral-950: var(--color-zinc-950);
+}
+
+:root[data-neutral='stone'] {
+  --neutral-50: var(--color-stone-50);
+  --neutral-100: var(--color-stone-100);
+  --neutral-200: var(--color-stone-200);
+  --neutral-300: var(--color-stone-300);
+  --neutral-400: var(--color-stone-400);
+  --neutral-500: var(--color-stone-500);
+  --neutral-600: var(--color-stone-600);
+  --neutral-700: var(--color-stone-700);
+  --neutral-800: var(--color-stone-800);
+  --neutral-900: var(--color-stone-900);
+  --neutral-950: var(--color-stone-950);
 }

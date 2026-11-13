@@ -44,7 +44,9 @@
     "check": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
-    "@ui-sdk/core": "0.1.0-beta.1"
+    "@ui-sdk/core": "0.1.0-beta.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.7.0"
   },
   "peerDependencies": {
     "@ui-sdk/vue": "0.1.0-beta.1",

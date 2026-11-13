@@ -32,7 +32,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rolldownOptions: {
-      external: ['vue', /^@ui-sdk\//],
+      external: ['vue', /^@ui-sdk\//, 'clsx', 'tailwind-merge'],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'src',
