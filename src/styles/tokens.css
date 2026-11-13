@@ -1,7 +1,3 @@
-/*
- * Esquema de color: `data-color-scheme="light|dark|system"` en cualquier elemento (normalmente
- * <html>). Sin atributo, sigue al sistema. Cada color usa light-dark(claro, oscuro).
- */
 :root,
 [data-color-scheme='system'] {
   color-scheme: light dark;
@@ -15,7 +11,6 @@
   color-scheme: dark;
 }
 
-/* Escala neutra. Se cambia con `data-neutral` (ver más abajo). */
 :root {
   --neutral-50: var(--color-neutral-50, oklch(0.985 0 0));
   --neutral-100: var(--color-neutral-100, oklch(0.97 0 0));
@@ -30,15 +25,11 @@
   --neutral-950: var(--color-neutral-950, oklch(0.145 0 0));
 }
 
-/*
- * Se declaran también en cada [data-color-scheme] para que un elemento con su propio esquema
- * (p. ej. una barra lateral oscura) resuelva light-dark() con el suyo.
- */
+/* Redeclared on every [data-color-scheme] so a nested scheme resolves light-dark() with its own. */
 :root,
 [data-color-scheme] {
   --radius: 0.5rem;
 
-  /* Superficies */
   --background: light-dark(var(--neutral-50), var(--neutral-950));
   --foreground: light-dark(var(--neutral-950), var(--neutral-50));
   --card: light-dark(var(--neutral-50), var(--neutral-900));
@@ -51,12 +42,10 @@
   --accent-foreground: light-dark(var(--neutral-900), var(--neutral-50));
   --overlay: light-dark(oklch(1 0 0 / 0.7), oklch(0 0 0 / 0.7));
 
-  /* Bordes y foco */
   --border: light-dark(var(--neutral-200), color-mix(in oklch, var(--neutral-50) 10%, transparent));
   --input: light-dark(var(--neutral-200), color-mix(in oklch, var(--neutral-50) 15%, transparent));
   --ring: light-dark(var(--neutral-400), var(--neutral-500));
 
-  /* Colores con significado: cada uno con su -foreground para el texto encima */
   --primary: oklch(0.51 0.105 247.84);
   --primary-foreground: light-dark(oklch(0.985 0 0), oklch(0.205 0 0));
   --secondary: light-dark(oklch(0.52 0.16 250), oklch(0.7 0.15 250));
@@ -75,7 +64,7 @@
   --destructive-foreground: var(--error-foreground);
   --enlace: light-dark(oklch(0.546 0.245 262.88), oklch(0.707 0.165 254.62));
 
-  /* ui-sdk lee estas variables: las apuntamos a nuestra paleta */
+  /* ui-sdk theme variables */
   --ui-background: var(--background);
   --ui-foreground: var(--foreground);
   --ui-muted: var(--muted);

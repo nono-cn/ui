@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import '@nono/ui/styles.css';
-/* Clases de los componentes de la librería (un consumidor externo apuntaría a node_modules/@nono/ui/dist) */
+/* @source does not resolve aliases; an external consumer points it at node_modules/@nono/ui/dist. */
 @source '../src';
 @source '.';
 
