@@ -1,1 +1,1 @@
-import './browser.css'
+import '@test/setup/browser.css'

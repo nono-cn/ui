@@ -1,5 +1,5 @@
-import { invalidValueSuite, type InvalidValueSuiteOptions } from '../shared/invalidValue'
-import { mountRoot, type MountRootOptions } from './mountRoot'
+import { invalidValueSuite, type InvalidValueSuiteOptions } from '@test/shared/invalidValue'
+import { mountRoot, type MountRootOptions } from '@test/vue/mountRoot'
 
 interface InvalidValueTestsOptions
   extends MountRootOptions, Omit<InvalidValueSuiteOptions, 'mountRoot'> {

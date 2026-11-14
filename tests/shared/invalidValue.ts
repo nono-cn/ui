@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { differences, snapshot } from './styles'
+import { differences, snapshot } from '@test/shared/styles'
 
 export interface InvalidValueSuiteOptions {
   mountRoot: (value: unknown) => Promise<Element>

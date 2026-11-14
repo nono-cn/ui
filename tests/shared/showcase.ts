@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { cdp, commands, page } from 'vitest/browser'
-import { browserWindow, defaultViewport, viewports } from '../setup/viewports'
-import { describeChanges, type ShowcaseBox } from './changedRows'
-import './showcase.css'
+import { browserWindow, defaultViewport, viewports } from '@test/setup/viewports'
+import { describeChanges, type ShowcaseBox } from '@test/shared/changedRows'
+import '@test/shared/showcase.css'
 
 export interface ShowcaseSuiteOptions {
   mount: () => Promise<HTMLElement>

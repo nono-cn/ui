@@ -1,5 +1,5 @@
-import { attrsSuite, type AttrsSuiteOptions } from '../shared/attrs'
-import { mountRoot, type MountRootOptions } from './mountRoot'
+import { attrsSuite, type AttrsSuiteOptions } from '@test/shared/attrs'
+import { mountRoot, type MountRootOptions } from '@test/vue/mountRoot'
 
 interface AttrsTestsOptions extends MountRootOptions, Omit<AttrsSuiteOptions, 'mountRoot'> {
   toProps?: (attrs: Record<string, unknown>) => Record<string, unknown>

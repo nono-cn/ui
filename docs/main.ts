@@ -1,1 +1,1 @@
-import './docs.css'
+export {}

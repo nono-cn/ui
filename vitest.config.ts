@@ -101,6 +101,7 @@ export default defineConfig({
     projects: [
       {
         extends: true,
+        plugins: [vue(), vueJsx({ include: frameworks.vue.jsx })],
         test: {
           name: 'unit',
           environment: 'jsdom',

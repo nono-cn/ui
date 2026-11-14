@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { measure, type StyleProperty } from './styles'
+import { measure, type StyleProperty } from '@test/shared/styles'
 
 export interface AttrsSuiteOptions {
   mountRoot: (attrs?: Record<string, unknown>) => Promise<Element>

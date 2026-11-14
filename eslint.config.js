@@ -36,5 +36,22 @@ export default tseslint.config(
       },
     },
   },
+  {
+    files: ['{src,docs,tests}/**/*.{ts,tsx,vue}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^\\.',
+              message:
+                'Use an alias (@/, @docs/, @test/ or @nono/ui/*) instead of a relative path.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
 )

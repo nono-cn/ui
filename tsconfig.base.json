@@ -16,8 +16,9 @@
     "paths": {
       "@nono/ui/core": ["./src/core/index.ts"],
       "@nono/ui/vue": ["./src/vue/index.ts"],
-      "@test/shared": ["./tests/shared/index.ts"],
-      "@test/vue": ["./tests/vue/index.ts"]
+      "@/*": ["./src/*"],
+      "@docs/*": ["./docs/*"],
+      "@test/*": ["./tests/*"]
     }
   }
 }

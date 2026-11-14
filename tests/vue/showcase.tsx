@@ -1,6 +1,6 @@
 import { defineComponent, type VNodeChild } from 'vue'
 import { render } from 'vitest-browser-vue'
-import { showcaseSuite } from '../shared/showcase'
+import { showcaseSuite } from '@test/shared/showcase'
 
 interface ShowcaseOptions {
   stories: Record<string, () => VNodeChild>
