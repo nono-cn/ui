@@ -16,6 +16,7 @@ const { version } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'ut
 
 export default defineConfig({
   root: docs,
+  base: process.env.DOCS_BASE ?? '/',
   plugins: [tailwindcss(), vue(), vueJsx({ include: jsx })],
   resolve: { alias: aliases },
   define: { 'import.meta.env.NONO_UI_VERSION': JSON.stringify(version) },
