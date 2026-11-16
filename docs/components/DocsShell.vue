@@ -1,0 +1,226 @@
+<script setup lang="ts">
+import { Menu, Moon, Palette, Sun, TableOfContents } from 'lucide'
+import { computed, ref, watch } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import { docsComponents, docsComponentsBySlug } from '@docs/config/docs-components'
+import { exampleAnchor } from '@docs/config/docs-anchors'
+import { frameworks } from '@docs/config/frameworks'
+import ComponentDocsPage from '@docs/components/ComponentDocsPage.vue'
+import DocsComponentsNav from '@docs/components/DocsComponentsNav.vue'
+import DocsDrawer from '@docs/components/DocsDrawer.vue'
+import DocsIcon from '@docs/components/DocsIcon.vue'
+import DocsToc, { type DocsTocItem } from '@docs/components/DocsToc.vue'
+import { useActiveSection } from '@docs/components/useActiveSection'
+import { dark, framework, neutral, neutralColors } from '@docs/components/useDocsTheme'
+
+const version = import.meta.env.NONO_UI_VERSION
+const route = useRoute()
+const themeOpen = ref(false)
+const componentsOpen = ref(false)
+const tocOpen = ref(false)
+
+const neutralOptions = neutralColors.map((value) => ({
+  value,
+  label: value.charAt(0).toUpperCase() + value.slice(1),
+}))
+
+const frameworkOptions = frameworks.map((option) => ({
+  ...option,
+  available: docsComponents.some((component) => component.demos[option.id]),
+}))
+
+const variables = ref([
+  { name: '--primary', value: '' },
+  { name: '--background', value: '' },
+  { name: '--foreground', value: '' },
+])
+
+function setVariable(name: string, value: string) {
+  if (value) document.documentElement.style.setProperty(name, value)
+  else document.documentElement.style.removeProperty(name)
+}
+
+const component = computed(() => docsComponentsBySlug[String(route.params.slug)])
+const pageTitle = computed(() =>
+  component.value ? `${component.value.title} · nono/ui` : 'nono/ui · Components',
+)
+
+const tocTree = computed<DocsTocItem[]>(() => {
+  const current = component.value
+  if (!current) return []
+
+  const items: DocsTocItem[] = [{ id: 'import', label: 'Import' }]
+
+  for (const [id, label] of [
+    ['usage', 'Usage'],
+    ['examples', 'Examples'],
+  ] as const) {
+    if (!current[id].length) continue
+    items.push({
+      id,
+      label,
+      children: current[id].map((example, index) => ({
+        id: exampleAnchor(id, example.title, index),
+        label: example.title,
+      })),
+    })
+  }
+
+  items.push({ id: 'accessibility', label: 'Accessibility' })
+
+  const { api } = current
+  const apiChildren: DocsTocItem[] = []
+  if (api.props.length) apiChildren.push({ id: 'props', label: 'Props' })
+  if (api.emits.length) apiChildren.push({ id: 'emits', label: 'Emits' })
+  if (api.slots.length) apiChildren.push({ id: 'slots', label: 'Slots' })
+  for (const table of api.configs ?? []) {
+    if (table.rows.length) apiChildren.push({ id: table.id, label: table.title })
+  }
+  if (api.expose.length) apiChildren.push({ id: 'expose', label: 'Expose' })
+
+  items.push({ id: 'api', label: 'API', children: apiChildren })
+  return items
+})
+
+const tocIds = computed(() =>
+  tocTree.value.flatMap((item) => [item.id, ...(item.children ?? []).map(({ id }) => id)]),
+)
+const activeId = useActiveSection(tocIds)
+
+watch(pageTitle, (value) => (document.title = value), { immediate: true })
+</script>
+
+<template>
+  <div class="docs-shell">
+    <header class="docs-topbar">
+      <RouterLink to="/components" class="docs-brand"
+        ><span class="docs-brand-mark">N</span><span>nono/ui</span
+        ><span class="docs-version">v{{ version }}</span></RouterLink
+      >
+      <div class="docs-actions">
+        <label class="docs-framework">
+          <span>Framework</span>
+          <select v-model="framework">
+            <option
+              v-for="option in frameworkOptions"
+              :key="option.id"
+              :value="option.id"
+              :disabled="!option.available"
+            >
+              {{ option.label }}{{ option.available ? '' : ' (soon)' }}
+            </option>
+          </select>
+        </label>
+        <div class="docs-theme-wrap">
+          <button
+            type="button"
+            class="docs-icon-button"
+            aria-label="Customize theme"
+            :aria-expanded="themeOpen"
+            @click="themeOpen = !themeOpen"
+          >
+            <DocsIcon :icon="Palette" />
+          </button>
+          <div v-if="themeOpen" class="docs-theme-popover">
+            <div class="docs-popover-heading">
+              <div><strong>Customize theme</strong><small>Design CSS variables</small></div>
+              <button
+                type="button"
+                class="docs-close"
+                aria-label="Close"
+                @click="themeOpen = false"
+              >
+                ×
+              </button>
+            </div>
+            <fieldset class="docs-neutral-picker">
+              <legend>Neutral scale</legend>
+              <div class="docs-neutral-options">
+                <button
+                  v-for="option in neutralOptions"
+                  :key="option.value"
+                  type="button"
+                  class="docs-neutral-option"
+                  :aria-label="option.label"
+                  :aria-pressed="neutral === option.value"
+                  @click="neutral = option.value"
+                >
+                  <span
+                    class="docs-neutral-swatch"
+                    :style="{
+                      background: `linear-gradient(135deg, var(--color-${option.value}-100) 50%, var(--color-${option.value}-800) 50%)`,
+                    }"
+                  />
+                  <span>{{ option.label }}</span>
+                </button>
+              </div>
+            </fieldset>
+            <label v-for="variable in variables" :key="variable.name"
+              ><span>{{ variable.name }}</span
+              ><input
+                v-model="variable.value"
+                placeholder="Default"
+                @input="setVariable(variable.name, variable.value)"
+            /></label>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="docs-icon-button"
+          :aria-label="dark ? 'Switch to light theme' : 'Switch to dark theme'"
+          @click="dark = !dark"
+        >
+          <DocsIcon :icon="dark ? Sun : Moon" />
+        </button>
+      </div>
+    </header>
+
+    <div class="docs-sectionbar">
+      <div class="docs-sectionbar-inner">
+        <button
+          type="button"
+          class="docs-icon-button docs-mobile-only"
+          aria-label="Open components"
+          @click="componentsOpen = true"
+        >
+          <DocsIcon :icon="Menu" />
+        </button>
+        <RouterLink to="/components" class="docs-section-title">Components</RouterLink>
+        <span v-if="component" class="docs-section-current">/ {{ component.title }}</span>
+        <button
+          v-if="component"
+          type="button"
+          class="docs-icon-button docs-mobile-only docs-toc-button"
+          @click="tocOpen = true"
+        >
+          <DocsIcon :icon="TableOfContents" />
+          <span>On this page</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="docs-workspace">
+      <aside class="docs-sidebar">
+        <DocsComponentsNav />
+      </aside>
+      <main class="docs-content">
+        <ComponentDocsPage v-if="component" :key="component.slug" :component="component" />
+        <div v-else class="docs-empty">
+          <span class="docs-empty-kicker">Components</span>
+          <h1>Component not found</h1>
+          <p>Pick one of the available components in the navigation.</p>
+        </div>
+      </main>
+      <aside v-if="component" class="docs-toc">
+        <DocsToc :items="tocTree" :active-id="activeId" />
+      </aside>
+    </div>
+
+    <DocsDrawer v-model:open="componentsOpen" side="left" label="Components">
+      <DocsComponentsNav @navigate="componentsOpen = false" />
+    </DocsDrawer>
+    <DocsDrawer v-if="component" v-model:open="tocOpen" side="right" label="On this page">
+      <DocsToc :items="tocTree" :active-id="activeId" @navigate="tocOpen = false" />
+    </DocsDrawer>
+  </div>
+</template>

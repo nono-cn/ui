@@ -1,0 +1,34 @@
+@import 'tailwindcss';
+@import '@nono/ui/styles.css';
+@import './docs-shell.css';
+/* @source does not resolve aliases; an external consumer points it at node_modules/@nono/ui/dist. */
+@source '../src';
+@source '.';
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--background);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}

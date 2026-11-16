@@ -15,6 +15,7 @@ export default tseslint.config(
       'src/vue/**/*.{ts,tsx,vue}',
       'tests/vue/**/*.{ts,tsx}',
       'docs/demos/vue/**/*.{ts,tsx,vue}',
+      'docs/**/*.vue',
     ],
     extends: [...pluginVue.configs['flat/recommended']],
     languageOptions: {

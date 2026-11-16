@@ -13,7 +13,7 @@
     "tests/setup/**/*.ts",
     "docs/**/*.ts",
     "docs/demos/vue/**/*.tsx",
-    "docs/demos/vue/**/*.vue",
+    "docs/**/*.vue",
     "env.d.ts"
   ]
 }

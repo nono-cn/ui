@@ -47,6 +47,7 @@
     "@ui-sdk/core": "0.1.0-beta.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "lucide": "^1.73.0",
     "tailwind-merge": "^3.7.0"
   },
   "peerDependencies": {
@@ -86,6 +87,7 @@
     "vitest": "4.1.10",
     "vitest-browser-vue": "3.1.0",
     "vue": "^3.5.39",
+    "vue-router": "^5.5.1",
     "vue-tsc": "^3.2.5"
   }
 }
