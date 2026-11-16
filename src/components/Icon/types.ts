@@ -1,5 +1,5 @@
-import type { iconSizes } from '@/core/components/icon/constants'
-import type { IconName } from '@/core/icons'
+import type { iconSizes } from '@/components/Icon/constants'
+import type { IconName } from '@/icons'
 
 export type IconSize = (typeof iconSizes)[number]
 

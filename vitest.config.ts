@@ -4,7 +4,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { playwright } from '@vitest/browser-playwright'
 import type { PluginOption } from 'vite'
 import { defineConfig, type TestProjectInlineConfiguration } from 'vitest/config'
-import { aliases, frameworks } from './aliases.ts'
+import { aliases, jsx } from './aliases.ts'
 import { browserCommands } from './tests/setup/browser-commands.ts'
 import { browserWindow, defaultViewport, viewports } from './tests/setup/viewports.ts'
 
@@ -101,7 +101,7 @@ export default defineConfig({
     projects: [
       {
         extends: true,
-        plugins: [vue(), vueJsx({ include: frameworks.vue.jsx })],
+        plugins: [vue(), vueJsx({ include: jsx })],
         test: {
           name: 'unit',
           environment: 'jsdom',
@@ -110,15 +110,10 @@ export default defineConfig({
         },
       },
       browserProject({
-        name: 'core',
-        include: ['src/core/**/__tests__/*.spec.browser.ts'],
-        setupFiles: ['./tests/setup/core.ts'],
-      }),
-      browserProject({
-        name: 'vue',
-        include: ['src/vue/**/__tests__/*.spec.browser.{ts,tsx}'],
+        name: 'browser',
+        include: ['src/**/__tests__/*.spec.browser.{ts,tsx}'],
         setupFiles: ['./tests/setup/vue.ts'],
-        plugins: [vue(), vueJsx({ include: frameworks.vue.jsx })],
+        plugins: [vue(), vueJsx({ include: jsx })],
         optimizeDeps: ['@ui-sdk/vue', 'vitest-browser-vue', 'vue'],
       }),
     ],

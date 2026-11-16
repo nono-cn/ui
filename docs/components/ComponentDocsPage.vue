@@ -27,7 +27,7 @@ const sections = [
       <h2 class="text-2xl font-semibold tracking-tight">Import</h2>
       <pre
         class="overflow-x-auto rounded-xl border bg-muted/40 p-4 text-sm"
-      ><code>import { {{ component.title }} } from '@nono/ui/vue'</code></pre>
+      ><code>import { {{ component.title }} } from '@nono/ui'</code></pre>
     </section>
 
     <template v-for="section in sections" :key="section.id">

@@ -1,6 +1,5 @@
-import { iconSizes } from '@nono/ui/core'
 import type { ComponentDocConfig } from '@docs/config/component-docs'
-import { Icon } from '@nono/ui/vue'
+import { Icon, iconSizes } from '@nono/ui'
 
 const names = ['check', 'info', 'warning', 'error', 'success', 'search', 'heart']
 const colors = ['currentColor', 'primary', 'neutral', 'secondary', 'warning', 'success', 'error']

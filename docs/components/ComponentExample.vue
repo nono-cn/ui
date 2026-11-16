@@ -35,7 +35,7 @@ const code = computed(() => {
     .join('')
 
   return `<script setup lang="ts">
-import { ${name} } from '@nono/ui/vue'
+import { ${name} } from '@nono/ui'
 <${'/'}script>
 
 <template>

@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import { aliases, frameworks } from './aliases.ts'
+import { aliases, jsx } from './aliases.ts'
 
 const root = path.dirname(fileURLToPath(import.meta.url))
 const docs = path.resolve(root, 'docs')
@@ -16,7 +16,7 @@ const { version } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'ut
 
 export default defineConfig({
   root: docs,
-  plugins: [tailwindcss(), vue(), vueJsx({ include: frameworks.vue.jsx })],
+  plugins: [tailwindcss(), vue(), vueJsx({ include: jsx })],
   resolve: { alias: aliases },
   define: { 'import.meta.env.NONO_UI_VERSION': JSON.stringify(version) },
   build: {
