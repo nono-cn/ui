@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { Check, Clipboard, RotateCcw } from 'lucide'
-import { computed, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import type {
   ComponentDocConfig,
   ComponentExampleConfig,
-  DemoHandle,
   ExampleState,
 } from '@docs/config/component-docs'
-import { frameworks, snippet } from '@docs/config/frameworks'
 import DocsIcon from '@docs/components/DocsIcon.vue'
 import ExampleColorControl from '@docs/components/controls/ExampleColorControl.vue'
 import ExampleSelectControl from '@docs/components/controls/ExampleSelectControl.vue'
-import { framework } from '@docs/components/useDocsTheme'
 
 const props = defineProps<{
   component: ComponentDocConfig
@@ -29,29 +26,26 @@ const exampleProps = computed(() => props.example.props(state))
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
-const mount = computed(() => props.component.demos[framework.value])
-const frameworkLabel = computed(() => frameworks.find(({ id }) => id === framework.value)!.label)
-const code = computed(() => snippet(framework.value, props.component.title, exampleProps.value))
+const code = computed(() => {
+  const name = props.component.title
+  const attributes = Object.entries(exampleProps.value)
+    .map(([key, value]) =>
+      typeof value === 'string' ? ` ${key}="${value}"` : ` :${key}="${value}"`,
+    )
+    .join('')
+
+  return `<script setup lang="ts">
+import { ${name} } from '@nono/ui/vue'
+<${'/'}script>
+
+<template>
+  <${name}${attributes} />
+</template>`
+})
 
 function reset() {
   Object.assign(state, initialState())
 }
-
-const preview = useTemplateRef<HTMLElement>('preview')
-let handle: DemoHandle | undefined
-
-watch(
-  [preview, mount],
-  ([element, mountDemo]) => {
-    handle?.unmount()
-    handle = element && mountDemo ? mountDemo(element, exampleProps.value) : undefined
-  },
-  { flush: 'post' },
-)
-
-watch(exampleProps, (value) => handle?.update(value))
-
-onBeforeUnmount(() => handle?.unmount())
 
 const copied = ref(false)
 let copyTimer: ReturnType<typeof setTimeout> | undefined
@@ -101,10 +95,7 @@ onBeforeUnmount(() => clearTimeout(copyTimer))
     </div>
 
     <div class="grid min-h-36 w-full max-w-full min-w-0 place-items-center p-8 sm:min-h-44">
-      <div v-if="mount" ref="preview" :key="framework" />
-      <p v-else class="text-sm text-muted-foreground">
-        The {{ frameworkLabel }} adapter is not available yet.
-      </p>
+      <component :is="component.component" v-bind="exampleProps" />
     </div>
 
     <div class="relative min-w-0 border-t bg-muted/40">

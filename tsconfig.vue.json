@@ -12,7 +12,6 @@
     "tests/vue/**/*.tsx",
     "tests/setup/**/*.ts",
     "docs/**/*.ts",
-    "docs/demos/vue/**/*.tsx",
     "docs/**/*.vue",
     "env.d.ts"
   ]

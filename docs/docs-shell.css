@@ -71,22 +71,6 @@
 .docs-icon-button:hover {
   background: var(--accent);
 }
-.docs-framework {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted-foreground);
-  font-size: 13px;
-}
-.docs-framework select {
-  height: 34px;
-  padding: 0 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--background);
-  color: var(--foreground);
-  font: inherit;
-}
 
 .docs-sectionbar {
   border-bottom: 1px solid var(--border);
@@ -440,12 +424,8 @@
   .docs-sectionbar-inner {
     padding: 0 16px;
   }
-  .docs-version,
-  .docs-framework > span {
+  .docs-version {
     display: none;
-  }
-  .docs-framework select {
-    max-width: 112px;
   }
   .docs-toc-button > span {
     display: none;

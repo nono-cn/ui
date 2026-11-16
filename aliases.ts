@@ -14,6 +14,6 @@ export const aliases = {
 
 export const frameworks = {
   vue: {
-    jsx: /[\\/](src|tests|docs[\\/]demos)[\\/]vue[\\/].*\.tsx$/,
+    jsx: /[\\/](src|tests)[\\/]vue[\\/].*\.tsx$/,
   },
 }
