@@ -1,6 +1,6 @@
-import { getColorVariables, oneOf } from '@/core/composables'
+import { getColorVariables, oneOf } from '@/core/composables/theme'
 import { iconDefaults, iconSizes } from '@/core/components/icon/constants'
-import type { IconContext, IconProps } from '@/core/components/icon/types'
+import type { IconProps } from '@/core/components/icon/types'
 import { iconVariants } from '@/core/components/icon/variants'
 import { icons } from '@/core/icons'
 
@@ -9,7 +9,8 @@ function resolveStroke(stroke: unknown): number {
   return Number.isFinite(value) && value > 0 ? value : iconDefaults.stroke
 }
 
-export function getIconAttrs(props: IconProps, { labelled }: IconContext) {
+export function getIconAttrs(props: IconProps, attrs: Record<string, unknown> = {}) {
+  const labelled = attrs['aria-label'] != null || attrs['aria-labelledby'] != null
   const color = props.color?.trim() || iconDefaults.color
   const inherit = color === 'currentColor'
 

@@ -49,5 +49,27 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    files: ['src/core/**/*.ts'],
+    ignores: ['src/core/**/index.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^\\.',
+              message:
+                'Use an alias (@/, @docs/, @test/ or @nono/ui/*) instead of a relative path.',
+            },
+            {
+              regex: '^@/core/(composables|components(/[^/]+)?)$',
+              message: 'Import from the module file, not from its index barrel.',
+            },
+          ],
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
 )

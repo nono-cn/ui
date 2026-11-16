@@ -9,7 +9,3 @@ export interface IconProps {
   color?: string
   stroke?: number
 }
-
-export interface IconContext {
-  labelled: boolean
-}

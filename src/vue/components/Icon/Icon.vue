@@ -12,11 +12,7 @@ const props = withDefaults(defineProps<IconProps>(), {
 
 const attrs = useAttrs()
 
-const icon = computed(() =>
-  getIconAttrs(props, {
-    labelled: attrs['aria-label'] != null || attrs['aria-labelledby'] != null,
-  }),
-)
+const icon = computed(() => getIconAttrs(props, attrs))
 
 const rootAttrs = computed(() => ({
   ...icon.value.attrs,
