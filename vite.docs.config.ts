@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
@@ -10,19 +10,17 @@ import { aliases, frameworks } from './aliases.ts'
 const root = path.dirname(fileURLToPath(import.meta.url))
 const docs = path.resolve(root, 'docs')
 
-const pages = Object.fromEntries(
-  readdirSync(docs)
-    .filter((file) => file.endsWith('.html'))
-    .map((file) => [path.basename(file, '.html'), path.join(docs, file)]),
-)
+const { version } = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')) as {
+  version: string
+}
 
 export default defineConfig({
   root: docs,
   plugins: [tailwindcss(), vue(), vueJsx({ include: frameworks.vue.jsx })],
   resolve: { alias: aliases },
+  define: { 'import.meta.env.NONO_UI_VERSION': JSON.stringify(version) },
   build: {
     outDir: path.resolve(root, 'docs-dist'),
     emptyOutDir: true,
-    rolldownOptions: { input: pages },
   },
 })
