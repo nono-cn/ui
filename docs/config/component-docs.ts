@@ -1,4 +1,4 @@
-import type { Framework } from '@docs/config/frameworks'
+import type { Component } from 'vue'
 
 export interface ApiTableRow {
   name: string
@@ -45,13 +45,6 @@ export interface ComponentExampleConfig {
   props: (state: ExampleState) => ExampleProps
 }
 
-export interface DemoHandle {
-  update: (props: ExampleProps) => void
-  unmount: () => void
-}
-
-export type DemoMount = (element: HTMLElement, props: ExampleProps) => DemoHandle
-
 export interface ComponentAccessibilityConfig {
   title: string
   description: string
@@ -62,7 +55,7 @@ export interface ComponentDocConfig {
   slug: string
   title: string
   description: string
-  demos: Partial<Record<Framework, DemoMount>>
+  component: Component
   usage: ComponentExampleConfig[]
   examples: ComponentExampleConfig[]
   accessibility: ComponentAccessibilityConfig[]

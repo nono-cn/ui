@@ -1,6 +1,5 @@
-import { iconSizes } from '@nono/ui/core'
 import type { ComponentDocConfig } from '@docs/config/component-docs'
-import { iconDemo } from '@docs/demos/vue/icon'
+import { Icon, iconSizes } from '@nono/ui'
 
 const names = ['check', 'info', 'warning', 'error', 'success', 'search', 'heart']
 const colors = ['currentColor', 'primary', 'neutral', 'secondary', 'warning', 'success', 'error']
@@ -9,7 +8,7 @@ const icon: ComponentDocConfig = {
   slug: 'icon',
   title: 'Icon',
   description: 'Renders a Lucide icon with a compact, consistent API.',
-  demos: { vue: iconDemo },
+  component: Icon,
   usage: [
     {
       title: 'Basic usage',

@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import '../../src/styles/index.css';
+@import '@nono/ui/styles.css';
 @source '../../src';
 @source '..';
 

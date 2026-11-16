@@ -5,14 +5,12 @@
     "jsxImportSource": "vue"
   },
   "include": [
-    "src/vue/**/*.ts",
-    "src/vue/**/*.tsx",
-    "src/vue/**/*.vue",
-    "tests/vue/**/*.ts",
-    "tests/vue/**/*.tsx",
-    "tests/setup/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
     "docs/**/*.ts",
-    "docs/demos/vue/**/*.tsx",
     "docs/**/*.vue",
     "env.d.ts"
   ]

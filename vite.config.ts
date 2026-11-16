@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import dts from 'vite-plugin-dts'
-import { aliases, frameworks } from './aliases.ts'
+import { aliases, jsx } from './aliases.ts'
 
 const root = path.dirname(fileURLToPath(import.meta.url))
 const src = path.resolve(root, 'src')
@@ -12,7 +12,7 @@ const src = path.resolve(root, 'src')
 export default defineConfig({
   plugins: [
     vue(),
-    vueJsx({ include: frameworks.vue.jsx }),
+    vueJsx({ include: jsx }),
     dts({
       tsconfigPath: './tsconfig.build.json',
       exclude: ['node_modules/**', 'src/**/__tests__/**'],
@@ -25,8 +25,7 @@ export default defineConfig({
     cssCodeSplit: true,
     lib: {
       entry: {
-        'core/index': path.join(src, 'core/index.ts'),
-        'vue/index': path.join(src, 'vue/index.ts'),
+        index: path.join(src, 'index.ts'),
         styles: path.join(src, 'styles/index.css'),
       },
       formats: ['es'],

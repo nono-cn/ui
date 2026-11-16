@@ -1,5 +1,4 @@
 import { ref, watch } from 'vue'
-import { frameworks, type Framework } from '@docs/config/frameworks'
 
 export const neutralColors = ['neutral', 'slate', 'gray', 'zinc', 'stone'] as const
 
@@ -31,10 +30,6 @@ export const neutral = ref<NeutralColor>(
   neutralColors.find((color) => color === read('nono-ui-neutral')) ?? 'neutral',
 )
 
-export const framework = ref<Framework>(
-  frameworks.find(({ id }) => id === read('nono-ui-framework'))?.id ?? 'vue',
-)
-
 watch(
   dark,
   (value) => {
@@ -53,5 +48,3 @@ watch(
   },
   { immediate: true },
 )
-
-watch(framework, (value) => write('nono-ui-framework', value))

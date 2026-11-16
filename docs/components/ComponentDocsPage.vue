@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import type { ComponentDocConfig } from '@docs/config/component-docs'
 import { exampleAnchor } from '@docs/config/docs-anchors'
-import { importPath } from '@docs/config/frameworks'
 import ComponentExample from '@docs/components/ComponentExample.vue'
 import ApiTable from '@docs/components/docs/ApiTable.vue'
-import { framework } from '@docs/components/useDocsTheme'
 
 const props = defineProps<{
   component: ComponentDocConfig
@@ -29,7 +27,7 @@ const sections = [
       <h2 class="text-2xl font-semibold tracking-tight">Import</h2>
       <pre
         class="overflow-x-auto rounded-xl border bg-muted/40 p-4 text-sm"
-      ><code v-if="framework === 'web'">import '{{ importPath(framework) }}'</code><code v-else>import { {{ component.title }} } from '{{ importPath(framework) }}'</code></pre>
+      ><code>import { {{ component.title }} } from '@nono/ui'</code></pre>
     </section>
 
     <template v-for="section in sections" :key="section.id">

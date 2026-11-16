@@ -2,16 +2,15 @@
 import { Menu, Moon, Palette, Sun, TableOfContents } from 'lucide'
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { docsComponents, docsComponentsBySlug } from '@docs/config/docs-components'
+import { docsComponentsBySlug } from '@docs/config/docs-components'
 import { exampleAnchor } from '@docs/config/docs-anchors'
-import { frameworks } from '@docs/config/frameworks'
 import ComponentDocsPage from '@docs/components/ComponentDocsPage.vue'
 import DocsComponentsNav from '@docs/components/DocsComponentsNav.vue'
 import DocsDrawer from '@docs/components/DocsDrawer.vue'
 import DocsIcon from '@docs/components/DocsIcon.vue'
 import DocsToc, { type DocsTocItem } from '@docs/components/DocsToc.vue'
 import { useActiveSection } from '@docs/components/useActiveSection'
-import { dark, framework, neutral, neutralColors } from '@docs/components/useDocsTheme'
+import { dark, neutral, neutralColors } from '@docs/components/useDocsTheme'
 
 const version = import.meta.env.NONO_UI_VERSION
 const route = useRoute()
@@ -22,11 +21,6 @@ const tocOpen = ref(false)
 const neutralOptions = neutralColors.map((value) => ({
   value,
   label: value.charAt(0).toUpperCase() + value.slice(1),
-}))
-
-const frameworkOptions = frameworks.map((option) => ({
-  ...option,
-  available: docsComponents.some((component) => component.demos[option.id]),
 }))
 
 const variables = ref([
@@ -98,19 +92,6 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
         ><span class="docs-version">v{{ version }}</span></RouterLink
       >
       <div class="docs-actions">
-        <label class="docs-framework">
-          <span>Framework</span>
-          <select v-model="framework">
-            <option
-              v-for="option in frameworkOptions"
-              :key="option.id"
-              :value="option.id"
-              :disabled="!option.available"
-            >
-              {{ option.label }}{{ option.available ? '' : ' (soon)' }}
-            </option>
-          </select>
-        </label>
         <div class="docs-theme-wrap">
           <button
             type="button"

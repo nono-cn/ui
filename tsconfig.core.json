@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.base.json",
-  "include": [
-    "src/core/**/*.ts",
-    "tests/shared/**/*.ts",
-    "tests/setup/**/*.ts",
-    "tests/assets/**/*.ts"
-  ]
-}

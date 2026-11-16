@@ -11,12 +11,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: [
-      'src/vue/**/*.{ts,tsx,vue}',
-      'tests/vue/**/*.{ts,tsx}',
-      'docs/demos/vue/**/*.{ts,tsx,vue}',
-      'docs/**/*.vue',
-    ],
+    files: ['src/**/*.{ts,tsx,vue}', 'tests/vue/**/*.{ts,tsx}', 'docs/**/*.vue'],
     extends: [...pluginVue.configs['flat/recommended']],
     languageOptions: {
       parserOptions: {
@@ -46,8 +41,28 @@ export default tseslint.config(
           patterns: [
             {
               regex: '^\\.',
-              message:
-                'Use an alias (@/, @docs/, @test/ or @nono/ui/*) instead of a relative path.',
+              message: 'Use an alias (@/, @docs/, @test/ or @nono/ui) instead of a relative path.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx,vue}'],
+    ignores: ['src/**/index.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^\\.',
+              message: 'Use an alias (@/, @docs/, @test/ or @nono/ui) instead of a relative path.',
+            },
+            {
+              regex: '^@/(composables|components(/[^/]+)?)$',
+              message: 'Import from the module file, not from its index barrel.',
             },
           ],
         },

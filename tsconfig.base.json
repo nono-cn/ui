@@ -12,10 +12,8 @@
     "esModuleInterop": true,
     "noEmit": true,
     "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "@nono/ui/core": ["./src/core/index.ts"],
-      "@nono/ui/vue": ["./src/vue/index.ts"],
+      "@nono/ui": ["./src/index.ts"],
       "@/*": ["./src/*"],
       "@docs/*": ["./docs/*"],
       "@test/*": ["./tests/*"]

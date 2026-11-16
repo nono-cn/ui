@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority'
-import { iconDefaults } from '@/core/components/icon/constants'
-import type { IconSize } from '@/core/components/icon/types'
+import { iconDefaults } from '@/components/Icon/constants'
+import type { IconSize } from '@/components/Icon/types'
 
 export const iconVariants = cva('shrink-0', {
   variants: {
