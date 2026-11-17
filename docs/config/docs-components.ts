@@ -5,6 +5,7 @@ import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
 import chip from '@docs/config/components/chip'
 import icon from '@docs/config/components/icon'
+import input from '@docs/config/components/input'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
 import separator from '@docs/config/components/separator'
@@ -17,6 +18,7 @@ export const docsComponents: ComponentDocConfig[] = [
   button,
   chip,
   icon,
+  input,
   kbd,
   label,
   separator,
