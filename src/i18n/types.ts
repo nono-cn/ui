@@ -1,5 +1,6 @@
 export interface Messages {
   close: string
+  clear: string
 }
 
 export type MessageKey = keyof Messages
