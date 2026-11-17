@@ -3,11 +3,17 @@ import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
 import icon from '@docs/config/components/icon'
 import kbd from '@docs/config/components/kbd'
+import label from '@docs/config/components/label'
 import separator from '@docs/config/components/separator'
 
-export const docsComponents: ComponentDocConfig[] = [badge, button, icon, kbd, separator].sort(
-  (a, b) => a.title.localeCompare(b.title),
-)
+export const docsComponents: ComponentDocConfig[] = [
+  badge,
+  button,
+  icon,
+  kbd,
+  label,
+  separator,
+].sort((a, b) => a.title.localeCompare(b.title))
 
 export const docsComponentsBySlug = Object.fromEntries(
   docsComponents.map((component) => [component.slug, component]),
