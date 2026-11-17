@@ -7,7 +7,7 @@ const label = 'Email'
 const formField: ComponentDocConfig = {
   slug: 'form-field',
   title: 'FormField',
-  description: 'Wraps a form control with its label, description, help and error message.',
+  description: 'Wraps a form control with its label, description and error message.',
   component: FormField,
   slot: { name: 'Input', component: Input, props: { placeholder: 'you@example.com' } },
   usage: [
@@ -21,21 +21,16 @@ const formField: ComponentDocConfig = {
   examples: [
     {
       title: 'Description',
-      description: 'Explain the field under its label. Screen readers read it with the control.',
+      description:
+        'Add a note under the control. Screen readers read it with the control, and the error message takes its place.',
       controls: [],
-      props: () => ({ label, description: 'We send the receipt to this address.' }),
+      props: () => ({ label, description: 'We never share your email.' }),
     },
     {
       title: 'Hint',
       description: 'Show a short note beside the label, such as Optional.',
       controls: [],
       props: () => ({ label, hint: 'Optional' }),
-    },
-    {
-      title: 'Help',
-      description: 'Add a note under the control. The error message takes its place.',
-      controls: [],
-      props: () => ({ label, help: 'We never share your email.' }),
     },
     {
       title: 'Error',
@@ -52,7 +47,7 @@ const formField: ComponentDocConfig = {
       ],
       props: (state) => ({
         label,
-        help: 'We never share your email.',
+        description: 'We never share your email.',
         error: state.message === 'true' ? 'Enter a valid email.' : true,
       }),
     },
@@ -76,7 +71,7 @@ const formField: ComponentDocConfig = {
       ],
       props: (state) => ({
         label,
-        description: 'We send the receipt to this address.',
+        description: 'We never share your email.',
         size: state.size!,
       }),
     },
@@ -100,7 +95,7 @@ const formField: ComponentDocConfig = {
           ['data-required', 'Root and parts', 'Present while the control is required.'],
           ['data-disabled', 'Root and parts', 'Present when disabled, by the prop or a fieldset.'],
           ['for', 'Label', 'Id of the control, made for it when it has none.'],
-          ['aria-describedby', 'Control', 'Ids of the description, the help and the error.'],
+          ['aria-describedby', 'Control', 'Ids of the description and the error.'],
           ['aria-invalid="true"', 'Control', 'Set while the field shows as invalid.'],
         ],
       },
@@ -113,7 +108,7 @@ const formField: ComponentDocConfig = {
     {
       title: 'Hint',
       description:
-        'The hint is not read with the control. Put what a screen reader needs in the label, the description or the help.',
+        'The hint is not read with the control. Put what a screen reader needs in the label or the description.',
     },
   ],
   api: {
@@ -126,14 +121,9 @@ const formField: ComponentDocConfig = {
       {
         name: 'description',
         type: 'string',
-        description: 'Text under the label that describes the control.',
-      },
-      { name: 'hint', type: 'string', description: 'Short note beside the label.' },
-      {
-        name: 'help',
-        type: 'string',
         description: 'Note under the control, hidden while the field shows as invalid.',
       },
+      { name: 'hint', type: 'string', description: 'Short note beside the label.' },
       {
         name: 'error',
         type: 'string | boolean',
@@ -172,11 +162,10 @@ const formField: ComponentDocConfig = {
   description?: () => HTMLAttributes
   container?: () => HTMLAttributes
   error?: () => HTMLAttributes
-  help?: () => HTMLAttributes
 }`,
         typePre: true,
         description:
-          'Attributes for the inner nodes: header (the row with the label and hint), label, hint, description, container (the box around the control), error and help. Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
+          'Attributes for the inner nodes: header (the row with the label and hint), label, hint, description, container (the box around the control) and error. Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
       },
     ],
     emits: [],
@@ -189,7 +178,6 @@ const formField: ComponentDocConfig = {
         type: '-',
         description: 'Description content; overrides the description fallback.',
       },
-      { name: 'help', type: '-', description: 'Help content; overrides the help fallback.' },
       {
         name: 'error',
         type: '{ message: string }',

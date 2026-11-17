@@ -17,7 +17,6 @@ export interface TextareaProps {
   rows?: number
   autoResize?: boolean
   highlight?: boolean
-  invalid?: boolean
   disabled?: boolean
   readOnly?: boolean
   required?: boolean

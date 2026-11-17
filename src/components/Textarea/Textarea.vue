@@ -3,7 +3,7 @@ import { Textarea as TextareaRoot } from '@ui-sdk/vue/textarea'
 import { computed, useAttrs } from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
-import { describedBy, useFormField } from '@/components/FormField/context'
+import { useFormField } from '@/components/FormField/context'
 import {
   textareaDefaults,
   textareaSizes,
@@ -25,7 +25,6 @@ const props = withDefaults(defineProps<TextareaProps>(), {
   rows: textareaDefaults.rows,
   autoResize: false,
   highlight: false,
-  invalid: false,
   disabled: undefined,
   readOnly: undefined,
   required: undefined,
@@ -49,10 +48,8 @@ const rootProps = computed(() => ({
   disabled: props.disabled,
   readOnly: props.readOnly,
   required: props.required ?? formField?.required(),
-  'aria-describedby': describedBy(attrs['aria-describedby'], formField),
   submitShortcut: props.submitShortcut,
   onSubmit: props.onSubmit,
-  'aria-invalid': props.invalid ? true : (attrs['aria-invalid'] as boolean | undefined),
   class: cn(
     textareaVariants({
       size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),

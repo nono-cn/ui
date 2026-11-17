@@ -28,7 +28,6 @@ export interface InputProps {
   clearable?: boolean
   clearLabel?: string
   highlight?: boolean
-  invalid?: boolean
   disabled?: boolean
   readOnly?: boolean
   required?: boolean
