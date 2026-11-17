@@ -20,7 +20,7 @@ const textarea: ComponentDocConfig = {
     {
       title: 'Basic usage',
       description:
-        'Bind the text with v-model, or set defaultValue to leave it uncontrolled. Name it with a Label.',
+        'Bind the text with v-model, or set defaultValue to leave it uncontrolled. Name it with a FormField or a Label.',
       props: () => ({ placeholder }),
     },
   ],
@@ -130,7 +130,8 @@ const textarea: ComponentDocConfig = {
     },
     {
       title: 'Invalid',
-      description: 'Mark the value as wrong. Point aria-describedby at the error message.',
+      description:
+        'Mark the value as wrong. Inside a FormField, its error prop does it and describes the control with the message.',
       controls: [],
       props: () => ({ invalid: true, defaultValue: 'Too short' }),
     },
@@ -162,7 +163,7 @@ const textarea: ComponentDocConfig = {
     {
       title: 'Naming the field',
       description:
-        'A placeholder is not a name. Give the textarea a visible Label pointing at its id, or an aria-label.',
+        'A placeholder is not a name. Give the textarea a visible label with a FormField, a Label pointing at its id, or an aria-label.',
     },
   ],
   api: {
@@ -191,7 +192,8 @@ const textarea: ComponentDocConfig = {
         name: 'size',
         type: textareaSizes.map((size) => `'${size}'`).join(' | '),
         default: `'${textareaDefaults.size}'`,
-        description: 'Padding, text size and minimum height.',
+        description:
+          'Padding, text size and minimum height. Inside a FormField, it defaults to the field size.',
       },
       {
         name: 'radius',
