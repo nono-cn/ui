@@ -2,6 +2,7 @@
 import { computed, ref, useAttrs } from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { alertDefaults, alertVariantNames } from '@/components/Alert/constants'
 import type { AlertEmits, AlertProps, AlertSlots } from '@/components/Alert/types'
 import {
@@ -36,19 +37,35 @@ const hasIcon = computed(() => Boolean(props.icon || slots.icon))
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
 
-const iconProps = { 'data-slot': 'icon', class: alertIconVariants() }
-const labelProps = { 'data-slot': 'label', class: alertLabelVariants() }
-const descriptionProps = { 'data-slot': 'description', class: alertDescriptionVariants() }
-const closeProps = { 'data-slot': 'close', class: alertCloseVariants() }
+const iconProps = computed(() =>
+  useUi({ 'data-slot': 'icon', class: alertIconVariants() }, props.ui?.icon),
+)
 
-const closeButtonProps = computed(() => ({
-  'aria-label': props.closeLabel || t('close'),
-  size: 'icon-xs' as const,
-  radius: 'full',
-  variant: variant.value,
-  color: props.color,
-  leadingIcon: 'x' as const,
-}))
+const labelProps = computed(() =>
+  useUi({ 'data-slot': 'label', class: alertLabelVariants() }, props.ui?.label),
+)
+
+const descriptionProps = computed(() =>
+  useUi({ 'data-slot': 'description', class: alertDescriptionVariants() }, props.ui?.description),
+)
+
+const closeProps = computed(() =>
+  useUi({ 'data-slot': 'close', class: alertCloseVariants() }, props.ui?.close),
+)
+
+const closeButtonProps = computed(() =>
+  useUi(
+    {
+      'aria-label': props.closeLabel || t('close'),
+      size: 'icon-xs' as const,
+      radius: 'full',
+      variant: variant.value,
+      color: props.color,
+      leadingIcon: 'x' as const,
+    },
+    props.ui?.closeButton,
+  ),
+)
 
 const rootProps = computed(() => ({
   'data-slot': 'alert',

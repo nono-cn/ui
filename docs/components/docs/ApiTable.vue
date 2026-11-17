@@ -45,7 +45,12 @@ withDefaults(
               >
                 <code class="rounded bg-muted px-1.5 py-0.5 text-xs">{{ row.type }}</code>
               </a>
-              <code v-else class="rounded bg-muted px-1.5 py-0.5 text-xs">{{ row.type }}</code>
+              <code
+                v-else
+                class="rounded bg-muted px-1.5 py-0.5 text-xs"
+                :class="row.typePre && 'block w-max whitespace-pre'"
+                >{{ row.type }}</code
+              >
             </td>
             <td v-if="showDefault" class="px-4 py-3 text-muted-foreground sm:px-5">
               <code v-if="row.default" class="text-xs whitespace-pre">{{ row.default }}</code>

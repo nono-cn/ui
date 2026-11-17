@@ -4,6 +4,7 @@ export interface ApiTableRow {
   name: string
   type: string
   typeLink?: string
+  typePre?: boolean
   default?: string
   description: string
   required?: boolean
