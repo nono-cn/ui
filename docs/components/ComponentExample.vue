@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import type {
   ComponentDocConfig,
   ComponentExampleConfig,
+  ExampleProps,
   ExampleState,
 } from '@docs/config/component-docs'
 import DocsIcon from '@docs/components/DocsIcon.vue'
@@ -36,24 +37,35 @@ const exampleBindings = computed(() => ({
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
-const code = computed(() => {
-  const name = props.component.title
-  const attributes = Object.entries(exampleProps.value)
+function attributesOf(values: ExampleProps) {
+  return Object.entries(values)
     .map(([key, value]) =>
       typeof value === 'string' ? ` ${key}="${value}"` : ` :${key}="${value}"`,
     )
     .join('')
+}
+
+const code = computed(() => {
+  const name = props.component.title
+  const slot = props.component.slot
+  const attributes = attributesOf(exampleProps.value)
   const listeners = handlers.value
     .map(({ event, name: handler }) => ` @${event}="${handler}"`)
     .join('')
   const sources = handlers.value.map(({ source }) => `\n${source}\n`).join('')
+  const imports = slot ? [name, slot.name].sort().join(', ') : name
+  const element = slot
+    ? `<${name}${attributes}${listeners}>
+    <${slot.name}${attributesOf(slot.props)} />
+  </${name}>`
+    : `<${name}${attributes}${listeners} />`
 
   return `<script setup lang="ts">
-import { ${name} } from '@nono/ui'
+import { ${imports} } from '@nono/ui'
 ${sources}<${'/'}script>
 
 <template>
-  <${name}${attributes}${listeners} />
+  ${element}
 </template>`
 })
 
@@ -109,7 +121,13 @@ onBeforeUnmount(() => clearTimeout(copyTimer))
     </div>
 
     <div class="grid min-h-36 w-full max-w-full min-w-0 place-items-center p-8 sm:min-h-44">
-      <component :is="component.component" v-bind="exampleBindings" />
+      <component :is="component.component" v-bind="exampleBindings">
+        <component
+          :is="component.slot.component"
+          v-if="component.slot"
+          v-bind="component.slot.props"
+        />
+      </component>
     </div>
 
     <div class="relative min-w-0 border-t bg-muted/40">

@@ -53,6 +53,12 @@ export interface ComponentExampleConfig {
   handlers?: ExampleHandler[]
 }
 
+export interface ExampleSlotContent {
+  name: string
+  component: Component
+  props: ExampleProps
+}
+
 export interface ComponentAccessibilityConfig {
   title: string
   description: string
@@ -64,6 +70,7 @@ export interface ComponentDocConfig {
   title: string
   description: string
   component: Component
+  slot?: ExampleSlotContent
   usage: ComponentExampleConfig[]
   examples: ComponentExampleConfig[]
   accessibility: ComponentAccessibilityConfig[]
