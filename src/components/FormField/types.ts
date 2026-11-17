@@ -10,14 +10,12 @@ export interface FormFieldUi {
   description?: UiResolver
   container?: UiResolver
   error?: UiResolver
-  help?: UiResolver
 }
 
 export interface FormFieldProps {
   label?: string
   description?: string
   hint?: string
-  help?: string
   error?: string | boolean
   name?: string
   size?: FormFieldSize
@@ -31,6 +29,5 @@ export interface FormFieldSlots {
   label?(): unknown
   hint?(): unknown
   description?(): unknown
-  help?(): unknown
   error?(props: { message: string }): unknown
 }

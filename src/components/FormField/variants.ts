@@ -38,8 +38,3 @@ export const formFieldErrorVariants = cva('text-error empty:hidden', {
   variants: { size: textSizes },
   defaultVariants: { size: formFieldDefaults.size },
 })
-
-export const formFieldHelpVariants = cva('text-muted-foreground', {
-  variants: { size: textSizes },
-  defaultVariants: { size: formFieldDefaults.size },
-})

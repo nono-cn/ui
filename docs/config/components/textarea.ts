@@ -129,13 +129,6 @@ const textarea: ComponentDocConfig = {
       props: (state) => ({ placeholder, highlight: true, color: state.color! }),
     },
     {
-      title: 'Invalid',
-      description:
-        'Mark the value as wrong. Inside a FormField, its error prop does it and describes the control with the message.',
-      controls: [],
-      props: () => ({ invalid: true, defaultValue: 'Too short' }),
-    },
-    {
       title: 'Disabled',
       description: 'Stop editing and remove the field from the tab order.',
       controls: [],
@@ -156,7 +149,11 @@ const textarea: ComponentDocConfig = {
           ['data-disabled', 'Root', 'Present when disabled, by the prop or a disabled fieldset.'],
           ['data-readonly', 'Root', 'Present when readOnly is set.'],
           ['data-required', 'Root', 'Present when required is set.'],
-          ['aria-invalid="true"', 'Root', 'Set when invalid is set.'],
+          [
+            'aria-invalid="true"',
+            'Root',
+            'Passed as an attribute, or set by FormField while it shows as invalid. Shows the error color.',
+          ],
         ],
       },
     },
@@ -219,12 +216,6 @@ const textarea: ComponentDocConfig = {
         type: 'boolean',
         default: 'false',
         description: 'Shows the border in the textarea color, even without focus.',
-      },
-      {
-        name: 'invalid',
-        type: 'boolean',
-        default: 'false',
-        description: 'Marks the value as wrong with aria-invalid and the error color.',
       },
       { name: 'disabled', type: 'boolean', default: 'false', description: 'Stops editing.' },
       {

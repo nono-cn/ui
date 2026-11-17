@@ -5,7 +5,7 @@ import { computed, useAttrs } from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
-import { describedBy, useFormField } from '@/components/FormField/context'
+import { useFormField } from '@/components/FormField/context'
 import { inputDefaults, inputSizes, inputVariantNames } from '@/components/Input/constants'
 import type { InputEmits, InputProps, InputSlots } from '@/components/Input/types'
 import {
@@ -33,7 +33,6 @@ const props = withDefaults(defineProps<InputProps>(), {
   clearable: false,
   clearLabel: undefined,
   highlight: false,
-  invalid: false,
   disabled: undefined,
   readOnly: undefined,
   required: undefined,
@@ -101,8 +100,6 @@ const inputProps = computed(() => {
     disabled: props.disabled,
     readOnly: props.readOnly,
     required: props.required ?? formField?.required(),
-    'aria-describedby': describedBy(rest['aria-describedby'], formField),
-    'aria-invalid': props.invalid ? true : (rest['aria-invalid'] as boolean | undefined),
   }
 })
 

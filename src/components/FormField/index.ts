@@ -11,7 +11,6 @@ export {
   formFieldDescriptionVariants,
   formFieldErrorVariants,
   formFieldHeaderVariants,
-  formFieldHelpVariants,
   formFieldHintVariants,
   formFieldLabelVariants,
   formFieldVariants,

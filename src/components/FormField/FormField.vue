@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Field, FieldDescription, FieldError, FieldLabel } from '@ui-sdk/vue/field'
-import { computed, useAttrs, useId } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 import { oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
@@ -12,7 +12,6 @@ import {
   formFieldDescriptionVariants,
   formFieldErrorVariants,
   formFieldHeaderVariants,
-  formFieldHelpVariants,
   formFieldHintVariants,
   formFieldLabelVariants,
   formFieldVariants,
@@ -29,7 +28,6 @@ const props = withDefaults(defineProps<FormFieldProps>(), {
 
 const slots = defineSlots<FormFieldSlots>()
 const attrs = useAttrs()
-const helpId = `${useId()}-help`
 
 const size = computed(() => oneOf(props.size, formFieldSizes, formFieldDefaults.size))
 const errorMessage = computed(() => (typeof props.error === 'string' ? props.error : ''))
@@ -37,12 +35,10 @@ const invalid = computed(() => (props.error === undefined ? undefined : Boolean(
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasHint = computed(() => Boolean(props.hint || slots.hint))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
-const hasHelp = computed(() => Boolean(props.help || slots.help))
 
 provideFormField({
   size: () => size.value,
   required: () => props.required,
-  describedBy: () => (hasHelp.value ? helpId : undefined),
 })
 
 const rootProps = computed(() => ({
@@ -79,13 +75,6 @@ const containerProps = computed(() =>
 const errorProps = computed(() =>
   useUi({ class: formFieldErrorVariants({ size: size.value }) }, props.ui?.error),
 )
-
-const helpProps = computed(() =>
-  useUi(
-    { 'data-slot': 'help', id: helpId, class: formFieldHelpVariants({ size: size.value }) },
-    props.ui?.help,
-  ),
-)
 </script>
 
 <template>
@@ -99,9 +88,6 @@ const helpProps = computed(() =>
           <slot name="hint">{{ hint }}</slot>
         </span>
       </div>
-      <FieldDescription v-if="hasDescription" v-bind="descriptionProps">
-        <slot name="description">{{ description }}</slot>
-      </FieldDescription>
       <div v-bind="containerProps">
         <slot />
       </div>
@@ -112,9 +98,9 @@ const helpProps = computed(() =>
           </slot>
         </template>
       </FieldError>
-      <p v-if="hasHelp && !state.invalid" v-bind="helpProps">
-        <slot name="help">{{ help }}</slot>
-      </p>
+      <FieldDescription v-if="hasDescription && !state.invalid" v-bind="descriptionProps">
+        <slot name="description">{{ description }}</slot>
+      </FieldDescription>
     </template>
   </Field>
 </template>
