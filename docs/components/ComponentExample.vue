@@ -23,6 +23,16 @@ function initialState(): ExampleState {
 
 const state = reactive<ExampleState>(initialState())
 const exampleProps = computed(() => props.example.props(state))
+const handlers = computed(() => props.example.handlers ?? [])
+const exampleBindings = computed(() => ({
+  ...exampleProps.value,
+  ...Object.fromEntries(
+    handlers.value.map(({ event, handler }) => [
+      `on${event[0]!.toUpperCase()}${event.slice(1)}`,
+      handler,
+    ]),
+  ),
+}))
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
@@ -33,13 +43,17 @@ const code = computed(() => {
       typeof value === 'string' ? ` ${key}="${value}"` : ` :${key}="${value}"`,
     )
     .join('')
+  const listeners = handlers.value
+    .map(({ event, name: handler }) => ` @${event}="${handler}"`)
+    .join('')
+  const sources = handlers.value.map(({ source }) => `\n${source}\n`).join('')
 
   return `<script setup lang="ts">
 import { ${name} } from '@nono/ui'
-<${'/'}script>
+${sources}<${'/'}script>
 
 <template>
-  <${name}${attributes} />
+  <${name}${attributes}${listeners} />
 </template>`
 })
 
@@ -95,7 +109,7 @@ onBeforeUnmount(() => clearTimeout(copyTimer))
     </div>
 
     <div class="grid min-h-36 w-full max-w-full min-w-0 place-items-center p-8 sm:min-h-44">
-      <component :is="component.component" v-bind="exampleProps" />
+      <component :is="component.component" v-bind="exampleBindings" />
     </div>
 
     <div class="relative min-w-0 border-t bg-muted/40">
