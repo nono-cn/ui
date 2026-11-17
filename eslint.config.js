@@ -61,7 +61,7 @@ export default tseslint.config(
               message: 'Use an alias (@/, @docs/, @test/ or @nono/ui) instead of a relative path.',
             },
             {
-              regex: '^@/(composables|components(/[^/]+)?)$',
+              regex: '^@/(composables|components(/(?!constants$)[^/]+)?)$',
               message: 'Import from the module file, not from its index barrel.',
             },
           ],

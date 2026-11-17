@@ -38,11 +38,19 @@ export interface ExampleControl {
   visible?: (state: ExampleState) => boolean
 }
 
+export interface ExampleHandler {
+  event: string
+  name: string
+  source: string
+  handler: (...args: never[]) => unknown
+}
+
 export interface ComponentExampleConfig {
   title: string
   description: string
   controls?: ExampleControl[]
   props: (state: ExampleState) => ExampleProps
+  handlers?: ExampleHandler[]
 }
 
 export interface ComponentAccessibilityConfig {

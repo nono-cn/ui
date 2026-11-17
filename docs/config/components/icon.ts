@@ -1,8 +1,7 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
-import { Icon, iconSizes } from '@nono/ui'
+import { Icon, iconDefaults, iconNames, iconSizes, themeColors } from '@nono/ui'
 
-const names = ['check', 'info', 'warning', 'error', 'success', 'search', 'heart']
-const colors = ['currentColor', 'primary', 'neutral', 'secondary', 'warning', 'success', 'error']
+const colors = [iconDefaults.color, ...themeColors]
 
 const icon: ComponentDocConfig = {
   slug: 'icon',
@@ -20,13 +19,23 @@ const icon: ComponentDocConfig = {
     {
       title: 'Name',
       description: 'Select an icon by its registered library name.',
-      controls: [{ key: 'name', label: 'Name', type: 'select', options: names, default: 'check' }],
+      controls: [
+        { key: 'name', label: 'Name', type: 'select', options: iconNames, default: 'check' },
+      ],
       props: (state) => ({ name: state.name! }),
     },
     {
       title: 'Size',
       description: 'Adjust the icon’s visual size.',
-      controls: [{ key: 'size', label: 'Size', type: 'select', options: iconSizes, default: 'md' }],
+      controls: [
+        {
+          key: 'size',
+          label: 'Size',
+          type: 'select',
+          options: iconSizes,
+          default: iconDefaults.size,
+        },
+      ],
       props: (state) => ({ name: 'check', size: state.size! }),
     },
     {
@@ -62,7 +71,7 @@ const icon: ComponentDocConfig = {
           label: 'Stroke',
           type: 'select',
           options: ['1', '1.5', '2', '2.5', '3'],
-          default: '2',
+          default: String(iconDefaults.stroke),
         },
       ],
       props: (state) => ({ name: 'check', stroke: Number(state.stroke) }),
@@ -103,20 +112,20 @@ const icon: ComponentDocConfig = {
       {
         name: 'size',
         type: iconSizes.map((size) => `'${size}'`).join(' | '),
-        default: "'md'",
+        default: `'${iconDefaults.size}'`,
         description: 'Visual size of the icon.',
       },
       {
         name: 'color',
         type: 'string',
-        default: "'currentColor'",
+        default: `'${iconDefaults.color}'`,
         description:
           'Theme token such as primary or success, a custom token, or a CSS color such as #6366f1. Unknown tokens fall back to primary. currentColor inherits the surrounding text color.',
       },
       {
         name: 'stroke',
         type: 'number',
-        default: '2',
+        default: String(iconDefaults.stroke),
         description: 'SVG stroke width. The line scales with the rendered icon size.',
       },
     ],
