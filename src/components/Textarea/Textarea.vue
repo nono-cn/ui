@@ -3,6 +3,7 @@ import { Textarea as TextareaRoot } from '@ui-sdk/vue/textarea'
 import { computed, useAttrs } from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { describedBy, useFormField } from '@/components/FormField/context'
 import {
   textareaDefaults,
   textareaSizes,
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<TextareaProps>(), {
   placeholder: undefined,
   variant: textareaDefaults.variant,
   color: textareaDefaults.color,
-  size: textareaDefaults.size,
+  size: undefined,
   radius: textareaDefaults.radius,
   rows: textareaDefaults.rows,
   autoResize: false,
@@ -34,6 +35,7 @@ const props = withDefaults(defineProps<TextareaProps>(), {
 
 const emit = defineEmits<TextareaEmits>()
 const attrs = useAttrs()
+const formField = useFormField()
 
 const rootProps = computed(() => ({
   'data-slot': 'textarea',
@@ -46,13 +48,14 @@ const rootProps = computed(() => ({
   autoResize: props.autoResize,
   disabled: props.disabled,
   readOnly: props.readOnly,
-  required: props.required,
+  required: props.required ?? formField?.required(),
+  'aria-describedby': describedBy(attrs['aria-describedby'], formField),
   submitShortcut: props.submitShortcut,
   onSubmit: props.onSubmit,
   'aria-invalid': props.invalid ? true : (attrs['aria-invalid'] as boolean | undefined),
   class: cn(
     textareaVariants({
-      size: oneOf(props.size, textareaSizes, textareaDefaults.size),
+      size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
       variant: oneOf(props.variant, textareaVariantNames, textareaDefaults.variant),
       autoResize: props.autoResize,
       highlight: props.highlight,

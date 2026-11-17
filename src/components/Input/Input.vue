@@ -5,6 +5,7 @@ import { computed, useAttrs } from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
+import { describedBy, useFormField } from '@/components/FormField/context'
 import { inputDefaults, inputSizes, inputVariantNames } from '@/components/Input/constants'
 import type { InputEmits, InputProps, InputSlots } from '@/components/Input/types'
 import {
@@ -27,7 +28,7 @@ const props = withDefaults(defineProps<InputProps>(), {
   placeholder: undefined,
   variant: inputDefaults.variant,
   color: inputDefaults.color,
-  size: inputDefaults.size,
+  size: undefined,
   radius: inputDefaults.radius,
   clearable: false,
   clearLabel: undefined,
@@ -42,8 +43,9 @@ const emit = defineEmits<InputEmits>()
 const slots = defineSlots<InputSlots>()
 const attrs = useAttrs()
 const { t } = useLocale()
+const formField = useFormField()
 
-const size = computed(() => oneOf(props.size, inputSizes, inputDefaults.size))
+const size = computed(() => oneOf(props.size ?? formField?.size(), inputSizes, inputDefaults.size))
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
@@ -98,7 +100,8 @@ const inputProps = computed(() => {
     placeholder: props.placeholder,
     disabled: props.disabled,
     readOnly: props.readOnly,
-    required: props.required,
+    required: props.required ?? formField?.required(),
+    'aria-describedby': describedBy(rest['aria-describedby'], formField),
     'aria-invalid': props.invalid ? true : (rest['aria-invalid'] as boolean | undefined),
   }
 })

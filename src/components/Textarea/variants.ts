@@ -4,7 +4,7 @@ import type { TextareaSize, TextareaVariant } from '@/components/Textarea/types'
 
 export const textareaVariants = cva(
   [
-    'flex w-full min-w-0 rounded-(--textarea-radius) border border-transparent bg-transparent text-foreground',
+    'flex w-full min-w-0 rounded-(--textarea-radius) border bg-transparent text-foreground',
     'placeholder:text-muted-foreground transition-[color,background-color,border-color,box-shadow] outline-none',
     'focus-visible:border-(--textarea-color) focus-visible:ring-[3px] focus-visible:ring-(--textarea-color)/30',
     'aria-invalid:border-error aria-invalid:focus-visible:ring-error/30',
@@ -21,9 +21,9 @@ export const textareaVariants = cva(
       } satisfies Record<TextareaSize, string>,
       variant: {
         outline: 'border-input shadow-xs',
-        soft: 'bg-muted/50 interactive:hover:bg-muted focus-visible:bg-muted',
+        soft: 'border-transparent bg-muted/50 interactive:hover:bg-muted focus-visible:bg-muted',
         subtle: 'border-input bg-muted',
-        plain: '',
+        plain: 'border-transparent',
       } satisfies Record<TextareaVariant, string>,
       autoResize: {
         true: 'max-h-80 resize-none',

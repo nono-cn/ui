@@ -25,7 +25,7 @@ const input: ComponentDocConfig = {
     {
       title: 'Basic usage',
       description:
-        'Bind the text with v-model, or set defaultValue to leave it uncontrolled. Name it with a Label.',
+        'Bind the text with v-model, or set defaultValue to leave it uncontrolled. Name it with a FormField or a Label.',
       props: () => ({ placeholder }),
     },
   ],
@@ -157,7 +157,8 @@ const input: ComponentDocConfig = {
     },
     {
       title: 'Invalid',
-      description: 'Mark the value as wrong. Point aria-describedby at the error message.',
+      description:
+        'Mark the value as wrong. Inside a FormField, its error prop does it and describes the control with the message.',
       controls: [],
       props: () => ({ invalid: true, defaultValue: 'not-an-email', type: 'email' }),
     },
@@ -199,7 +200,7 @@ const input: ComponentDocConfig = {
     {
       title: 'Naming the field',
       description:
-        'A placeholder is not a name. Give the input a visible Label pointing at its id, or an aria-label.',
+        'A placeholder is not a name. Give the input a visible label with a FormField, a Label pointing at its id, or an aria-label.',
     },
     {
       title: 'Icons',
@@ -239,7 +240,8 @@ const input: ComponentDocConfig = {
         name: 'size',
         type: inputSizes.map((size) => `'${size}'`).join(' | '),
         default: `'${inputDefaults.size}'`,
-        description: 'Height, padding, text and icon size.',
+        description:
+          'Height, padding, text and icon size. Inside a FormField, it defaults to the field size.',
       },
       {
         name: 'radius',

@@ -8,7 +8,7 @@ export const inputRootVariants = cva(
 
 export const inputVariants = cva(
   [
-    'w-full min-w-0 rounded-(--input-radius) border border-transparent bg-transparent text-foreground',
+    'w-full min-w-0 rounded-(--input-radius) border bg-transparent text-foreground',
     'placeholder:text-muted-foreground transition-[color,background-color,border-color,box-shadow] outline-none',
     'focus-visible:border-(--input-color) focus-visible:ring-[3px] focus-visible:ring-(--input-color)/30',
     'aria-invalid:border-error aria-invalid:focus-visible:ring-error/30',
@@ -25,9 +25,9 @@ export const inputVariants = cva(
       } satisfies Record<InputSize, string>,
       variant: {
         outline: 'border-input shadow-xs',
-        soft: 'bg-muted/50 interactive:hover:bg-muted focus-visible:bg-muted',
+        soft: 'border-transparent bg-muted/50 interactive:hover:bg-muted focus-visible:bg-muted',
         subtle: 'border-input bg-muted',
-        plain: '',
+        plain: 'border-transparent',
       } satisfies Record<InputVariant, string>,
       highlight: {
         true: 'border-(--input-color)',
