@@ -8,6 +8,7 @@ import icon from '@docs/config/components/icon'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
 import separator from '@docs/config/components/separator'
+import textarea from '@docs/config/components/textarea'
 
 export const docsComponents: ComponentDocConfig[] = [
   alert,
@@ -19,6 +20,7 @@ export const docsComponents: ComponentDocConfig[] = [
   kbd,
   label,
   separator,
+  textarea,
 ].sort((a, b) => a.title.localeCompare(b.title))
 
 export const docsComponentsBySlug = Object.fromEntries(
