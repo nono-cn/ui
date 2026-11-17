@@ -1,0 +1,5 @@
+export { default as Kbd } from '@/components/Kbd/Kbd.vue'
+export { default as KbdGroup } from '@/components/Kbd/KbdGroup.vue'
+export { kbdDefaults, kbdSizes, kbdVariantNames } from '@/components/Kbd/constants'
+export type { KbdGroupSlots, KbdProps, KbdSize, KbdSlots, KbdVariant } from '@/components/Kbd/types'
+export { kbdGroupVariants, kbdVariants } from '@/components/Kbd/variants'

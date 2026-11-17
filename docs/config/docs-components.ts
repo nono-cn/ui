@@ -2,8 +2,9 @@ import type { ComponentDocConfig } from '@docs/config/component-docs'
 import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
 import icon from '@docs/config/components/icon'
+import kbd from '@docs/config/components/kbd'
 
-export const docsComponents: ComponentDocConfig[] = [badge, button, icon].sort((a, b) =>
+export const docsComponents: ComponentDocConfig[] = [badge, button, icon, kbd].sort((a, b) =>
   a.title.localeCompare(b.title),
 )
 
