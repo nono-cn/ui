@@ -1,6 +1,7 @@
 export * from '@/components/Avatar'
 export * from '@/components/Badge'
 export * from '@/components/Button'
+export * from '@/components/Chip'
 export * from '@/components/constants'
 export * from '@/components/Icon'
 export * from '@/components/Kbd'

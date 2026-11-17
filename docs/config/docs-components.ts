@@ -2,6 +2,7 @@ import type { ComponentDocConfig } from '@docs/config/component-docs'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
+import chip from '@docs/config/components/chip'
 import icon from '@docs/config/components/icon'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
@@ -11,6 +12,7 @@ export const docsComponents: ComponentDocConfig[] = [
   avatar,
   badge,
   button,
+  chip,
   icon,
   kbd,
   label,
