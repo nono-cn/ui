@@ -1,4 +1,5 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
+import alert from '@docs/config/components/alert'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
@@ -9,6 +10,7 @@ import label from '@docs/config/components/label'
 import separator from '@docs/config/components/separator'
 
 export const docsComponents: ComponentDocConfig[] = [
+  alert,
   avatar,
   badge,
   button,
