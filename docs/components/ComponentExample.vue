@@ -69,8 +69,11 @@ ${sources}<${'/'}script>
 </template>`
 })
 
+const renderKey = ref(0)
+
 function reset() {
   Object.assign(state, initialState())
+  renderKey.value++
 }
 
 const copied = ref(false)
@@ -121,7 +124,7 @@ onBeforeUnmount(() => clearTimeout(copyTimer))
     </div>
 
     <div class="grid min-h-36 w-full max-w-full min-w-0 place-items-center p-8 sm:min-h-44">
-      <component :is="component.component" v-bind="exampleBindings">
+      <component :is="component.component" :key="renderKey" v-bind="exampleBindings">
         <component
           :is="component.slot.component"
           v-if="component.slot"
