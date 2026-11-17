@@ -171,6 +171,19 @@ const alert: ComponentDocConfig = {
         description:
           'Uses role="none" instead of role="alert" for purely visual content. A role passed as an attribute takes precedence.',
       },
+      {
+        name: 'ui',
+        type: `{
+  icon?: () => HTMLAttributes
+  label?: () => HTMLAttributes
+  description?: () => HTMLAttributes
+  close?: () => HTMLAttributes
+  closeButton?: () => ButtonProps & ButtonHTMLAttributes
+}`,
+        typePre: true,
+        description:
+          'Attributes for the inner nodes, matched by data-slot: icon, label, description, close (the box around the close button) and closeButton (the close Button, which also takes Button props). Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
+      },
     ],
     emits: [
       {
