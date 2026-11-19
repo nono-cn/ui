@@ -3,18 +3,19 @@ import { cn, type ClassValue } from '@/composables/cn'
 
 export type UiAttributes = HTMLAttributes & Record<`data-${string}`, unknown>
 
-export type UiResolver<T extends object = UiAttributes> = () => T
+export type UiResolver<T extends object = UiAttributes, P = void> = (props: P) => T
 
 interface Styled {
   class?: unknown
   style?: unknown
 }
 
-export function useUi<B extends object, U extends object>(
+export function useUi<B extends object, U extends object, P = void>(
   base: B,
-  resolver: UiResolver<U> | undefined,
+  resolver: UiResolver<U, P> | undefined,
+  ...payload: P extends void ? [] : [props: P]
 ): B & U {
-  const ui = resolver?.()
+  const ui = resolver?.(...(payload as [P]))
   if (!ui) return base as B & U
 
   return {
