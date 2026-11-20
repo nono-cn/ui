@@ -33,23 +33,19 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() => ({
-  'data-slot': 'leading',
   class: buttonLeadingVariants({ size: size.value }),
 }))
 
 const trailingProps = computed(() => ({
-  'data-slot': 'trailing',
   class: buttonTrailingVariants({ size: size.value }),
 }))
 
 const labelProps = {
-  'data-slot': 'label',
   class: 'truncate',
 }
 
 const spinnerProps = {
   name: 'spinner' as const,
-  'data-slot': 'spinner',
   class: cn(buttonIconVariants(), 'animate-spin'),
 }
 
@@ -87,22 +83,22 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <ButtonRoot v-bind="rootProps">
+  <ButtonRoot data-ui="button-root" v-bind="rootProps">
     <template #default="{ state }">
-      <span v-if="hasLeading || state.pending" v-bind="leadingProps">
+      <span v-if="hasLeading || state.pending" data-ui="button-leading" v-bind="leadingProps">
         <slot v-if="state.pending" name="loading">
-          <Icon v-bind="spinnerProps" />
+          <Icon data-ui="button-spinner" v-bind="spinnerProps" />
         </slot>
         <slot v-else name="leading">
-          <Icon v-if="leadingIcon" v-bind="leadingIconProps" />
+          <Icon v-if="leadingIcon" data-ui="button-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
       <slot>
-        <span v-if="label" v-bind="labelProps">{{ label }}</span>
+        <span v-if="label" data-ui="button-label" v-bind="labelProps">{{ label }}</span>
       </slot>
-      <span v-if="hasTrailing" v-bind="trailingProps">
+      <span v-if="hasTrailing" data-ui="button-trailing" v-bind="trailingProps">
         <slot name="trailing">
-          <Icon v-if="trailingIcon" v-bind="trailingIconProps" />
+          <Icon v-if="trailingIcon" data-ui="button-trailing-icon" v-bind="trailingIconProps" />
         </slot>
       </span>
     </template>

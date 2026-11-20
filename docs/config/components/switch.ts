@@ -133,16 +133,6 @@ const switchDocs: ComponentDocConfig = {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
           ['role="switch"', 'Root', 'Button with aria-checked.'],
-          ['data-slot="switch"', 'Root', 'Lets you style every switch from CSS.'],
-          ['data-slot="switch-thumb"', 'Thumb', 'Lets you style every thumb from CSS.'],
-          ['data-checked / data-unchecked', 'Root, Thumb', 'Present while on, or off.'],
-          [
-            'data-disabled',
-            'Root, Thumb',
-            'Present when disabled, by the prop or a disabled fieldset.',
-          ],
-          ['data-readonly', 'Root, Thumb', 'Present when read-only.'],
-          ['data-required', 'Root, Thumb', 'Present when required.'],
           ['aria-busy="true"', 'Root', 'Present while loading.'],
           [
             'aria-invalid="true"',

@@ -29,17 +29,14 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() => ({
-  'data-slot': 'leading',
   class: badgeLeadingVariants({ size: size.value }),
 }))
 
 const trailingProps = computed(() => ({
-  'data-slot': 'trailing',
   class: badgeTrailingVariants({ size: size.value }),
 }))
 
 const labelProps = {
-  'data-slot': 'label',
   class: 'truncate',
 }
 
@@ -54,7 +51,6 @@ const trailingIconProps = computed(() => ({
 }))
 
 const rootProps = computed(() => ({
-  'data-slot': 'badge',
   ...attrs,
   class: cn(
     badgeVariants({
@@ -72,18 +68,18 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <span v-bind="rootProps">
-    <span v-if="hasLeading" v-bind="leadingProps">
+  <span data-ui="badge-root" v-bind="rootProps">
+    <span v-if="hasLeading" data-ui="badge-leading" v-bind="leadingProps">
       <slot name="leading">
-        <Icon v-if="leadingIcon" v-bind="leadingIconProps" />
+        <Icon v-if="leadingIcon" data-ui="badge-leading-icon" v-bind="leadingIconProps" />
       </slot>
     </span>
     <slot>
-      <span v-if="label" v-bind="labelProps">{{ label }}</span>
+      <span v-if="label" data-ui="badge-label" v-bind="labelProps">{{ label }}</span>
     </slot>
-    <span v-if="hasTrailing" v-bind="trailingProps">
+    <span v-if="hasTrailing" data-ui="badge-trailing" v-bind="trailingProps">
       <slot name="trailing">
-        <Icon v-if="trailingIcon" v-bind="trailingIconProps" />
+        <Icon v-if="trailingIcon" data-ui="badge-trailing-icon" v-bind="trailingIconProps" />
       </slot>
     </span>
   </span>

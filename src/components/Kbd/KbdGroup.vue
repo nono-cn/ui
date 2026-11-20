@@ -10,14 +10,13 @@ defineSlots<KbdGroupSlots>()
 const attrs = useAttrs()
 
 const rootProps = computed(() => ({
-  'data-slot': 'kbd-group',
   ...attrs,
   class: cn(kbdGroupVariants(), attrs.class as ClassValue),
 }))
 </script>
 
 <template>
-  <kbd v-bind="rootProps">
+  <kbd data-ui="kbd-group-root" v-bind="rootProps">
     <slot />
   </kbd>
 </template>

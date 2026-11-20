@@ -144,11 +144,6 @@ const textarea: ComponentDocConfig = {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
           ['textarea', 'Root', 'Native textarea element, with the textbox role.'],
-          ['data-slot="textarea"', 'Root', 'Lets you style every textarea from CSS.'],
-          ['data-filled', 'Root', 'Present while the textarea has text.'],
-          ['data-disabled', 'Root', 'Present when disabled, by the prop or a disabled fieldset.'],
-          ['data-readonly', 'Root', 'Present when readOnly is set.'],
-          ['data-required', 'Root', 'Present when required is set.'],
           [
             'aria-invalid="true"',
             'Root',

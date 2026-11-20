@@ -129,8 +129,6 @@ const separator: ComponentDocConfig = {
           ['role="none"', 'Root', 'Set while decorative is true, so screen readers skip the line.'],
           ['role="separator"', 'Root', 'Set when decorative is false.'],
           ['aria-orientation', 'Root', 'Orientation of a separator that is not decorative.'],
-          ['data-orientation', 'Root', 'horizontal or vertical, set in both cases for styling.'],
-          ['data-slot="separator"', 'Root', 'Lets you style every separator from CSS.'],
         ],
       },
     },

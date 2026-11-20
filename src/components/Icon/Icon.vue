@@ -33,7 +33,6 @@ const rootAttrs = computed(() => {
     'stroke-linecap': 'round' as const,
     'stroke-linejoin': 'round' as const,
     ...(labelled ? {} : { 'aria-hidden': 'true' as const }),
-    'data-slot': 'icon',
     ...attrs,
     class: cn(
       iconVariants({ size: oneOf(props.size, iconSizes, iconDefaults.size), inherit }),
@@ -45,7 +44,7 @@ const rootAttrs = computed(() => {
 </script>
 
 <template>
-  <svg v-bind="rootAttrs">
+  <svg data-ui="icon-root" v-bind="rootAttrs">
     <component
       :is="tag"
       v-for="([tag, nodeAttrs], index) in node"

@@ -95,7 +95,6 @@ function iconProps(state: SwitchThumbState) {
   return useUi(
     {
       name: thumbIcon(state)!,
-      'data-slot': state.loading ? 'spinner' : 'icon',
       class: switchIconVariants({ loading: state.loading }),
     },
     props.ui?.icon,
@@ -112,12 +111,13 @@ defineExpose<SwitchExpose>({
 </script>
 
 <template>
-  <SwitchRoot v-bind="rootProps">
+  <SwitchRoot data-ui="switch-root" v-bind="rootProps">
     <template #default="{ state }">
-      <SwitchThumb v-bind="thumbProps(thumbState(state.checked))">
+      <SwitchThumb data-ui="switch-thumb" v-bind="thumbProps(thumbState(state.checked))">
         <slot name="thumb" v-bind="thumbState(state.checked)">
           <Icon
             v-if="thumbIcon(thumbState(state.checked))"
+            data-ui="switch-icon"
             v-bind="iconProps(thumbState(state.checked))"
           />
         </slot>

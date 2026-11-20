@@ -82,7 +82,6 @@ function iconProps(state: CheckboxIndicatorState) {
   return useUi(
     {
       name: state.indeterminate ? props.indeterminateIcon : props.icon,
-      'data-slot': 'icon',
       stroke: 3,
       class: checkboxIconVariants(),
     },
@@ -100,11 +99,14 @@ defineExpose<CheckboxExpose>({
 </script>
 
 <template>
-  <CheckboxRoot v-bind="rootProps">
+  <CheckboxRoot data-ui="checkbox-root" v-bind="rootProps">
     <template #default="{ state }">
-      <CheckboxIndicator v-bind="indicatorProps(indicatorState(state))">
+      <CheckboxIndicator
+        data-ui="checkbox-indicator"
+        v-bind="indicatorProps(indicatorState(state))"
+      >
         <slot name="indicator" v-bind="indicatorState(state)">
-          <Icon v-bind="iconProps(indicatorState(state))" />
+          <Icon data-ui="checkbox-icon" v-bind="iconProps(indicatorState(state))" />
         </slot>
       </CheckboxIndicator>
     </template>

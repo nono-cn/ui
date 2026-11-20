@@ -228,9 +228,6 @@ const button: ComponentDocConfig = {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
           ['button', 'Root', 'Native button element, type="button" by default.'],
-          ['data-slot="button"', 'Root', 'Lets you style every button from CSS.'],
-          ['data-pending', 'Root', 'Present while the Promise returned by @click is running.'],
-          ['data-disabled', 'Root', 'Present when disabled, by the prop or a disabled fieldset.'],
           [
             'aria-busy="true"',
             'Root',

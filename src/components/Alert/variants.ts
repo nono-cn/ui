@@ -33,4 +33,6 @@ export const alertLabelVariants = cva('col-start-2 line-clamp-1 min-h-4 font-med
 
 export const alertDescriptionVariants = cva('col-start-2 text-current/80 [&_p]:leading-relaxed')
 
-export const alertCloseVariants = cva('col-start-3 row-start-1 -my-1.5 ms-2 -me-2 self-start')
+export const alertCloseContainerVariants = cva(
+  'col-start-3 row-start-1 -my-1.5 ms-2 -me-2 self-start',
+)

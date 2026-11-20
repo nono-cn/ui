@@ -10,7 +10,7 @@ export interface AlertUi {
   icon?: UiResolver
   label?: UiResolver
   description?: UiResolver
-  close?: UiResolver
+  closeContainer?: UiResolver
   closeButton?: UiResolver<ButtonProps & ButtonHTMLAttributes & UiAttributes>
 }
 

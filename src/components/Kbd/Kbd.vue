@@ -19,7 +19,6 @@ defineSlots<KbdSlots>()
 const attrs = useAttrs()
 
 const rootProps = computed(() => ({
-  'data-slot': 'kbd',
   ...attrs,
   class: cn(
     kbdVariants({
@@ -37,7 +36,7 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <kbd v-bind="rootProps">
+  <kbd data-ui="kbd-root" v-bind="rootProps">
     <slot>{{ label }}</slot>
   </kbd>
 </template>

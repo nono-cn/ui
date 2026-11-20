@@ -137,7 +137,6 @@ const badge: ComponentDocConfig = {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
           ['span', 'Root', 'Inline element with no role.'],
-          ['data-slot="badge"', 'Root', 'Lets you style every badge from CSS.'],
           [
             'aria-hidden="true"',
             'Icons',

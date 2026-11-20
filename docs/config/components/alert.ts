@@ -103,7 +103,6 @@ const alert: ComponentDocConfig = {
         rows: [
           ['role="alert"', 'Root', 'Announces the content immediately.'],
           ['role="none"', 'Root', 'Used instead of alert when decorative is true.'],
-          ['data-slot="alert"', 'Root', 'Lets you style every alert from CSS.'],
           [
             'aria-label',
             'Close button',
@@ -177,12 +176,12 @@ const alert: ComponentDocConfig = {
   icon?: () => HTMLAttributes
   label?: () => HTMLAttributes
   description?: () => HTMLAttributes
-  close?: () => HTMLAttributes
+  closeContainer?: () => HTMLAttributes
   closeButton?: () => ButtonProps & ButtonHTMLAttributes
 }`,
         typePre: true,
         description:
-          'Attributes for the inner nodes, matched by data-slot: icon, label, description, close (the box around the close button) and closeButton (the close Button, which also takes Button props). Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
+          'Attributes for the inner nodes: icon, label, description, closeContainer (the box around the close button) and closeButton (the close Button, which also takes Button props). Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
       },
     ],
     emits: [

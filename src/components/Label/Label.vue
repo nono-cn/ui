@@ -20,7 +20,7 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <LabelRoot v-bind="rootProps">
+  <LabelRoot data-ui="label-root" v-bind="rootProps">
     <slot>{{ label }}</slot>
   </LabelRoot>
 </template>

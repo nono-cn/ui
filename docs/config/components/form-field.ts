@@ -141,12 +141,6 @@ const formField: ComponentDocConfig = {
       table: {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
-          ['data-slot="field"', 'Root', 'Lets you style every field from CSS.'],
-          ['data-orientation', 'Root', 'vertical or horizontal.'],
-          ['data-variant', 'Root', 'default or card.'],
-          ['data-invalid', 'Root and parts', 'Present while the field shows as invalid.'],
-          ['data-required', 'Root and parts', 'Present while the control is required.'],
-          ['data-disabled', 'Root and parts', 'Present when disabled, by the prop or a fieldset.'],
           ['for', 'Label', 'Id of the control, made for it when it has none.'],
           ['aria-describedby', 'Control', 'Ids of the description and the error.'],
           ['aria-invalid="true"', 'Control', 'Set while the field shows as invalid.'],

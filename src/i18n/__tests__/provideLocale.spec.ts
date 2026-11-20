@@ -13,7 +13,7 @@ function renderAlert(initial?: string, options?: LocaleOptions) {
 
   return {
     locale,
-    closeLabel: () => wrapper.get('[data-slot="close"] button').attributes('aria-label'),
+    closeLabel: () => wrapper.get('[data-ui="alert-close-button"]').attributes('aria-label'),
   }
 }
 
@@ -55,6 +55,8 @@ describe('provideLocale', () => {
       return () => h(Alert, { label: 'Alert', closable: true, closeLabel: 'Ocultar' })
     })
 
-    expect(mount(Root).get('[data-slot="close"] button').attributes('aria-label')).toBe('Ocultar')
+    expect(mount(Root).get('[data-ui="alert-close-button"]').attributes('aria-label')).toBe(
+      'Ocultar',
+    )
   })
 })

@@ -25,7 +25,6 @@ const label: ComponentDocConfig = {
         rows: [
           ['label', 'Root', 'Native label element.'],
           ['for', 'Root', 'Id of the control the label names.'],
-          ['data-slot="label"', 'Root', 'Lets you style every label from CSS.'],
         ],
       },
     },

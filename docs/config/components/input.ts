@@ -172,14 +172,6 @@ const input: ComponentDocConfig = {
         rows: [
           ['div', 'Root', 'Group that holds the input and its icons.'],
           ['input', 'Input', 'Native input element, type="text" by default.'],
-          ['data-slot="input-group"', 'Root', 'Lets you style every input group from CSS.'],
-          ['data-slot="input"', 'Input', 'Lets you style every input from CSS.'],
-          ['data-filled', 'Root, Input', 'Present while the input has text.'],
-          [
-            'data-disabled',
-            'Root, Input',
-            'Present when disabled, by the prop or a disabled fieldset.',
-          ],
           [
             'aria-invalid="true"',
             'Input',
@@ -190,7 +182,6 @@ const input: ComponentDocConfig = {
             'Clear',
             'Native button, named by clearLabel ("Clear" by default). Present while the input has text and is editable.',
           ],
-          ['data-slot="input-clear"', 'Clear', 'Lets you style every clear button from CSS.'],
         ],
       },
     },
