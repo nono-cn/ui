@@ -6,7 +6,8 @@ import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
-import { ratingDefaults, ratingSizes } from '@/components/Rating/constants'
+import { useLocale } from '@/i18n/useLocale'
+import { ratingDefaults, ratingOrientations, ratingSizes } from '@/components/Rating/constants'
 import type {
   RatingChangeDetails,
   RatingEmits,
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<RatingProps>(), {
   step: ratingDefaults.step,
   color: ratingDefaults.color,
   size: undefined,
+  orientation: ratingDefaults.orientation,
   icon: ratingDefaults.icon,
   emptyIcon: undefined,
   deselectable: undefined,
@@ -44,6 +46,7 @@ const emit = defineEmits<RatingEmits>()
 defineSlots<RatingSlots>()
 const attrs = useAttrs()
 const formField = useFormField()
+const { locale, t } = useLocale()
 
 const controller = createRatingController()
 
@@ -51,9 +54,22 @@ const size = computed(() =>
   oneOf(props.size ?? formField?.size(), ratingSizes, ratingDefaults.size),
 )
 
+const orientation = computed(() =>
+  oneOf(props.orientation, ratingOrientations, ratingDefaults.orientation),
+)
+
+const valueLabel = computed(() => {
+  const { format } = new Intl.NumberFormat(locale.value)
+  const message = t('ratingValue')
+  return (value: number, max: number) =>
+    message.replace('{value}', format(value)).replace('{max}', format(max))
+})
+
 const rootProps = computed(() => ({
+  'aria-orientation': props.readOnly ? undefined : orientation.value,
+  'data-orientation': orientation.value,
   ...attrs,
-  class: cn(ratingVariants(), attrs.class as ClassValue),
+  class: cn(ratingVariants({ orientation: orientation.value }), attrs.class as ClassValue),
   style: [getColorVariables(props.color, 'rating', ratingDefaults.color), attrs.style],
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
@@ -69,7 +85,7 @@ const rootProps = computed(() => ({
   name: props.name,
   form: props.form,
   loop: props.loop,
-  getValueLabel: props.getValueLabel,
+  getValueLabel: props.getValueLabel ?? valueLabel.value,
   controller,
 }))
 

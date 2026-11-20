@@ -1,11 +1,22 @@
 import { cva } from 'class-variance-authority'
 import { ratingDefaults } from '@/components/Rating/constants'
-import type { RatingSize } from '@/components/Rating/types'
+import type { RatingOrientation, RatingSize } from '@/components/Rating/types'
 
-export const ratingVariants = cva([
-  'inline-flex items-center gap-0.5 outline-none',
-  'data-disabled:cursor-not-allowed data-disabled:opacity-50',
-])
+export const ratingVariants = cva(
+  [
+    'inline-flex items-center gap-0.5 outline-none',
+    'data-disabled:cursor-not-allowed data-disabled:opacity-50',
+  ],
+  {
+    variants: {
+      orientation: {
+        horizontal: 'flex-row',
+        vertical: 'flex-col',
+      } satisfies Record<RatingOrientation, string>,
+    },
+    defaultVariants: { orientation: ratingDefaults.orientation },
+  },
+)
 
 export const ratingItemVariants = cva(
   [

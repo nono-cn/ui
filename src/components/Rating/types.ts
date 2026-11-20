@@ -4,11 +4,13 @@ import type {
   RatingItemState,
   RatingValueChangeReason,
 } from '@ui-sdk/core/rating'
-import type { ratingSizes } from '@/components/Rating/constants'
+import type { ratingOrientations, ratingSizes } from '@/components/Rating/constants'
 import type { UiAttributes, UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type RatingSize = (typeof ratingSizes)[number]
+
+export type RatingOrientation = (typeof ratingOrientations)[number]
 
 export type RatingChangeDetails = ChangeDetails<RatingValueChangeReason>
 
@@ -25,6 +27,7 @@ export interface RatingProps {
   step?: number
   color?: string
   size?: RatingSize
+  orientation?: RatingOrientation
   icon?: IconName
   emptyIcon?: IconName
   deselectable?: boolean

@@ -1,9 +1,10 @@
 export { default as Rating } from '@/components/Rating/Rating.vue'
-export { ratingDefaults, ratingSizes } from '@/components/Rating/constants'
+export { ratingDefaults, ratingOrientations, ratingSizes } from '@/components/Rating/constants'
 export type {
   RatingChangeDetails,
   RatingEmits,
   RatingExpose,
+  RatingOrientation,
   RatingProps,
   RatingSize,
   RatingSlots,

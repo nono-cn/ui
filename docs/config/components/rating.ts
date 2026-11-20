@@ -1,5 +1,12 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
-import { iconNames, Rating, ratingDefaults, ratingSizes, themeColors } from '@nono/ui'
+import {
+  iconNames,
+  Rating,
+  ratingDefaults,
+  ratingOrientations,
+  ratingSizes,
+  themeColors,
+} from '@nono/ui'
 
 const name = { 'aria-label': 'Rate your stay' }
 
@@ -56,6 +63,21 @@ const rating: ComponentDocConfig = {
         },
       ],
       props: (state) => ({ ...name, defaultValue: 3, size: state.size! }),
+    },
+    {
+      title: 'Orientation',
+      description:
+        'Stack the stars in a column with vertical. Every arrow key works in both orientations.',
+      controls: [
+        {
+          key: 'orientation',
+          label: 'Orientation',
+          type: 'select',
+          options: ratingOrientations,
+          default: 'vertical',
+        },
+      ],
+      props: (state) => ({ ...name, defaultValue: 3, orientation: state.orientation! }),
     },
     {
       title: 'Max',
@@ -132,7 +154,13 @@ const rating: ComponentDocConfig = {
         rows: [
           ['role="radiogroup"', 'Root', 'The group of scores. role="img" while read-only.'],
           ['role="radio"', 'Radio', 'One per score, named by getValueLabel.'],
+          [
+            'aria-orientation',
+            'Root',
+            'horizontal or vertical. Left out while read-only, as an image has none.',
+          ],
           ['data-slot="rating"', 'Root', 'Lets you style every rating from CSS.'],
+          ['data-orientation', 'Root', 'horizontal or vertical.'],
           ['data-slot="rating-item"', 'Item', 'Lets you style every star from CSS.'],
           ['data-filled', 'Item', 'Present on stars the shown score covers whole.'],
           ['data-partial', 'Item', 'Present on the star the shown score ends partway through.'],
@@ -199,6 +227,12 @@ const rating: ComponentDocConfig = {
         description: 'Star size. Inside a FormField, it defaults to the field size.',
       },
       {
+        name: 'orientation',
+        type: ratingOrientations.map((value) => `'${value}'`).join(' | '),
+        default: `'${ratingDefaults.orientation}'`,
+        description: 'horizontal puts the stars in a row; vertical stacks them in a column.',
+      },
+      {
         name: 'icon',
         type: 'IconName',
         default: `'${ratingDefaults.icon}'`,
@@ -251,7 +285,7 @@ const rating: ComponentDocConfig = {
         name: 'getValueLabel',
         type: '(value: number, max: number) => string',
         description:
-          'Names a score, for each radio and for a read-only rating. Says "3 stars" by default.',
+          'Names a score, for each radio and for a read-only rating. Says "3 of 5" by default, in the locale from provideLocale.',
       },
       {
         name: 'ui',
