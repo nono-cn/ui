@@ -1,6 +1,8 @@
 export interface Messages {
   close: string
   clear: string
+  removeFile: string
+  openFile: string
 }
 
 export type MessageKey = keyof Messages

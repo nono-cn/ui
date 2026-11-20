@@ -57,3 +57,16 @@
   --radius-3xl: 1.5rem;
   --radius-4xl: 2rem;
 }
+
+@theme {
+  --animate-shimmer: shimmer 2s linear infinite;
+
+  @keyframes shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: -100% 0;
+    }
+  }
+}

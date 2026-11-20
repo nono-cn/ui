@@ -1,5 +1,6 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
 import alert from '@docs/config/components/alert'
+import attachment from '@docs/config/components/attachment'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
@@ -16,6 +17,7 @@ import textarea from '@docs/config/components/textarea'
 
 export const docsComponents: ComponentDocConfig[] = [
   alert,
+  attachment,
   avatar,
   badge,
   button,
