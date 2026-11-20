@@ -136,29 +136,6 @@ const checkbox: ComponentDocConfig = {
         rows: [
           ['role="checkbox"', 'Root', 'Button with aria-checked.'],
           ['aria-checked="mixed"', 'Root', 'Present while indeterminate.'],
-          ['data-slot="checkbox"', 'Root', 'Lets you style every checkbox from CSS.'],
-          [
-            'data-slot="checkbox-indicator"',
-            'Indicator',
-            'Lets you style every indicator from CSS.',
-          ],
-          [
-            'data-checked / data-unchecked / data-indeterminate',
-            'Root, Indicator',
-            'Present while checked, unchecked or indeterminate.',
-          ],
-          [
-            'data-disabled',
-            'Root, Indicator',
-            'Present when disabled, by the prop or a disabled fieldset.',
-          ],
-          ['data-readonly', 'Root, Indicator', 'Present when read-only.'],
-          ['data-required', 'Root, Indicator', 'Present when required.'],
-          [
-            'data-starting-style / data-ending-style',
-            'Indicator',
-            'Present while the indicator animates in, or out.',
-          ],
           [
             'aria-invalid="true"',
             'Root',

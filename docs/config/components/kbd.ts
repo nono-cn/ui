@@ -96,11 +96,7 @@ const kbd: ComponentDocConfig = {
         'Kbd renders a native kbd element. Attributes passed to Kbd reach that element. Wrap the keys of a shortcut in KbdGroup, which renders an outer kbd, the way HTML marks a key combination.',
       table: {
         columns: ['Attribute', 'Element', 'Value'],
-        rows: [
-          ['kbd', 'Root', 'Marks the text as keyboard input.'],
-          ['data-slot="kbd"', 'Root', 'Lets you style every key from CSS.'],
-          ['data-slot="kbd-group"', 'KbdGroup', 'Lets you style every key combination from CSS.'],
-        ],
+        rows: [['kbd', 'Root', 'Marks the text as keyboard input.']],
       },
     },
     {

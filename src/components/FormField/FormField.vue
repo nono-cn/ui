@@ -68,10 +68,7 @@ const rootProps = computed(() => ({
 }))
 
 const headerProps = computed(() =>
-  useUi(
-    { 'data-slot': 'header', class: formFieldHeaderVariants({ orientation: orientation.value }) },
-    props.ui?.header,
-  ),
+  useUi({ class: formFieldHeaderVariants({ orientation: orientation.value }) }, props.ui?.header),
 )
 
 const labelProps = computed(() =>
@@ -82,10 +79,7 @@ const labelProps = computed(() =>
 )
 
 const hintProps = computed(() =>
-  useUi(
-    { 'data-slot': 'hint', class: formFieldHintVariants({ size: size.value }) },
-    props.ui?.hint,
-  ),
+  useUi({ class: formFieldHintVariants({ size: size.value }) }, props.ui?.hint),
 )
 
 const descriptionProps = computed(() =>
@@ -100,7 +94,6 @@ const descriptionProps = computed(() =>
 const containerProps = computed(() =>
   useUi(
     {
-      'data-slot': 'container',
       class: formFieldContainerVariants({ orientation: orientation.value }),
     },
     props.ui?.container,
@@ -116,27 +109,31 @@ const errorProps = computed(() =>
 </script>
 
 <template>
-  <Field v-bind="rootProps">
+  <Field data-ui="form-field-root" v-bind="rootProps">
     <template #default="{ state }">
-      <div v-if="hasLabel || hasHint" v-bind="headerProps">
-        <FieldLabel v-if="hasLabel" v-bind="labelProps">
+      <div v-if="hasLabel || hasHint" data-ui="form-field-header" v-bind="headerProps">
+        <FieldLabel v-if="hasLabel" data-ui="form-field-label" v-bind="labelProps">
           <slot name="label">{{ label }}</slot>
         </FieldLabel>
-        <span v-if="hasHint" v-bind="hintProps">
+        <span v-if="hasHint" data-ui="form-field-hint" v-bind="hintProps">
           <slot name="hint">{{ hint }}</slot>
         </span>
       </div>
-      <div v-bind="containerProps">
+      <div data-ui="form-field-container" v-bind="containerProps">
         <slot />
       </div>
-      <FieldError v-bind="errorProps">
+      <FieldError data-ui="form-field-error" v-bind="errorProps">
         <template #default="{ state: errorState }">
           <slot name="error" :message="errorMessage || errorState.message">
             {{ errorMessage || errorState.message }}
           </slot>
         </template>
       </FieldError>
-      <FieldDescription v-if="hasDescription && !state.invalid" v-bind="descriptionProps">
+      <FieldDescription
+        v-if="hasDescription && !state.invalid"
+        data-ui="form-field-description"
+        v-bind="descriptionProps"
+      >
         <slot name="description">{{ description }}</slot>
       </FieldDescription>
     </template>

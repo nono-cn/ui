@@ -42,14 +42,12 @@ const initials = computed(() => {
 })
 
 const imageProps = computed(() => ({
-  'data-slot': 'image',
   src: props.src,
   alt: props.alt ?? '',
   class: avatarImageVariants(),
 }))
 
 const fallbackProps = computed(() => ({
-  'data-slot': 'fallback',
   delay: props.delay,
   ...(props.alt ? { role: 'img', 'aria-label': props.alt } : {}),
   class: avatarFallbackVariants({
@@ -65,7 +63,6 @@ const iconProps = computed(() => ({
 }))
 
 const rootProps = computed(() => ({
-  'data-slot': 'avatar',
   ...attrs,
   onLoadingStatusChange: props.onLoadingStatusChange,
   class: cn(
@@ -81,12 +78,12 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <AvatarRoot v-bind="rootProps">
-    <AvatarImage v-if="src" v-bind="imageProps" />
-    <AvatarFallback v-bind="fallbackProps">
+  <AvatarRoot data-ui="avatar-root" v-bind="rootProps">
+    <AvatarImage v-if="src" data-ui="avatar-image" v-bind="imageProps" />
+    <AvatarFallback data-ui="avatar-fallback" v-bind="fallbackProps">
       <slot>
-        <span v-if="initials" v-bind="textProps">{{ initials }}</span>
-        <Icon v-else v-bind="iconProps" />
+        <span v-if="initials" data-ui="avatar-text" v-bind="textProps">{{ initials }}</span>
+        <Icon v-else data-ui="avatar-icon" v-bind="iconProps" />
       </slot>
     </AvatarFallback>
   </AvatarRoot>

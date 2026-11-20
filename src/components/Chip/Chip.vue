@@ -21,7 +21,6 @@ defineSlots<ChipSlots>()
 const attrs = useAttrs()
 
 const indicatorProps = computed(() => ({
-  'data-slot': 'indicator',
   class: chipIndicatorVariants({
     size: oneOf(props.size, chipSizes, chipDefaults.size),
     position: props.standalone
@@ -33,7 +32,6 @@ const indicatorProps = computed(() => ({
 }))
 
 const rootProps = computed(() => ({
-  'data-slot': 'chip',
   ...attrs,
   class: cn(chipVariants(), attrs.class as ClassValue),
   style: [getColorVariables(props.color, 'chip', chipDefaults.color), attrs.style],
@@ -41,8 +39,8 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <div v-bind="rootProps">
+  <div data-ui="chip-root" v-bind="rootProps">
     <slot />
-    <span v-if="show" v-bind="indicatorProps" />
+    <span v-if="show" data-ui="chip-indicator" v-bind="indicatorProps" />
   </div>
 </template>

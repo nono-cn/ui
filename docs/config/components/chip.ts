@@ -118,11 +118,7 @@ const chip: ComponentDocConfig = {
         'The indicator is a purely visual dot over the default slot. It has no text, role or name, so assistive technology does not notice it. Attributes passed to Chip reach the root.',
       table: {
         columns: ['Attribute', 'Element', 'Value'],
-        rows: [
-          ['div', 'Root', 'Generic container that wraps the default slot.'],
-          ['data-slot="chip"', 'Root', 'Lets you style every chip from CSS.'],
-          ['data-slot="indicator"', 'Indicator', 'Visual dot with no role or name.'],
-        ],
+        rows: [['div', 'Root', 'Generic container that wraps the default slot.']],
       },
     },
     {

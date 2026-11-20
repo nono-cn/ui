@@ -49,17 +49,11 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi(
-    { 'data-slot': 'leading', class: inputLeadingVariants({ size: size.value }) },
-    props.ui?.leading,
-  ),
+  useUi({ class: inputLeadingVariants({ size: size.value }) }, props.ui?.leading),
 )
 
 const trailingProps = computed(() =>
-  useUi(
-    { 'data-slot': 'trailing', class: inputTrailingVariants({ size: size.value }) },
-    props.ui?.trailing,
-  ),
+  useUi({ class: inputTrailingVariants({ size: size.value }) }, props.ui?.trailing),
 )
 
 const clearProps = computed(() =>
@@ -75,7 +69,6 @@ const clearProps = computed(() =>
 const iconClass = inputIconVariants()
 
 const rootProps = computed(() => ({
-  'data-slot': 'input-group',
   class: cn(inputRootVariants(), attrs.class as ClassValue),
   style: [
     getColorVariables(props.color, 'input', inputDefaults.color),
@@ -90,7 +83,6 @@ const inputProps = computed(() => {
   )
 
   return {
-    'data-slot': 'input',
     ...rest,
     type: props.type,
     modelValue: props.modelValue,
@@ -127,22 +119,32 @@ function inputBindings(state: InputGroupState) {
 </script>
 
 <template>
-  <InputGroup v-bind="rootProps">
+  <InputGroup data-ui="input-root" v-bind="rootProps">
     <template #default="{ state }">
-      <span v-if="hasLeading" v-bind="leadingProps">
+      <span v-if="hasLeading" data-ui="input-leading" v-bind="leadingProps">
         <slot name="leading">
-          <Icon v-if="leadingIcon" :name="leadingIcon" :class="iconClass" />
+          <Icon
+            v-if="leadingIcon"
+            data-ui="input-leading-icon"
+            :name="leadingIcon"
+            :class="iconClass"
+          />
         </slot>
       </span>
-      <InputRoot v-bind="inputBindings(state)" />
-      <span v-if="hasTrailing || showsClear(state)" v-bind="trailingProps">
-        <InputClear v-if="clearable" v-bind="clearProps">
+      <InputRoot data-ui="input-input" v-bind="inputBindings(state)" />
+      <span v-if="hasTrailing || showsClear(state)" data-ui="input-trailing" v-bind="trailingProps">
+        <InputClear v-if="clearable" data-ui="input-clear" v-bind="clearProps">
           <slot name="clear">
-            <Icon name="x" class="size-full" />
+            <Icon data-ui="input-clear-icon" name="x" class="size-full" />
           </slot>
         </InputClear>
         <slot name="trailing">
-          <Icon v-if="trailingIcon" :name="trailingIcon" :class="iconClass" />
+          <Icon
+            v-if="trailingIcon"
+            data-ui="input-trailing-icon"
+            :name="trailingIcon"
+            :class="iconClass"
+          />
         </slot>
       </span>
     </template>

@@ -33,7 +33,6 @@ const orientation = computed(() =>
 const hasLabel = computed(() => Boolean(props.label || slots.default))
 
 const labelProps = {
-  'data-slot': 'label',
   class: separatorLabelVariants(),
 }
 
@@ -58,8 +57,8 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <SeparatorRoot v-bind="rootProps">
-    <span v-if="hasLabel" v-bind="labelProps">
+  <SeparatorRoot data-ui="separator-root" v-bind="rootProps">
+    <span v-if="hasLabel" data-ui="separator-label" v-bind="labelProps">
       <slot>{{ label }}</slot>
     </span>
   </SeparatorRoot>

@@ -155,7 +155,6 @@ const avatar: ComponentDocConfig = {
       table: {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
-          ['data-slot="avatar"', 'Root', 'Lets you style every avatar from CSS.'],
           ['alt', 'Image', 'The alt prop, or an empty string when it is missing.'],
           [
             'role="img" aria-label',

@@ -37,7 +37,6 @@ const attrs = useAttrs()
 const formField = useFormField()
 
 const rootProps = computed(() => ({
-  'data-slot': 'textarea',
   ...attrs,
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
@@ -68,5 +67,5 @@ const rootProps = computed(() => ({
 </script>
 
 <template>
-  <TextareaRoot v-bind="rootProps" />
+  <TextareaRoot data-ui="textarea-root" v-bind="rootProps" />
 </template>

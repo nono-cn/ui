@@ -6,7 +6,7 @@ import { useUi } from '@/composables/useUi'
 import { alertDefaults, alertVariantNames } from '@/components/Alert/constants'
 import type { AlertEmits, AlertProps, AlertSlots } from '@/components/Alert/types'
 import {
-  alertCloseVariants,
+  alertCloseContainerVariants,
   alertDescriptionVariants,
   alertIconVariants,
   alertLabelVariants,
@@ -37,20 +37,16 @@ const hasIcon = computed(() => Boolean(props.icon || slots.icon))
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
 
-const iconProps = computed(() =>
-  useUi({ 'data-slot': 'icon', class: alertIconVariants() }, props.ui?.icon),
-)
+const iconProps = computed(() => useUi({ class: alertIconVariants() }, props.ui?.icon))
 
-const labelProps = computed(() =>
-  useUi({ 'data-slot': 'label', class: alertLabelVariants() }, props.ui?.label),
-)
+const labelProps = computed(() => useUi({ class: alertLabelVariants() }, props.ui?.label))
 
 const descriptionProps = computed(() =>
-  useUi({ 'data-slot': 'description', class: alertDescriptionVariants() }, props.ui?.description),
+  useUi({ class: alertDescriptionVariants() }, props.ui?.description),
 )
 
-const closeProps = computed(() =>
-  useUi({ 'data-slot': 'close', class: alertCloseVariants() }, props.ui?.close),
+const closeContainerProps = computed(() =>
+  useUi({ class: alertCloseContainerVariants() }, props.ui?.closeContainer),
 )
 
 const closeButtonProps = computed(() =>
@@ -68,7 +64,6 @@ const closeButtonProps = computed(() =>
 )
 
 const rootProps = computed(() => ({
-  'data-slot': 'alert',
   role: props.decorative ? 'none' : 'alert',
   ...attrs,
   class: cn(
@@ -85,21 +80,21 @@ function close() {
 </script>
 
 <template>
-  <div v-if="visible" v-bind="rootProps">
-    <span v-if="hasIcon" v-bind="iconProps">
+  <div v-if="visible" data-ui="alert-root" v-bind="rootProps">
+    <span v-if="hasIcon" data-ui="alert-icon" v-bind="iconProps">
       <slot name="icon">
         <Icon v-if="icon" :name="icon" />
       </slot>
     </span>
-    <div v-if="hasLabel" v-bind="labelProps">
+    <div v-if="hasLabel" data-ui="alert-label" v-bind="labelProps">
       <slot name="label">{{ label }}</slot>
     </div>
-    <div v-if="hasDescription" v-bind="descriptionProps">
+    <div v-if="hasDescription" data-ui="alert-description" v-bind="descriptionProps">
       <slot name="description">{{ description }}</slot>
     </div>
-    <div v-if="closable" v-bind="closeProps">
+    <div v-if="closable" data-ui="alert-close-container" v-bind="closeContainerProps">
       <slot name="close" :close="close">
-        <Button v-bind="closeButtonProps" @click="close" />
+        <Button data-ui="alert-close-button" v-bind="closeButtonProps" @click="close" />
       </slot>
     </div>
   </div>

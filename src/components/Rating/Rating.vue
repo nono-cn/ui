@@ -104,7 +104,6 @@ function emptyIconProps(state: RatingItemState) {
   return useUi(
     {
       name: props.emptyIcon ?? props.icon,
-      'data-slot': 'empty-icon',
       fill: 'currentColor',
       class: ratingEmptyIconVariants(),
     },
@@ -117,7 +116,6 @@ function iconProps(state: RatingItemState) {
   return useUi(
     {
       name: props.icon,
-      'data-slot': 'icon',
       fill: 'currentColor',
       class: ratingIconVariants(),
     },
@@ -134,17 +132,17 @@ defineExpose<RatingExpose>({
 </script>
 
 <template>
-  <RatingRoot v-bind="rootProps">
+  <RatingRoot data-ui="rating-root" v-bind="rootProps">
     <RatingItem>
       <template #render="{ props: itemAttrs, state, children }">
-        <span v-bind="itemProps(itemAttrs, state)">
+        <span data-ui="rating-item" v-bind="itemProps(itemAttrs, state)">
           <component :is="children" />
         </span>
       </template>
       <template #default="{ state }">
         <slot name="item" v-bind="state">
-          <Icon v-bind="emptyIconProps(state)" />
-          <Icon v-if="state.fill > 0" v-bind="iconProps(state)" />
+          <Icon data-ui="rating-empty-icon" v-bind="emptyIconProps(state)" />
+          <Icon v-if="state.fill > 0" data-ui="rating-icon" v-bind="iconProps(state)" />
         </slot>
       </template>
     </RatingItem>

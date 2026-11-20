@@ -8,7 +8,7 @@ export type {
   AlertVariant,
 } from '@/components/Alert/types'
 export {
-  alertCloseVariants,
+  alertCloseContainerVariants,
   alertDescriptionVariants,
   alertIconVariants,
   alertLabelVariants,

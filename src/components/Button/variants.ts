@@ -12,11 +12,11 @@ export const buttonVariants = cva(
   {
     variants: {
       size: {
-        xs: 'h-7 gap-1 px-2.5 text-xs has-[>[data-slot=leading],>[data-slot=trailing]]:px-2',
-        sm: 'h-8 gap-1.5 px-3 text-sm has-[>[data-slot=leading],>[data-slot=trailing]]:px-2.5',
-        md: 'h-9 px-4 py-2 text-base has-[>[data-slot=leading],>[data-slot=trailing]]:px-3',
-        lg: 'h-10 px-6 text-lg has-[>[data-slot=leading],>[data-slot=trailing]]:px-4',
-        xl: 'h-11 px-7 text-xl has-[>[data-slot=leading],>[data-slot=trailing]]:px-5',
+        xs: 'h-7 gap-1 px-2.5 text-xs has-[>[data-ui=button-leading],>[data-ui=button-trailing]]:px-2',
+        sm: 'h-8 gap-1.5 px-3 text-sm has-[>[data-ui=button-leading],>[data-ui=button-trailing]]:px-2.5',
+        md: 'h-9 px-4 py-2 text-base has-[>[data-ui=button-leading],>[data-ui=button-trailing]]:px-3',
+        lg: 'h-10 px-6 text-lg has-[>[data-ui=button-leading],>[data-ui=button-trailing]]:px-4',
+        xl: 'h-11 px-7 text-xl has-[>[data-ui=button-leading],>[data-ui=button-trailing]]:px-5',
         'icon-xs': 'size-7 p-0',
         'icon-sm': 'size-8 p-0',
         icon: 'size-9 p-0',

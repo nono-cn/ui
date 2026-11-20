@@ -91,7 +91,6 @@ const icon: ComponentDocConfig = {
             'Root',
             'Hides the icon from assistive technology. It is dropped when you pass aria-label or aria-labelledby, and you can pass another value.',
           ],
-          ['data-slot="icon"', 'Root', 'Lets you style every icon from CSS.'],
         ],
       },
     },
