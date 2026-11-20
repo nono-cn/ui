@@ -1,7 +1,15 @@
-import type { formFieldSizes } from '@/components/FormField/constants'
+import type {
+  formFieldOrientations,
+  formFieldSizes,
+  formFieldVariantNames,
+} from '@/components/FormField/constants'
 import type { UiResolver } from '@/composables/useUi'
 
 export type FormFieldSize = (typeof formFieldSizes)[number]
+
+export type FormFieldOrientation = (typeof formFieldOrientations)[number]
+
+export type FormFieldVariant = (typeof formFieldVariantNames)[number]
 
 export interface FormFieldUi {
   header?: UiResolver
@@ -19,6 +27,8 @@ export interface FormFieldProps {
   error?: string | boolean
   name?: string
   size?: FormFieldSize
+  orientation?: FormFieldOrientation
+  variant?: FormFieldVariant
   required?: boolean
   disabled?: boolean
   ui?: FormFieldUi

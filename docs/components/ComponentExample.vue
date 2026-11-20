@@ -34,6 +34,7 @@ const exampleBindings = computed(() => ({
     ]),
   ),
 }))
+const slot = computed(() => props.example.slot ?? props.component.slot)
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
@@ -47,16 +48,16 @@ function attributesOf(values: ExampleProps) {
 
 const code = computed(() => {
   const name = props.component.title
-  const slot = props.component.slot
   const attributes = attributesOf(exampleProps.value)
   const listeners = handlers.value
     .map(({ event, name: handler }) => ` @${event}="${handler}"`)
     .join('')
   const sources = handlers.value.map(({ source }) => `\n${source}\n`).join('')
-  const imports = slot ? [name, slot.name].sort().join(', ') : name
-  const element = slot
+  const content = slot.value
+  const imports = content ? [name, content.name].sort().join(', ') : name
+  const element = content
     ? `<${name}${attributes}${listeners}>
-    <${slot.name}${attributesOf(slot.props)} />
+    <${content.name}${attributesOf(content.props)} />
   </${name}>`
     : `<${name}${attributes}${listeners} />`
 
@@ -125,11 +126,7 @@ onBeforeUnmount(() => clearTimeout(copyTimer))
 
     <div class="grid min-h-36 w-full max-w-full min-w-0 place-items-center p-8 sm:min-h-44">
       <component :is="component.component" :key="renderKey" v-bind="exampleBindings">
-        <component
-          :is="component.slot.component"
-          v-if="component.slot"
-          v-bind="component.slot.props"
-        />
+        <component :is="slot.component" v-if="slot" v-bind="slot.props" />
       </component>
     </div>
 

@@ -10,6 +10,7 @@ import input from '@docs/config/components/input'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
 import separator from '@docs/config/components/separator'
+import switchDocs from '@docs/config/components/switch'
 import textarea from '@docs/config/components/textarea'
 
 export const docsComponents: ComponentDocConfig[] = [
@@ -24,6 +25,7 @@ export const docsComponents: ComponentDocConfig[] = [
   kbd,
   label,
   separator,
+  switchDocs,
   textarea,
 ].sort((a, b) => a.title.localeCompare(b.title))
 
