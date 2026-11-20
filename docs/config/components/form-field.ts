@@ -1,8 +1,18 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
-import { FormField, formFieldDefaults, formFieldSizes, Input } from '@nono/ui'
+import {
+  FormField,
+  formFieldDefaults,
+  formFieldOrientations,
+  formFieldSizes,
+  formFieldVariantNames,
+  Input,
+  Switch,
+} from '@nono/ui'
 
 const booleans = ['false', 'true']
 const label = 'Email'
+const setting = { label: 'Weekly digest', description: 'A summary of your week, every Monday.' }
+const toggle = { name: 'Switch', component: Switch, props: {} }
 
 const formField: ComponentDocConfig = {
   slug: 'form-field',
@@ -31,6 +41,47 @@ const formField: ComponentDocConfig = {
       description: 'Show a short note beside the label, such as Optional.',
       controls: [],
       props: () => ({ label, hint: 'Optional' }),
+    },
+    {
+      title: 'Orientation',
+      description:
+        'Put the label and description beside the control, for a Switch or other choice control. The error takes the place of the description.',
+      controls: [
+        {
+          key: 'orientation',
+          label: 'Orientation',
+          type: 'select',
+          options: formFieldOrientations,
+          default: 'horizontal',
+        },
+      ],
+      slot: toggle,
+      props: (state) => ({
+        ...setting,
+        orientation: state.orientation!,
+        class: 'max-w-sm',
+      }),
+    },
+    {
+      title: 'Card',
+      description:
+        'Frame the field as a card. A click anywhere on it reaches the control, and the card tints while a Switch inside it is on.',
+      controls: [
+        {
+          key: 'variant',
+          label: 'Variant',
+          type: 'select',
+          options: formFieldVariantNames,
+          default: 'card',
+        },
+      ],
+      slot: toggle,
+      props: (state) => ({
+        ...setting,
+        orientation: 'horizontal',
+        variant: state.variant!,
+        class: 'max-w-sm',
+      }),
     },
     {
       title: 'Error',
@@ -91,6 +142,8 @@ const formField: ComponentDocConfig = {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
           ['data-slot="field"', 'Root', 'Lets you style every field from CSS.'],
+          ['data-orientation', 'Root', 'vertical or horizontal.'],
+          ['data-variant', 'Root', 'default or card.'],
           ['data-invalid', 'Root and parts', 'Present while the field shows as invalid.'],
           ['data-required', 'Root and parts', 'Present while the control is required.'],
           ['data-disabled', 'Root and parts', 'Present when disabled, by the prop or a fieldset.'],
@@ -140,6 +193,20 @@ const formField: ComponentDocConfig = {
         type: formFieldSizes.map((size) => `'${size}'`).join(' | '),
         default: `'${formFieldDefaults.size}'`,
         description: 'Text size of the parts, and size of a control that sets none.',
+      },
+      {
+        name: 'orientation',
+        type: formFieldOrientations.map((value) => `'${value}'`).join(' | '),
+        default: `'${formFieldDefaults.orientation}'`,
+        description:
+          'vertical stacks the parts; horizontal puts the label and description beside the control.',
+      },
+      {
+        name: 'variant',
+        type: formFieldVariantNames.map((value) => `'${value}'`).join(' | '),
+        default: `'${formFieldDefaults.variant}'`,
+        description:
+          'card frames the field and makes the whole card a target for the control. Meant for horizontal choice controls such as Switch.',
       },
       {
         name: 'required',

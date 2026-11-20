@@ -52,6 +52,7 @@ export interface ComponentExampleConfig {
   controls?: ExampleControl[]
   props: (state: ExampleState) => ExampleProps
   handlers?: ExampleHandler[]
+  slot?: ExampleSlotContent
 }
 
 export interface ExampleSlotContent {

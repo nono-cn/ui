@@ -1,8 +1,15 @@
 export { default as FormField } from '@/components/FormField/FormField.vue'
-export { formFieldDefaults, formFieldSizes } from '@/components/FormField/constants'
+export {
+  formFieldDefaults,
+  formFieldOrientations,
+  formFieldSizes,
+  formFieldVariantNames,
+} from '@/components/FormField/constants'
 export type {
+  FormFieldOrientation,
   FormFieldProps,
   FormFieldSize,
+  FormFieldVariant,
   FormFieldSlots,
   FormFieldUi,
 } from '@/components/FormField/types'
