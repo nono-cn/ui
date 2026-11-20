@@ -10,6 +10,7 @@ import icon from '@docs/config/components/icon'
 import input from '@docs/config/components/input'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
+import rating from '@docs/config/components/rating'
 import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
 import textarea from '@docs/config/components/textarea'
@@ -26,6 +27,7 @@ export const docsComponents: ComponentDocConfig[] = [
   input,
   kbd,
   label,
+  rating,
   separator,
   switchDocs,
   textarea,
