@@ -4,6 +4,7 @@ import { docsComponents } from '@docs/config/docs-components'
 
 const emit = defineEmits<{ navigate: [] }>()
 const route = useRoute()
+const dev = import.meta.env.DEV
 </script>
 
 <template>
@@ -23,5 +24,17 @@ const route = useRoute()
         {{ component.title }}
       </RouterLink>
     </nav>
+    <template v-if="dev">
+      <p class="docs-nav-heading"><span>Dev</span></p>
+      <nav class="docs-nav-list" aria-label="Dev">
+        <RouterLink
+          to="/playground"
+          :aria-current="route.path === '/playground' ? 'page' : undefined"
+          @click="emit('navigate')"
+        >
+          Playground
+        </RouterLink>
+      </nav>
+    </template>
   </div>
 </template>

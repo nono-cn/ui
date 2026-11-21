@@ -1,3 +1,4 @@
+import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import DocsShell from '@docs/components/DocsShell.vue'
 import { docsComponents } from '@docs/config/docs-components'
@@ -15,5 +16,16 @@ export const router = createRouter({
     { path: '/', redirect: firstComponent },
     { path: '/components', redirect: firstComponent },
     { path: '/components/:slug', component: DocsShell },
+    ...(import.meta.env.DEV
+      ? [
+          {
+            path: '/playground',
+            component: DocsShell,
+            meta: {
+              page: defineAsyncComponent(() => import('@docs/playground/Playground.vue')),
+            },
+          },
+        ]
+      : []),
   ],
 })

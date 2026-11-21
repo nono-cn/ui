@@ -187,6 +187,7 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
       </aside>
       <main class="docs-content">
         <ComponentDocsPage v-if="component" :key="component.slug" :component="component" />
+        <component :is="route.meta.page" v-else-if="route.meta.page" />
         <div v-else class="docs-empty">
           <span class="docs-empty-kicker">Components</span>
           <h1>Component not found</h1>
