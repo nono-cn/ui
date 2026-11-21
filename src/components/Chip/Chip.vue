@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { chipDefaults, chipPositions, chipSizes } from '@/components/Chip/constants'
 import type { ChipProps, ChipSlots } from '@/components/Chip/types'
 import { chipIndicatorVariants, chipVariants } from '@/components/Chip/variants'
@@ -20,22 +20,32 @@ const props = withDefaults(defineProps<ChipProps>(), {
 defineSlots<ChipSlots>()
 const attrs = useAttrs()
 
-const indicatorProps = computed(() => ({
-  class: chipIndicatorVariants({
-    size: oneOf(props.size, chipSizes, chipDefaults.size),
-    position: props.standalone
-      ? undefined
-      : oneOf(props.position, chipPositions, chipDefaults.position),
-    inset: props.inset,
-    standalone: props.standalone,
+const indicatorProps = computed(() =>
+  useUi({
+    base: {
+      class: chipIndicatorVariants({
+        size: oneOf(props.size, chipSizes, chipDefaults.size),
+        position: props.standalone
+          ? undefined
+          : oneOf(props.position, chipPositions, chipDefaults.position),
+        inset: props.inset,
+        standalone: props.standalone,
+      }),
+    },
+    resolver: props.ui?.indicator,
   }),
-}))
+)
 
-const rootProps = computed(() => ({
-  ...attrs,
-  class: cn(chipVariants(), attrs.class as ClassValue),
-  style: [getColorVariables(props.color, 'chip', chipDefaults.color), attrs.style],
-}))
+const rootProps = computed(() =>
+  useUi({
+    base: {
+      class: chipVariants(),
+      style: getColorVariables(props.color, 'chip', chipDefaults.color),
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
+)
 </script>
 
 <template>

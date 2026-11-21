@@ -216,20 +216,21 @@ const formField: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: `{
-  header?: () => HTMLAttributes
-  label?: () => HTMLAttributes
-  hint?: () => HTMLAttributes
-  description?: () => HTMLAttributes
-  container?: () => HTMLAttributes
-  error?: () => HTMLAttributes
-}`,
-        typePre: true,
-        description:
-          'Attributes for the inner nodes: header (the row with the label and hint), label, hint, description, container (the box around the control) and error. Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
+        type: 'FormFieldUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [],
+    ui: [
+      { node: 'root', tag: 'div' },
+      { node: 'header', tag: 'div' },
+      { node: 'label', tag: 'label' },
+      { node: 'hint', tag: 'span' },
+      { node: 'container', tag: 'div' },
+      { node: 'error', tag: 'div' },
+      { node: 'description', tag: 'p' },
+    ],
     slots: [
       { name: 'default', type: '-', description: 'The control, such as Input or Textarea.' },
       { name: 'label', type: '-', description: 'Label content; overrides the label fallback.' },

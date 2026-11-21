@@ -258,6 +258,12 @@ const toggle: ComponentDocConfig = {
         default: 'false',
         description: 'Keeps a disabled toggle focusable with aria-disabled instead of disabled.',
       },
+      {
+        name: 'ui',
+        type: 'ToggleUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
+      },
     ],
     emits: [
       {
@@ -271,6 +277,18 @@ const toggle: ComponentDocConfig = {
         description:
           'Runs before a change. details.reason says why (press or imperative), and details.cancel() stops it.',
       },
+    ],
+    ui: [
+      {
+        node: 'root',
+        tag: 'button',
+        kept: 'aria-pressed',
+      },
+      { node: 'leading', tag: 'span', kept: 'aria-hidden' },
+      { node: 'leadingIcon', tag: 'svg' },
+      { node: 'label', tag: 'span' },
+      { node: 'trailing', tag: 'span', kept: 'aria-hidden' },
+      { node: 'trailingIcon', tag: 'svg' },
     ],
     slots: [
       {

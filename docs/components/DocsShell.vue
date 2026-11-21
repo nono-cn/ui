@@ -71,6 +71,7 @@ const tocTree = computed<DocsTocItem[]>(() => {
     if (table.rows.length) apiChildren.push({ id: table.id, label: table.title })
   }
   if (api.expose.length) apiChildren.push({ id: 'expose', label: 'Expose' })
+  if (api.ui?.length) apiChildren.push({ id: 'ui', label: 'UI' })
 
   items.push({ id: 'api', label: 'API', children: apiChildren })
   return items

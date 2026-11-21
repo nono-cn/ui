@@ -2,7 +2,6 @@
 import { createCheckboxController, type CheckedState } from '@ui-sdk/core/checkbox'
 import { Checkbox as CheckboxRoot, CheckboxIndicator } from '@ui-sdk/vue/checkbox'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
@@ -49,13 +48,17 @@ const size = computed(() =>
 )
 
 const rootProps = computed(() => ({
-  ...attrs,
-  class: cn(checkboxVariants({ size: size.value }), attrs.class as ClassValue),
-  style: [
-    getColorVariables(props.color, 'checkbox', checkboxDefaults.color),
-    getRadiusVariables(props.radius, 'checkbox', checkboxDefaults.radius),
-    attrs.style,
-  ],
+  ...useUi({
+    base: {
+      class: checkboxVariants({ size: size.value }),
+      style: [
+        getColorVariables(props.color, 'checkbox', checkboxDefaults.color),
+        getRadiusVariables(props.radius, 'checkbox', checkboxDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
   'onUpdate:checked': (value: CheckedState) => emit('update:modelValue', value),
@@ -75,19 +78,19 @@ function indicatorState(state: CheckboxIndicatorState): CheckboxIndicatorState {
 }
 
 function indicatorProps(state: CheckboxIndicatorState) {
-  return useUi({ class: checkboxIndicatorVariants() }, props.ui?.indicator, state)
+  return useUi({
+    base: { class: checkboxIndicatorVariants() },
+    resolver: props.ui?.indicator,
+    payload: state,
+  })
 }
 
 function iconProps(state: CheckboxIndicatorState) {
-  return useUi(
-    {
-      name: state.indeterminate ? props.indeterminateIcon : props.icon,
-      stroke: 3,
-      class: checkboxIconVariants(),
-    },
-    props.ui?.icon,
-    state,
-  )
+  return {
+    ...useUi({ base: { class: checkboxIconVariants() }, resolver: props.ui?.icon, payload: state }),
+    name: state.indeterminate ? props.indeterminateIcon : props.icon,
+    stroke: 3,
+  }
 }
 
 defineExpose<CheckboxExpose>({

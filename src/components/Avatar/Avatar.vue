@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { AvatarFallback, Avatar as AvatarRoot, AvatarImage } from '@ui-sdk/vue/avatar'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { avatarDefaults, avatarSizes, avatarVariantNames } from '@/components/Avatar/constants'
 import type { AvatarProps, AvatarSlots } from '@/components/Avatar/types'
 import {
@@ -42,38 +42,46 @@ const initials = computed(() => {
 })
 
 const imageProps = computed(() => ({
+  ...useUi({ base: { class: avatarImageVariants() }, resolver: props.ui?.image }),
   src: props.src,
   alt: props.alt ?? '',
-  class: avatarImageVariants(),
 }))
 
 const fallbackProps = computed(() => ({
-  delay: props.delay,
-  ...(props.alt ? { role: 'img', 'aria-label': props.alt } : {}),
-  class: avatarFallbackVariants({
-    variant: oneOf(props.variant, avatarVariantNames, avatarDefaults.variant),
+  ...useUi({
+    base: {
+      ...(props.alt ? { role: 'img', 'aria-label': props.alt } : {}),
+      class: avatarFallbackVariants({
+        variant: oneOf(props.variant, avatarVariantNames, avatarDefaults.variant),
+      }),
+    },
+    resolver: props.ui?.fallback,
   }),
+  delay: props.delay,
 }))
 
-const textProps = { 'aria-hidden': 'true' as const }
+const textProps = computed(() =>
+  useUi({ base: { 'aria-hidden': 'true' }, resolver: props.ui?.text }),
+)
 
 const iconProps = computed(() => ({
+  ...useUi({ base: { class: avatarIconVariants() }, resolver: props.ui?.icon }),
   name: props.icon,
-  class: avatarIconVariants(),
 }))
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({
+    base: {
+      class: avatarVariants({ size: oneOf(props.size, avatarSizes, avatarDefaults.size) }),
+      style: [
+        getColorVariables(props.color, 'avatar', avatarDefaults.color),
+        getRadiusVariables(props.radius, 'avatar', avatarDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   onLoadingStatusChange: props.onLoadingStatusChange,
-  class: cn(
-    avatarVariants({ size: oneOf(props.size, avatarSizes, avatarDefaults.size) }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color, 'avatar', avatarDefaults.color),
-    getRadiusVariables(props.radius, 'avatar', avatarDefaults.radius),
-    attrs.style,
-  ],
 }))
 </script>
 

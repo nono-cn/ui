@@ -2,7 +2,6 @@
 import { createSwitchController } from '@ui-sdk/core/switch'
 import { Switch as SwitchRoot, SwitchThumb } from '@ui-sdk/vue/switch'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
@@ -57,13 +56,17 @@ function onCheckedChange(checked: boolean, details: SwitchChangeDetails) {
 }
 
 const rootProps = computed(() => ({
-  ...attrs,
-  class: cn(switchVariants({ size: size.value }), attrs.class as ClassValue),
-  style: [
-    getColorVariables(props.color, 'switch', switchDefaults.color),
-    getRadiusVariables(props.radius, 'switch', switchDefaults.radius),
-    attrs.style,
-  ],
+  ...useUi({
+    base: {
+      class: switchVariants({ size: size.value }),
+      style: [
+        getColorVariables(props.color, 'switch', switchDefaults.color),
+        getRadiusVariables(props.radius, 'switch', switchDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
   'onUpdate:checked': (value: boolean) => emit('update:modelValue', value),
@@ -83,7 +86,11 @@ function thumbState(checked: boolean): SwitchThumbState {
 }
 
 function thumbProps(state: SwitchThumbState) {
-  return useUi({ class: switchThumbVariants({ size: size.value }) }, props.ui?.thumb, state)
+  return useUi({
+    base: { class: switchThumbVariants({ size: size.value }) },
+    resolver: props.ui?.thumb,
+    payload: state,
+  })
 }
 
 function thumbIcon(state: SwitchThumbState) {
@@ -92,14 +99,14 @@ function thumbIcon(state: SwitchThumbState) {
 }
 
 function iconProps(state: SwitchThumbState) {
-  return useUi(
-    {
-      name: thumbIcon(state)!,
-      class: switchIconVariants({ loading: state.loading }),
-    },
-    props.ui?.icon,
-    state,
-  )
+  return {
+    ...useUi({
+      base: { class: switchIconVariants({ loading: state.loading }) },
+      resolver: props.ui?.icon,
+      payload: state,
+    }),
+    name: thumbIcon(state)!,
+  }
 }
 
 defineExpose<SwitchExpose>({

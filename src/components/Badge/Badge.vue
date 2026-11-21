@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { badgeDefaults, badgeSizes, badgeVariantNames } from '@/components/Badge/constants'
 import type { BadgeProps, BadgeSlots } from '@/components/Badge/types'
 import {
@@ -28,43 +28,48 @@ const size = computed(() => oneOf(props.size, badgeSizes, badgeDefaults.size))
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
-const leadingProps = computed(() => ({
-  class: badgeLeadingVariants({ size: size.value }),
-}))
+const leadingProps = computed(() =>
+  useUi({
+    base: { class: badgeLeadingVariants({ size: size.value }) },
+    resolver: props.ui?.leading,
+  }),
+)
 
-const trailingProps = computed(() => ({
-  class: badgeTrailingVariants({ size: size.value }),
-}))
+const trailingProps = computed(() =>
+  useUi({
+    base: { class: badgeTrailingVariants({ size: size.value }) },
+    resolver: props.ui?.trailing,
+  }),
+)
 
-const labelProps = {
-  class: 'truncate',
-}
+const labelProps = computed(() => useUi({ base: { class: 'truncate' }, resolver: props.ui?.label }))
 
 const leadingIconProps = computed(() => ({
+  ...useUi({ base: { class: badgeIconVariants() }, resolver: props.ui?.leadingIcon }),
   name: props.leadingIcon!,
-  class: badgeIconVariants(),
 }))
 
 const trailingIconProps = computed(() => ({
+  ...useUi({ base: { class: badgeIconVariants() }, resolver: props.ui?.trailingIcon }),
   name: props.trailingIcon!,
-  class: badgeIconVariants(),
 }))
 
-const rootProps = computed(() => ({
-  ...attrs,
-  class: cn(
-    badgeVariants({
-      size: size.value,
-      variant: oneOf(props.variant, badgeVariantNames, badgeDefaults.variant),
-    }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color, 'badge', badgeDefaults.color),
-    getRadiusVariables(props.radius, 'badge', badgeDefaults.radius),
-    attrs.style,
-  ],
-}))
+const rootProps = computed(() =>
+  useUi({
+    base: {
+      class: badgeVariants({
+        size: size.value,
+        variant: oneOf(props.variant, badgeVariantNames, badgeDefaults.variant),
+      }),
+      style: [
+        getColorVariables(props.color, 'badge', badgeDefaults.color),
+        getRadiusVariables(props.radius, 'badge', badgeDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
+)
 </script>
 
 <template>

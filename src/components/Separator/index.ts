@@ -13,5 +13,6 @@ export type {
   SeparatorSize,
   SeparatorSlots,
   SeparatorType,
+  SeparatorUi,
 } from '@/components/Separator/types'
 export { separatorLabelVariants, separatorVariants } from '@/components/Separator/variants'

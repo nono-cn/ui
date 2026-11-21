@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { kbdDefaults, kbdSizes, kbdVariantNames } from '@/components/Kbd/constants'
 import type { KbdProps, KbdSlots } from '@/components/Kbd/types'
 import { kbdVariants } from '@/components/Kbd/variants'
@@ -18,21 +18,22 @@ const props = withDefaults(defineProps<KbdProps>(), {
 defineSlots<KbdSlots>()
 const attrs = useAttrs()
 
-const rootProps = computed(() => ({
-  ...attrs,
-  class: cn(
-    kbdVariants({
-      size: oneOf(props.size, kbdSizes, kbdDefaults.size),
-      variant: oneOf(props.variant, kbdVariantNames, kbdDefaults.variant),
-    }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color, 'kbd', kbdDefaults.color),
-    getRadiusVariables(props.radius, 'kbd', kbdDefaults.radius),
-    attrs.style,
-  ],
-}))
+const rootProps = computed(() =>
+  useUi({
+    base: {
+      class: kbdVariants({
+        size: oneOf(props.size, kbdSizes, kbdDefaults.size),
+        variant: oneOf(props.variant, kbdVariantNames, kbdDefaults.variant),
+      }),
+      style: [
+        getColorVariables(props.color, 'kbd', kbdDefaults.color),
+        getRadiusVariables(props.radius, 'kbd', kbdDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
+)
 </script>
 
 <template>

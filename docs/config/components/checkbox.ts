@@ -10,6 +10,11 @@ import {
 
 const name = { 'aria-label': 'Accept terms and conditions' }
 
+const indicatorState = `{
+  checked: boolean
+  indeterminate: boolean
+}`
+
 const checkbox: ComponentDocConfig = {
   slug: 'checkbox',
   title: 'Checkbox',
@@ -237,19 +242,9 @@ const checkbox: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: `{
-  indicator?: (state: {
-    checked: boolean
-    indeterminate: boolean
-  }) => HTMLAttributes
-  icon?: (state: {
-    checked: boolean
-    indeterminate: boolean
-  }) => HTMLAttributes
-}`,
-        typePre: true,
-        description:
-          'Attributes for the inner nodes: indicator and icon (inside it). Each one receives the same state as the indicator slot. Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes class, style and every other attribute directly.',
+        type: 'CheckboxUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [
@@ -264,6 +259,19 @@ const checkbox: ComponentDocConfig = {
         description:
           'Runs before a change. details.reason says why (press, reset, restore or imperative), and details.cancel() stops it.',
       },
+    ],
+    ui: [
+      {
+        node: 'root',
+        tag: 'button',
+        kept: 'role, tabindex, aria-checked, aria-disabled, aria-readonly',
+      },
+      {
+        node: 'indicator',
+        tag: 'span',
+        state: indicatorState,
+      },
+      { node: 'icon', tag: 'svg', state: indicatorState },
     ],
     slots: [
       {

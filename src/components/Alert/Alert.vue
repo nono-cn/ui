@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { alertDefaults, alertVariantNames } from '@/components/Alert/constants'
@@ -37,41 +36,49 @@ const hasIcon = computed(() => Boolean(props.icon || slots.icon))
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
 
-const iconProps = computed(() => useUi({ class: alertIconVariants() }, props.ui?.icon))
+const iconProps = computed(() =>
+  useUi({ base: { class: alertIconVariants() }, resolver: props.ui?.icon }),
+)
 
-const labelProps = computed(() => useUi({ class: alertLabelVariants() }, props.ui?.label))
+const labelProps = computed(() =>
+  useUi({ base: { class: alertLabelVariants() }, resolver: props.ui?.label }),
+)
 
 const descriptionProps = computed(() =>
-  useUi({ class: alertDescriptionVariants() }, props.ui?.description),
+  useUi({ base: { class: alertDescriptionVariants() }, resolver: props.ui?.description }),
 )
 
 const closeContainerProps = computed(() =>
-  useUi({ class: alertCloseContainerVariants() }, props.ui?.closeContainer),
+  useUi({ base: { class: alertCloseContainerVariants() }, resolver: props.ui?.closeContainer }),
 )
 
-const closeButtonProps = computed(() =>
-  useUi(
-    {
-      'aria-label': props.closeLabel || t('close'),
-      size: 'icon-xs' as const,
-      radius: 'full',
-      variant: variant.value,
-      color: props.color,
-      leadingIcon: 'x' as const,
+const closeButtonProps = computed(() => {
+  const ui = useUi({
+    base: { 'aria-label': props.closeLabel || t('close') },
+    resolver: props.ui?.closeButton,
+  })
+
+  return {
+    ...ui,
+    size: 'icon-xs' as const,
+    radius: 'full' as const,
+    variant: variant.value,
+    color: props.color,
+    leadingIcon: 'x' as const,
+  }
+})
+
+const rootProps = computed(() =>
+  useUi({
+    base: {
+      role: props.decorative ? 'none' : 'alert',
+      class: alertVariants({ variant: variant.value, icon: hasIcon.value }),
+      style: getColorVariables(props.color, 'alert', alertDefaults.color),
     },
-    props.ui?.closeButton,
-  ),
+    resolver: props.ui?.root,
+    attrs,
+  }),
 )
-
-const rootProps = computed(() => ({
-  role: props.decorative ? 'none' : 'alert',
-  ...attrs,
-  class: cn(
-    alertVariants({ variant: variant.value, icon: hasIcon.value }),
-    attrs.class as ClassValue,
-  ),
-  style: [getColorVariables(props.color, 'alert', alertDefaults.color), attrs.style],
-}))
 
 function close() {
   visible.value = false

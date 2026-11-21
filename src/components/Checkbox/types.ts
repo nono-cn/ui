@@ -6,7 +6,7 @@ import type {
 } from '@ui-sdk/core/checkbox'
 import type { checkboxSizes } from '@/components/Checkbox/constants'
 import type { Radius } from '@/composables/useTheme'
-import type { UiAttributes, UiResolver } from '@/composables/useUi'
+import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type CheckboxSize = (typeof checkboxSizes)[number]
@@ -19,8 +19,9 @@ export interface CheckboxIndicatorState {
 }
 
 export interface CheckboxUi {
-  indicator?: UiResolver<UiAttributes, CheckboxIndicatorState>
-  icon?: UiResolver<UiAttributes, CheckboxIndicatorState>
+  root?: UiResolver
+  indicator?: UiResolver<CheckboxIndicatorState>
+  icon?: UiResolver<CheckboxIndicatorState>
 }
 
 export interface CheckboxProps {

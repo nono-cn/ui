@@ -6,6 +6,7 @@ import type {
   buttonVariantNames,
 } from '@/components/Button/constants'
 import type { Radius } from '@/composables/useTheme'
+import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type ButtonSize = (typeof buttonSizes)[number]
@@ -15,6 +16,16 @@ export type ButtonTextSize = (typeof buttonTextSizes)[number]
 export type ButtonIconSize = (typeof buttonIconSizes)[number]
 
 export type ButtonVariant = (typeof buttonVariantNames)[number]
+
+export interface ButtonUi {
+  root?: UiResolver
+  leading?: UiResolver
+  leadingIcon?: UiResolver
+  spinner?: UiResolver
+  label?: UiResolver
+  trailing?: UiResolver
+  trailingIcon?: UiResolver
+}
 
 export interface ButtonProps {
   label?: string
@@ -30,6 +41,7 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset'
   pendingAnnouncement?: string
   onClick?: (event: MouseEvent, details: ButtonActionDetails) => unknown
+  ui?: ButtonUi
 }
 
 export interface ButtonSlots {

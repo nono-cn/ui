@@ -8,10 +8,14 @@ export type InputSize = (typeof inputSizes)[number]
 export type InputVariant = (typeof inputVariantNames)[number]
 
 export interface InputUi {
+  root?: UiResolver
   input?: UiResolver
   leading?: UiResolver
+  leadingIcon?: UiResolver
   trailing?: UiResolver
+  trailingIcon?: UiResolver
   clear?: UiResolver
+  clearIcon?: UiResolver
 }
 
 export interface InputProps {

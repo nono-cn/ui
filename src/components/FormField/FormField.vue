@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Field, FieldDescription, FieldError, FieldLabel } from '@ui-sdk/vue/field'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import {
@@ -55,56 +54,57 @@ provideFormField({
 })
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({
+    base: { class: formFieldVariants({ orientation: orientation.value, variant: variant.value }) },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   name: props.name,
   disabled: props.disabled,
   invalid: invalid.value,
   'data-orientation': orientation.value,
   'data-variant': variant.value,
-  class: cn(
-    formFieldVariants({ orientation: orientation.value, variant: variant.value }),
-    attrs.class as ClassValue,
-  ),
 }))
 
 const headerProps = computed(() =>
-  useUi({ class: formFieldHeaderVariants({ orientation: orientation.value }) }, props.ui?.header),
+  useUi({
+    base: { class: formFieldHeaderVariants({ orientation: orientation.value }) },
+    resolver: props.ui?.header,
+  }),
 )
 
 const labelProps = computed(() =>
-  useUi(
-    { class: formFieldLabelVariants({ size: size.value, variant: variant.value }) },
-    props.ui?.label,
-  ),
+  useUi({
+    base: { class: formFieldLabelVariants({ size: size.value, variant: variant.value }) },
+    resolver: props.ui?.label,
+  }),
 )
 
 const hintProps = computed(() =>
-  useUi({ class: formFieldHintVariants({ size: size.value }) }, props.ui?.hint),
+  useUi({ base: { class: formFieldHintVariants({ size: size.value }) }, resolver: props.ui?.hint }),
 )
 
 const descriptionProps = computed(() =>
-  useUi(
-    {
+  useUi({
+    base: {
       class: formFieldDescriptionVariants({ size: size.value, orientation: orientation.value }),
     },
-    props.ui?.description,
-  ),
+    resolver: props.ui?.description,
+  }),
 )
 
 const containerProps = computed(() =>
-  useUi(
-    {
-      class: formFieldContainerVariants({ orientation: orientation.value }),
-    },
-    props.ui?.container,
-  ),
+  useUi({
+    base: { class: formFieldContainerVariants({ orientation: orientation.value }) },
+    resolver: props.ui?.container,
+  }),
 )
 
 const errorProps = computed(() =>
-  useUi(
-    { class: formFieldErrorVariants({ size: size.value, orientation: orientation.value }) },
-    props.ui?.error,
-  ),
+  useUi({
+    base: { class: formFieldErrorVariants({ size: size.value, orientation: orientation.value }) },
+    resolver: props.ui?.error,
+  }),
 )
 </script>
 

@@ -2,7 +2,7 @@ import type { ChangeDetails } from '@ui-sdk/core'
 import type { SwitchCheckedChangeReason, SwitchController } from '@ui-sdk/core/switch'
 import type { switchSizes } from '@/components/Switch/constants'
 import type { Radius } from '@/composables/useTheme'
-import type { UiAttributes, UiResolver } from '@/composables/useUi'
+import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type SwitchSize = (typeof switchSizes)[number]
@@ -15,8 +15,9 @@ export interface SwitchThumbState {
 }
 
 export interface SwitchUi {
-  thumb?: UiResolver<UiAttributes, SwitchThumbState>
-  icon?: UiResolver<UiAttributes, SwitchThumbState>
+  root?: UiResolver
+  thumb?: UiResolver<SwitchThumbState>
+  icon?: UiResolver<SwitchThumbState>
 }
 
 export interface SwitchProps {

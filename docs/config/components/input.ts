@@ -274,15 +274,9 @@ const input: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: `{
-  input?: () => HTMLAttributes
-  leading?: () => HTMLAttributes
-  trailing?: () => HTMLAttributes
-  clear?: () => HTMLAttributes
-}`,
-        typePre: true,
-        description:
-          'Attributes for the inner nodes: input (the native input), leading and trailing (the boxes around the icons) and clear (the clear button). Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes class and style directly.',
+        type: 'InputUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [
@@ -291,6 +285,16 @@ const input: ComponentDocConfig = {
         type: '(value: string) => void',
         description: 'Runs as the text changes.',
       },
+    ],
+    ui: [
+      { node: 'root', tag: 'div' },
+      { node: 'input', tag: 'input' },
+      { node: 'leading', tag: 'span' },
+      { node: 'leadingIcon', tag: 'svg' },
+      { node: 'trailing', tag: 'span' },
+      { node: 'trailingIcon', tag: 'svg' },
+      { node: 'clear', tag: 'button' },
+      { node: 'clearIcon', tag: 'svg' },
     ],
     slots: [
       {

@@ -18,10 +18,18 @@ export interface ApiTableConfig {
   showDefault?: boolean
 }
 
+export interface UiTableRow {
+  node: string
+  tag: string
+  state?: string
+  kept?: string
+}
+
 export interface ComponentApiConfig {
   props: ApiTableRow[]
   emits: ApiTableRow[]
   slots: ApiTableRow[]
+  ui?: UiTableRow[]
   configs?: ApiTableConfig[]
   expose: ApiTableRow[]
 }

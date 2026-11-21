@@ -166,8 +166,18 @@ const chip: ComponentDocConfig = {
         default: String(chipDefaults.standalone),
         description: 'Places the indicator in the flow instead of positioning it over the content.',
       },
+      {
+        name: 'ui',
+        type: 'ChipUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
+      },
     ],
     emits: [],
+    ui: [
+      { node: 'root', tag: 'div' },
+      { node: 'indicator', tag: 'span' },
+    ],
     slots: [{ name: 'default', type: '-', description: 'Element the indicator sits over.' }],
     expose: [],
   },

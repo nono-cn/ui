@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Button as ButtonRoot } from '@ui-sdk/vue/button'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
+import { cn } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { buttonDefaults, buttonSizes, buttonVariantNames } from '@/components/Button/constants'
 import type { ButtonProps, ButtonSlots } from '@/components/Button/types'
 import {
@@ -32,53 +33,61 @@ const size = computed(() => oneOf(props.size, buttonSizes, buttonDefaults.size))
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
-const leadingProps = computed(() => ({
-  class: buttonLeadingVariants({ size: size.value }),
-}))
+const leadingProps = computed(() =>
+  useUi({
+    base: { class: buttonLeadingVariants({ size: size.value }) },
+    resolver: props.ui?.leading,
+  }),
+)
 
-const trailingProps = computed(() => ({
-  class: buttonTrailingVariants({ size: size.value }),
-}))
+const trailingProps = computed(() =>
+  useUi({
+    base: { class: buttonTrailingVariants({ size: size.value }) },
+    resolver: props.ui?.trailing,
+  }),
+)
 
-const labelProps = {
-  class: 'truncate',
-}
+const labelProps = computed(() => useUi({ base: { class: 'truncate' }, resolver: props.ui?.label }))
 
-const spinnerProps = {
+const spinnerProps = computed(() => ({
+  ...useUi({
+    base: { class: cn(buttonIconVariants(), 'animate-spin') },
+    resolver: props.ui?.spinner,
+  }),
   name: 'spinner' as const,
-  class: cn(buttonIconVariants(), 'animate-spin'),
-}
+}))
 
 const leadingIconProps = computed(() => ({
+  ...useUi({ base: { class: buttonIconVariants() }, resolver: props.ui?.leadingIcon }),
   name: props.leadingIcon!,
-  class: buttonIconVariants(),
 }))
 
 const trailingIconProps = computed(() => ({
+  ...useUi({ base: { class: buttonIconVariants() }, resolver: props.ui?.trailingIcon }),
   name: props.trailingIcon!,
-  class: buttonIconVariants(),
 }))
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({
+    base: {
+      class: buttonVariants({
+        size: size.value,
+        variant: oneOf(props.variant, buttonVariantNames, buttonDefaults.variant),
+        block: props.block,
+      }),
+      style: [
+        getColorVariables(props.color, 'button', buttonDefaults.color),
+        getRadiusVariables(props.radius, 'button', buttonDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   disabled: props.disabled,
   focusableWhenDisabled: props.focusableWhenDisabled,
   type: props.type,
   pendingAnnouncement: props.pendingAnnouncement,
   onClick: props.onClick,
-  class: cn(
-    buttonVariants({
-      size: size.value,
-      variant: oneOf(props.variant, buttonVariantNames, buttonDefaults.variant),
-      block: props.block,
-    }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color, 'button', buttonDefaults.color),
-    getRadiusVariables(props.radius, 'button', buttonDefaults.radius),
-    attrs.style,
-  ],
 }))
 </script>
 

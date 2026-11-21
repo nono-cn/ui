@@ -2,7 +2,6 @@
 import { InputClear, InputGroup, Input as InputRoot } from '@ui-sdk/vue/input'
 import type { InputGroupState } from '@ui-sdk/vue/input'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
@@ -49,33 +48,57 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({ class: inputLeadingVariants({ size: size.value }) }, props.ui?.leading),
+  useUi({
+    base: { class: inputLeadingVariants({ size: size.value }) },
+    resolver: props.ui?.leading,
+  }),
 )
 
 const trailingProps = computed(() =>
-  useUi({ class: inputTrailingVariants({ size: size.value }) }, props.ui?.trailing),
+  useUi({
+    base: { class: inputTrailingVariants({ size: size.value }) },
+    resolver: props.ui?.trailing,
+  }),
 )
 
 const clearProps = computed(() =>
-  useUi(
-    {
+  useUi({
+    base: {
       'aria-label': props.clearLabel || t('clear'),
       class: inputClearVariants({ size: size.value }),
     },
-    props.ui?.clear,
-  ),
+    resolver: props.ui?.clear,
+  }),
 )
 
-const iconClass = inputIconVariants()
-
-const rootProps = computed(() => ({
-  class: cn(inputRootVariants(), attrs.class as ClassValue),
-  style: [
-    getColorVariables(props.color, 'input', inputDefaults.color),
-    getRadiusVariables(props.radius, 'input', inputDefaults.radius),
-    attrs.style,
-  ],
+const leadingIconProps = computed(() => ({
+  ...useUi({ base: { class: inputIconVariants() }, resolver: props.ui?.leadingIcon }),
+  name: props.leadingIcon!,
 }))
+
+const trailingIconProps = computed(() => ({
+  ...useUi({ base: { class: inputIconVariants() }, resolver: props.ui?.trailingIcon }),
+  name: props.trailingIcon!,
+}))
+
+const clearIconProps = computed(() => ({
+  ...useUi({ base: { class: 'size-full' }, resolver: props.ui?.clearIcon }),
+  name: 'x' as const,
+}))
+
+const rootProps = computed(() =>
+  useUi({
+    base: {
+      class: inputRootVariants(),
+      style: [
+        getColorVariables(props.color, 'input', inputDefaults.color),
+        getRadiusVariables(props.radius, 'input', inputDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs: { class: attrs.class, style: attrs.style },
+  }),
+)
 
 const inputProps = computed(() => {
   const rest = Object.fromEntries(
@@ -83,7 +106,20 @@ const inputProps = computed(() => {
   )
 
   return {
-    ...rest,
+    ...useUi({
+      base: {
+        class: inputVariants({
+          size: size.value,
+          variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
+          highlight: props.highlight,
+          leading: hasLeading.value,
+          trailing: hasTrailing.value,
+          clearable: props.clearable,
+        }),
+      },
+      resolver: props.ui?.input,
+      attrs: rest,
+    }),
     type: props.type,
     modelValue: props.modelValue,
     defaultValue: props.defaultValue,
@@ -98,25 +134,6 @@ const inputProps = computed(() => {
 function showsClear(state: InputGroupState) {
   return props.clearable && state.filled && !state.disabled && !state.readOnly
 }
-
-const inputBindings = computed(() =>
-  useUi(
-    {
-      ...inputProps.value,
-      class: cn(
-        inputVariants({
-          size: size.value,
-          variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
-          highlight: props.highlight,
-          leading: hasLeading.value,
-          trailing: hasTrailing.value,
-          clearable: props.clearable,
-        }),
-      ),
-    },
-    props.ui?.input,
-  ),
-)
 </script>
 
 <template>
@@ -124,28 +141,18 @@ const inputBindings = computed(() =>
     <template #default="{ state }">
       <span v-if="hasLeading" data-ui="input-leading" v-bind="leadingProps">
         <slot name="leading">
-          <Icon
-            v-if="leadingIcon"
-            data-ui="input-leading-icon"
-            :name="leadingIcon"
-            :class="iconClass"
-          />
+          <Icon v-if="leadingIcon" data-ui="input-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
-      <InputRoot data-ui="input-input" v-bind="inputBindings" />
+      <InputRoot data-ui="input-input" v-bind="inputProps" />
       <span v-if="hasTrailing || showsClear(state)" data-ui="input-trailing" v-bind="trailingProps">
         <InputClear v-if="clearable" data-ui="input-clear" v-bind="clearProps">
           <slot name="iconClear">
-            <Icon data-ui="input-clear-icon" name="x" class="size-full" />
+            <Icon data-ui="input-clear-icon" v-bind="clearIconProps" />
           </slot>
         </InputClear>
         <slot name="trailing">
-          <Icon
-            v-if="trailingIcon"
-            data-ui="input-trailing-icon"
-            :name="trailingIcon"
-            :class="iconClass"
-          />
+          <Icon v-if="trailingIcon" data-ui="input-trailing-icon" v-bind="trailingIconProps" />
         </slot>
       </span>
     </template>

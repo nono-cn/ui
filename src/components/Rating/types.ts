@@ -5,7 +5,7 @@ import type {
   RatingValueChangeReason,
 } from '@ui-sdk/core/rating'
 import type { ratingOrientations, ratingSizes } from '@/components/Rating/constants'
-import type { UiAttributes, UiResolver } from '@/composables/useUi'
+import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type RatingSize = (typeof ratingSizes)[number]
@@ -15,9 +15,10 @@ export type RatingOrientation = (typeof ratingOrientations)[number]
 export type RatingChangeDetails = ChangeDetails<RatingValueChangeReason>
 
 export interface RatingUi {
-  item?: UiResolver<UiAttributes, RatingItemState>
-  emptyIcon?: UiResolver<UiAttributes, RatingItemState>
-  icon?: UiResolver<UiAttributes, RatingItemState>
+  root?: UiResolver
+  item?: UiResolver<RatingItemState>
+  emptyIcon?: UiResolver<RatingItemState>
+  icon?: UiResolver<RatingItemState>
 }
 
 export interface RatingProps {
