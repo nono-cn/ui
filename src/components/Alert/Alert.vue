@@ -36,27 +36,20 @@ const hasIcon = computed(() => Boolean(props.icon || slots.icon))
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
 
-const iconProps = computed(() =>
-  useUi({ base: { class: alertIconVariants() }, resolver: props.ui?.icon }),
-)
+const iconProps = computed(() => useUi({ class: alertIconVariants() }, props.ui?.icon?.()))
 
-const labelProps = computed(() =>
-  useUi({ base: { class: alertLabelVariants() }, resolver: props.ui?.label }),
-)
+const labelProps = computed(() => useUi({ class: alertLabelVariants() }, props.ui?.label?.()))
 
 const descriptionProps = computed(() =>
-  useUi({ base: { class: alertDescriptionVariants() }, resolver: props.ui?.description }),
+  useUi({ class: alertDescriptionVariants() }, props.ui?.description?.()),
 )
 
 const closeContainerProps = computed(() =>
-  useUi({ base: { class: alertCloseContainerVariants() }, resolver: props.ui?.closeContainer }),
+  useUi({ class: alertCloseContainerVariants() }, props.ui?.closeContainer?.()),
 )
 
 const closeButtonProps = computed(() => {
-  const ui = useUi({
-    base: { 'aria-label': props.closeLabel || t('close') },
-    resolver: props.ui?.closeButton,
-  })
+  const ui = useUi({ 'aria-label': props.closeLabel || t('close') }, props.ui?.closeButton?.())
 
   return {
     ...ui,
@@ -69,15 +62,17 @@ const closeButtonProps = computed(() => {
 })
 
 const rootProps = computed(() =>
-  useUi({
-    base: {
-      role: props.decorative ? 'none' : 'alert',
-      class: alertVariants({ variant: variant.value, icon: hasIcon.value }),
-      style: getColorVariables(props.color, 'alert', alertDefaults.color),
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  useUi(
+    [
+      {
+        role: props.decorative ? 'none' : 'alert',
+        class: alertVariants({ variant: variant.value, icon: hasIcon.value }),
+        style: getColorVariables(props.color, 'alert', alertDefaults.color),
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
 )
 
 function close() {

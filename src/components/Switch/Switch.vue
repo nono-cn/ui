@@ -56,17 +56,19 @@ function onCheckedChange(checked: boolean, details: SwitchChangeDetails) {
 }
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: switchVariants({ size: size.value }),
-      style: [
-        getColorVariables(props.color, 'switch', switchDefaults.color),
-        getRadiusVariables(props.radius, 'switch', switchDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: switchVariants({ size: size.value }),
+        style: [
+          getColorVariables(props.color, 'switch', switchDefaults.color),
+          getRadiusVariables(props.radius, 'switch', switchDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
   'onUpdate:checked': (value: boolean) => emit('update:modelValue', value),
@@ -86,11 +88,7 @@ function thumbState(checked: boolean): SwitchThumbState {
 }
 
 function thumbProps(state: SwitchThumbState) {
-  return useUi({
-    base: { class: switchThumbVariants({ size: size.value }) },
-    resolver: props.ui?.thumb,
-    payload: state,
-  })
+  return useUi({ class: switchThumbVariants({ size: size.value }) }, props.ui?.thumb?.(state))
 }
 
 function thumbIcon(state: SwitchThumbState) {
@@ -100,11 +98,7 @@ function thumbIcon(state: SwitchThumbState) {
 
 function iconProps(state: SwitchThumbState) {
   return {
-    ...useUi({
-      base: { class: switchIconVariants({ loading: state.loading }) },
-      resolver: props.ui?.icon,
-      payload: state,
-    }),
+    ...useUi({ class: switchIconVariants({ loading: state.loading }) }, props.ui?.icon?.(state)),
     name: thumbIcon(state)!,
   }
 }

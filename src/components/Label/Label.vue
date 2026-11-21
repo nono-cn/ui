@@ -13,7 +13,7 @@ defineSlots<LabelSlots>()
 const attrs = useAttrs()
 
 const rootProps = computed(() => ({
-  ...useUi({ base: { class: labelVariants() }, resolver: props.ui?.root, attrs }),
+  ...useUi([{ class: labelVariants() }, attrs], props.ui?.root?.()),
   for: props.for,
 }))
 </script>

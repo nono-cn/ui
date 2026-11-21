@@ -37,22 +37,24 @@ const attrs = useAttrs()
 const formField = useFormField()
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: textareaVariants({
-        size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
-        variant: oneOf(props.variant, textareaVariantNames, textareaDefaults.variant),
-        autoResize: props.autoResize,
-        highlight: props.highlight,
-      }),
-      style: [
-        getColorVariables(props.color, 'textarea', textareaDefaults.color),
-        getRadiusVariables(props.radius, 'textarea', textareaDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: textareaVariants({
+          size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
+          variant: oneOf(props.variant, textareaVariantNames, textareaDefaults.variant),
+          autoResize: props.autoResize,
+          highlight: props.highlight,
+        }),
+        style: [
+          getColorVariables(props.color, 'textarea', textareaDefaults.color),
+          getRadiusVariables(props.radius, 'textarea', textareaDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: string) => emit('update:modelValue', value),

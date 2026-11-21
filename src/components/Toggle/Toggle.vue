@@ -42,46 +42,42 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({
-    base: { class: toggleSlotVariants({ size: size.value }) },
-    resolver: props.ui?.leading,
-  }),
+  useUi({ class: toggleSlotVariants({ size: size.value }) }, props.ui?.leading?.()),
 )
 
 const trailingProps = computed(() =>
-  useUi({
-    base: { class: toggleSlotVariants({ size: size.value }) },
-    resolver: props.ui?.trailing,
-  }),
+  useUi({ class: toggleSlotVariants({ size: size.value }) }, props.ui?.trailing?.()),
 )
 
-const labelProps = computed(() => useUi({ base: { class: 'truncate' }, resolver: props.ui?.label }))
+const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.()))
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: toggleIconVariants() }, resolver: props.ui?.leadingIcon }),
+  ...useUi({ class: toggleIconVariants() }, props.ui?.leadingIcon?.()),
   name: props.leadingIcon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: toggleIconVariants() }, resolver: props.ui?.trailingIcon }),
+  ...useUi({ class: toggleIconVariants() }, props.ui?.trailingIcon?.()),
   name: props.trailingIcon!,
 }))
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: toggleVariants({
-        size: size.value,
-        variant: oneOf(props.variant, toggleVariantNames, toggleDefaults.variant),
-      }),
-      style: [
-        getColorVariables(props.color, 'toggle', toggleDefaults.color),
-        getRadiusVariables(props.radius, 'toggle', toggleDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: toggleVariants({
+          size: size.value,
+          variant: oneOf(props.variant, toggleVariantNames, toggleDefaults.variant),
+        }),
+        style: [
+          getColorVariables(props.color, 'toggle', toggleDefaults.color),
+          getRadiusVariables(props.radius, 'toggle', toggleDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   pressed: props.modelValue,
   defaultPressed: props.defaultValue,
   'onUpdate:pressed': (value: boolean) => emit('update:modelValue', value),

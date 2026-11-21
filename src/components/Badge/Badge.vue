@@ -29,46 +29,42 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({
-    base: { class: badgeLeadingVariants({ size: size.value }) },
-    resolver: props.ui?.leading,
-  }),
+  useUi({ class: badgeLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
 )
 
 const trailingProps = computed(() =>
-  useUi({
-    base: { class: badgeTrailingVariants({ size: size.value }) },
-    resolver: props.ui?.trailing,
-  }),
+  useUi({ class: badgeTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
 )
 
-const labelProps = computed(() => useUi({ base: { class: 'truncate' }, resolver: props.ui?.label }))
+const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.()))
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: badgeIconVariants() }, resolver: props.ui?.leadingIcon }),
+  ...useUi({ class: badgeIconVariants() }, props.ui?.leadingIcon?.()),
   name: props.leadingIcon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: badgeIconVariants() }, resolver: props.ui?.trailingIcon }),
+  ...useUi({ class: badgeIconVariants() }, props.ui?.trailingIcon?.()),
   name: props.trailingIcon!,
 }))
 
 const rootProps = computed(() =>
-  useUi({
-    base: {
-      class: badgeVariants({
-        size: size.value,
-        variant: oneOf(props.variant, badgeVariantNames, badgeDefaults.variant),
-      }),
-      style: [
-        getColorVariables(props.color, 'badge', badgeDefaults.color),
-        getRadiusVariables(props.radius, 'badge', badgeDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  useUi(
+    [
+      {
+        class: badgeVariants({
+          size: size.value,
+          variant: oneOf(props.variant, badgeVariantNames, badgeDefaults.variant),
+        }),
+        style: [
+          getColorVariables(props.color, 'badge', badgeDefaults.color),
+          getRadiusVariables(props.radius, 'badge', badgeDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
 )
 </script>
 

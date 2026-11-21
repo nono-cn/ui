@@ -54,11 +54,13 @@ provideFormField({
 })
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: { class: formFieldVariants({ orientation: orientation.value, variant: variant.value }) },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      { class: formFieldVariants({ orientation: orientation.value, variant: variant.value }) },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   name: props.name,
   disabled: props.disabled,
   invalid: invalid.value,
@@ -67,44 +69,44 @@ const rootProps = computed(() => ({
 }))
 
 const headerProps = computed(() =>
-  useUi({
-    base: { class: formFieldHeaderVariants({ orientation: orientation.value }) },
-    resolver: props.ui?.header,
-  }),
+  useUi(
+    { class: formFieldHeaderVariants({ orientation: orientation.value }) },
+    props.ui?.header?.(),
+  ),
 )
 
 const labelProps = computed(() =>
-  useUi({
-    base: { class: formFieldLabelVariants({ size: size.value, variant: variant.value }) },
-    resolver: props.ui?.label,
-  }),
+  useUi(
+    { class: formFieldLabelVariants({ size: size.value, variant: variant.value }) },
+    props.ui?.label?.(),
+  ),
 )
 
 const hintProps = computed(() =>
-  useUi({ base: { class: formFieldHintVariants({ size: size.value }) }, resolver: props.ui?.hint }),
+  useUi({ class: formFieldHintVariants({ size: size.value }) }, props.ui?.hint?.()),
 )
 
 const descriptionProps = computed(() =>
-  useUi({
-    base: {
+  useUi(
+    {
       class: formFieldDescriptionVariants({ size: size.value, orientation: orientation.value }),
     },
-    resolver: props.ui?.description,
-  }),
+    props.ui?.description?.(),
+  ),
 )
 
 const containerProps = computed(() =>
-  useUi({
-    base: { class: formFieldContainerVariants({ orientation: orientation.value }) },
-    resolver: props.ui?.container,
-  }),
+  useUi(
+    { class: formFieldContainerVariants({ orientation: orientation.value }) },
+    props.ui?.container?.(),
+  ),
 )
 
 const errorProps = computed(() =>
-  useUi({
-    base: { class: formFieldErrorVariants({ size: size.value, orientation: orientation.value }) },
-    resolver: props.ui?.error,
-  }),
+  useUi(
+    { class: formFieldErrorVariants({ size: size.value, orientation: orientation.value }) },
+    props.ui?.error?.(),
+  ),
 )
 </script>
 
