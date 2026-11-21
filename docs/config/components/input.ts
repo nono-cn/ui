@@ -304,7 +304,7 @@ const input: ComponentDocConfig = {
         description: 'Content displayed after the text; overrides the trailingIcon fallback.',
       },
       {
-        name: 'clear',
+        name: 'iconClear',
         type: '-',
         description:
           'Content of the clear button, such as another icon; overrides the x icon. The button keeps its name, visibility and behavior.',
