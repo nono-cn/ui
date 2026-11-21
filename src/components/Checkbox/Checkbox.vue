@@ -48,17 +48,19 @@ const size = computed(() =>
 )
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: checkboxVariants({ size: size.value }),
-      style: [
-        getColorVariables(props.color, 'checkbox', checkboxDefaults.color),
-        getRadiusVariables(props.radius, 'checkbox', checkboxDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: checkboxVariants({ size: size.value }),
+        style: [
+          getColorVariables(props.color, 'checkbox', checkboxDefaults.color),
+          getRadiusVariables(props.radius, 'checkbox', checkboxDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
   'onUpdate:checked': (value: CheckedState) => emit('update:modelValue', value),
@@ -78,16 +80,12 @@ function indicatorState(state: CheckboxIndicatorState): CheckboxIndicatorState {
 }
 
 function indicatorProps(state: CheckboxIndicatorState) {
-  return useUi({
-    base: { class: checkboxIndicatorVariants() },
-    resolver: props.ui?.indicator,
-    payload: state,
-  })
+  return useUi({ class: checkboxIndicatorVariants() }, props.ui?.indicator?.(state))
 }
 
 function iconProps(state: CheckboxIndicatorState) {
   return {
-    ...useUi({ base: { class: checkboxIconVariants() }, resolver: props.ui?.icon, payload: state }),
+    ...useUi({ class: checkboxIconVariants() }, props.ui?.icon?.(state)),
     name: state.indeterminate ? props.indeterminateIcon : props.icon,
     stroke: 3,
   }

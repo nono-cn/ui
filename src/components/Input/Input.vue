@@ -48,56 +48,52 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({
-    base: { class: inputLeadingVariants({ size: size.value }) },
-    resolver: props.ui?.leading,
-  }),
+  useUi({ class: inputLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
 )
 
 const trailingProps = computed(() =>
-  useUi({
-    base: { class: inputTrailingVariants({ size: size.value }) },
-    resolver: props.ui?.trailing,
-  }),
+  useUi({ class: inputTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
 )
 
 const clearProps = computed(() =>
-  useUi({
-    base: {
+  useUi(
+    {
       'aria-label': props.clearLabel || t('clear'),
       class: inputClearVariants({ size: size.value }),
     },
-    resolver: props.ui?.clear,
-  }),
+    props.ui?.clear?.(),
+  ),
 )
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: inputIconVariants() }, resolver: props.ui?.leadingIcon }),
+  ...useUi({ class: inputIconVariants() }, props.ui?.leadingIcon?.()),
   name: props.leadingIcon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: inputIconVariants() }, resolver: props.ui?.trailingIcon }),
+  ...useUi({ class: inputIconVariants() }, props.ui?.trailingIcon?.()),
   name: props.trailingIcon!,
 }))
 
 const clearIconProps = computed(() => ({
-  ...useUi({ base: { class: 'size-full' }, resolver: props.ui?.clearIcon }),
+  ...useUi({ class: 'size-full' }, props.ui?.clearIcon?.()),
   name: 'x' as const,
 }))
 
 const rootProps = computed(() =>
-  useUi({
-    base: {
-      class: inputRootVariants(),
-      style: [
-        getColorVariables(props.color, 'input', inputDefaults.color),
-        getRadiusVariables(props.radius, 'input', inputDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs: { class: attrs.class, style: attrs.style },
-  }),
+  useUi(
+    [
+      {
+        class: inputRootVariants(),
+        style: [
+          getColorVariables(props.color, 'input', inputDefaults.color),
+          getRadiusVariables(props.radius, 'input', inputDefaults.radius),
+        ],
+      },
+      { class: attrs.class, style: attrs.style },
+    ],
+    props.ui?.root?.(),
+  ),
 )
 
 const inputProps = computed(() => {
@@ -106,20 +102,22 @@ const inputProps = computed(() => {
   )
 
   return {
-    ...useUi({
-      base: {
-        class: inputVariants({
-          size: size.value,
-          variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
-          highlight: props.highlight,
-          leading: hasLeading.value,
-          trailing: hasTrailing.value,
-          clearable: props.clearable,
-        }),
-      },
-      resolver: props.ui?.input,
-      attrs: rest,
-    }),
+    ...useUi(
+      [
+        {
+          class: inputVariants({
+            size: size.value,
+            variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
+            highlight: props.highlight,
+            leading: hasLeading.value,
+            trailing: hasTrailing.value,
+            clearable: props.clearable,
+          }),
+        },
+        rest,
+      ],
+      props.ui?.input?.(),
+    ),
     type: props.type,
     modelValue: props.modelValue,
     defaultValue: props.defaultValue,

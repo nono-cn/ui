@@ -23,14 +23,16 @@ const rootAttrs = computed(() => {
   const color = props.color?.trim() || iconDefaults.color
   const inherit = color === 'currentColor'
   const stroke = Number(props.stroke)
-  const ui = useUi({
-    base: {
-      class: iconVariants({ size: oneOf(props.size, iconSizes, iconDefaults.size), inherit }),
-      style: inherit ? {} : getColorVariables(color, 'icon', 'primary'),
-    },
-    resolver: props.ui?.root,
-    attrs,
-  })
+  const ui = useUi(
+    [
+      {
+        class: iconVariants({ size: oneOf(props.size, iconSizes, iconDefaults.size), inherit }),
+        style: inherit ? {} : getColorVariables(color, 'icon', 'primary'),
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  )
   const labelled = ui['aria-label'] != null || ui['aria-labelledby'] != null
 
   return {

@@ -19,20 +19,22 @@ defineSlots<KbdSlots>()
 const attrs = useAttrs()
 
 const rootProps = computed(() =>
-  useUi({
-    base: {
-      class: kbdVariants({
-        size: oneOf(props.size, kbdSizes, kbdDefaults.size),
-        variant: oneOf(props.variant, kbdVariantNames, kbdDefaults.variant),
-      }),
-      style: [
-        getColorVariables(props.color, 'kbd', kbdDefaults.color),
-        getRadiusVariables(props.radius, 'kbd', kbdDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  useUi(
+    [
+      {
+        class: kbdVariants({
+          size: oneOf(props.size, kbdSizes, kbdDefaults.size),
+          variant: oneOf(props.variant, kbdVariantNames, kbdDefaults.variant),
+        }),
+        style: [
+          getColorVariables(props.color, 'kbd', kbdDefaults.color),
+          getRadiusVariables(props.radius, 'kbd', kbdDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
 )
 </script>
 

@@ -42,45 +42,45 @@ const initials = computed(() => {
 })
 
 const imageProps = computed(() => ({
-  ...useUi({ base: { class: avatarImageVariants() }, resolver: props.ui?.image }),
+  ...useUi({ class: avatarImageVariants() }, props.ui?.image?.()),
   src: props.src,
   alt: props.alt ?? '',
 }))
 
 const fallbackProps = computed(() => ({
-  ...useUi({
-    base: {
+  ...useUi(
+    {
       ...(props.alt ? { role: 'img', 'aria-label': props.alt } : {}),
       class: avatarFallbackVariants({
         variant: oneOf(props.variant, avatarVariantNames, avatarDefaults.variant),
       }),
     },
-    resolver: props.ui?.fallback,
-  }),
+    props.ui?.fallback?.(),
+  ),
   delay: props.delay,
 }))
 
-const textProps = computed(() =>
-  useUi({ base: { 'aria-hidden': 'true' }, resolver: props.ui?.text }),
-)
+const textProps = computed(() => useUi({ 'aria-hidden': 'true' }, props.ui?.text?.()))
 
 const iconProps = computed(() => ({
-  ...useUi({ base: { class: avatarIconVariants() }, resolver: props.ui?.icon }),
+  ...useUi({ class: avatarIconVariants() }, props.ui?.icon?.()),
   name: props.icon,
 }))
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: avatarVariants({ size: oneOf(props.size, avatarSizes, avatarDefaults.size) }),
-      style: [
-        getColorVariables(props.color, 'avatar', avatarDefaults.color),
-        getRadiusVariables(props.radius, 'avatar', avatarDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: avatarVariants({ size: oneOf(props.size, avatarSizes, avatarDefaults.size) }),
+        style: [
+          getColorVariables(props.color, 'avatar', avatarDefaults.color),
+          getRadiusVariables(props.radius, 'avatar', avatarDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   onLoadingStatusChange: props.onLoadingStatusChange,
 }))
 </script>

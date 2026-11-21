@@ -32,28 +32,28 @@ const orientation = computed(() =>
 )
 const hasLabel = computed(() => Boolean(props.label || slots.default))
 
-const labelProps = computed(() =>
-  useUi({ base: { class: separatorLabelVariants() }, resolver: props.ui?.label }),
-)
+const labelProps = computed(() => useUi({ class: separatorLabelVariants() }, props.ui?.label?.()))
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: separatorVariants({
-        orientation: orientation.value,
-        type: oneOf(props.type, separatorTypes, separatorDefaults.type),
-        size: oneOf(props.size, separatorSizes, separatorDefaults.size),
-        position: oneOf(props.position, separatorPositions, separatorDefaults.position),
-      }),
-      style: getColorVariables(
-        props.color === 'neutral' ? 'border' : props.color,
-        'separator',
-        'border',
-      ),
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: separatorVariants({
+          orientation: orientation.value,
+          type: oneOf(props.type, separatorTypes, separatorDefaults.type),
+          size: oneOf(props.size, separatorSizes, separatorDefaults.size),
+          position: oneOf(props.position, separatorPositions, separatorDefaults.position),
+        }),
+        style: getColorVariables(
+          props.color === 'neutral' ? 'border' : props.color,
+          'separator',
+          'border',
+        ),
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   orientation: orientation.value,
   decorative: props.decorative,
 }))

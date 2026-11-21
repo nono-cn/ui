@@ -45,16 +45,7 @@ export type UiAttributes = Pick<HTMLAttributes & NativeAttributes, UiAttributeNa
 
 export type UiResolver<P = void> = (state: P) => UiAttributes
 
-type BaseAttributes = Omit<UiAttributes, `data-${string}`> & {
-  [key: `data-${string}`]: string | number | boolean | undefined
-}
-
-export interface UseUiOptions<P = void> {
-  base?: BaseAttributes
-  resolver?: UiResolver<P>
-  payload?: P
-  attrs?: Record<string, unknown>
-}
+type UiBase = Record<string, unknown>
 
 const allowed = new Set<string>(uiAttributeNames)
 
@@ -62,26 +53,17 @@ function isUiAttribute(key: string) {
   return allowed.has(key) || key.startsWith('aria-')
 }
 
-function pickUiAttributes(value: object | undefined): UiAttributes {
+function pickUiAttributes(value: object | undefined): UiBase {
   if (!value) return {}
-  return Object.fromEntries(
-    Object.entries(value).filter(([key]) => isUiAttribute(key)),
-  ) as UiAttributes
+  return Object.fromEntries(Object.entries(value).filter(([key]) => isUiAttribute(key)))
 }
 
-export function useUi<P = void>({
-  base = {},
-  resolver,
-  payload,
-  attrs = {},
-}: UseUiOptions<P>): Record<string, unknown> {
-  const ui = pickUiAttributes(resolver?.(payload as P))
+export function useUi(base: UiBase | UiBase[], ui?: UiAttributes): Record<string, unknown> {
+  const layers: UiBase[] = [...(Array.isArray(base) ? base : [base]), pickUiAttributes(ui)]
 
   return {
-    ...base,
-    ...ui,
-    ...attrs,
-    class: cn(base.class as ClassValue, ui.class as ClassValue, attrs.class as ClassValue),
-    style: [base.style, ui.style, attrs.style] as StyleValue,
+    ...Object.assign({}, ...layers),
+    class: cn(...layers.map((layer) => layer.class as ClassValue)),
+    style: layers.map((layer) => layer.style) as StyleValue,
   }
 }

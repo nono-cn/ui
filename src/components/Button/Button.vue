@@ -34,55 +34,48 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({
-    base: { class: buttonLeadingVariants({ size: size.value }) },
-    resolver: props.ui?.leading,
-  }),
+  useUi({ class: buttonLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
 )
 
 const trailingProps = computed(() =>
-  useUi({
-    base: { class: buttonTrailingVariants({ size: size.value }) },
-    resolver: props.ui?.trailing,
-  }),
+  useUi({ class: buttonTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
 )
 
-const labelProps = computed(() => useUi({ base: { class: 'truncate' }, resolver: props.ui?.label }))
+const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.()))
 
 const spinnerProps = computed(() => ({
-  ...useUi({
-    base: { class: cn(buttonIconVariants(), 'animate-spin') },
-    resolver: props.ui?.spinner,
-  }),
+  ...useUi({ class: cn(buttonIconVariants(), 'animate-spin') }, props.ui?.spinner?.()),
   name: 'spinner' as const,
 }))
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: buttonIconVariants() }, resolver: props.ui?.leadingIcon }),
+  ...useUi({ class: buttonIconVariants() }, props.ui?.leadingIcon?.()),
   name: props.leadingIcon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: buttonIconVariants() }, resolver: props.ui?.trailingIcon }),
+  ...useUi({ class: buttonIconVariants() }, props.ui?.trailingIcon?.()),
   name: props.trailingIcon!,
 }))
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      class: buttonVariants({
-        size: size.value,
-        variant: oneOf(props.variant, buttonVariantNames, buttonDefaults.variant),
-        block: props.block,
-      }),
-      style: [
-        getColorVariables(props.color, 'button', buttonDefaults.color),
-        getRadiusVariables(props.radius, 'button', buttonDefaults.radius),
-      ],
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        class: buttonVariants({
+          size: size.value,
+          variant: oneOf(props.variant, buttonVariantNames, buttonDefaults.variant),
+          block: props.block,
+        }),
+        style: [
+          getColorVariables(props.color, 'button', buttonDefaults.color),
+          getRadiusVariables(props.radius, 'button', buttonDefaults.radius),
+        ],
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   disabled: props.disabled,
   focusableWhenDisabled: props.focusableWhenDisabled,
   type: props.type,

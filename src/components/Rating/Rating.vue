@@ -65,16 +65,18 @@ const valueLabel = computed(() => {
 })
 
 const rootProps = computed(() => ({
-  ...useUi({
-    base: {
-      'aria-orientation': props.readOnly ? undefined : orientation.value,
-      'data-orientation': orientation.value,
-      class: ratingVariants({ orientation: orientation.value }),
-      style: getColorVariables(props.color, 'rating', ratingDefaults.color),
-    },
-    resolver: props.ui?.root,
-    attrs,
-  }),
+  ...useUi(
+    [
+      {
+        'aria-orientation': props.readOnly ? undefined : orientation.value,
+        'data-orientation': orientation.value,
+        class: ratingVariants({ orientation: orientation.value }),
+        style: getColorVariables(props.color, 'rating', ratingDefaults.color),
+      },
+      attrs,
+    ],
+    props.ui?.root?.(),
+  ),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: number | null) => emit('update:modelValue', value),
@@ -94,21 +96,15 @@ const rootProps = computed(() => ({
 }))
 
 function itemProps(itemAttrs: Record<string, unknown>, state: RatingItemState) {
-  return useUi({
-    base: { class: ratingItemVariants({ size: size.value }) },
-    resolver: props.ui?.item,
-    payload: state,
-    attrs: itemAttrs,
-  })
+  return useUi(
+    [{ class: ratingItemVariants({ size: size.value }) }, itemAttrs],
+    props.ui?.item?.(state),
+  )
 }
 
 function emptyIconProps(state: RatingItemState) {
   return {
-    ...useUi({
-      base: { class: ratingEmptyIconVariants() },
-      resolver: props.ui?.emptyIcon,
-      payload: state,
-    }),
+    ...useUi({ class: ratingEmptyIconVariants() }, props.ui?.emptyIcon?.(state)),
     name: props.emptyIcon ?? props.icon,
     fill: 'currentColor',
   }
@@ -116,7 +112,7 @@ function emptyIconProps(state: RatingItemState) {
 
 function iconProps(state: RatingItemState) {
   return {
-    ...useUi({ base: { class: ratingIconVariants() }, resolver: props.ui?.icon, payload: state }),
+    ...useUi({ class: ratingIconVariants() }, props.ui?.icon?.(state)),
     name: props.icon,
     fill: 'currentColor',
   }
