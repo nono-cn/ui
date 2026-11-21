@@ -6,6 +6,7 @@ import type {
   ComponentExampleConfig,
   ExampleProps,
   ExampleState,
+  ExampleValue,
 } from '@docs/config/component-docs'
 import DocsIcon from '@docs/components/DocsIcon.vue'
 import ExampleColorControl from '@docs/components/controls/ExampleColorControl.vue'
@@ -38,10 +39,17 @@ const slot = computed(() => props.example.slot ?? props.component.slot)
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
+function literalOf(value: ExampleValue): string {
+  if (typeof value === 'string') return `'${value}'`
+  if (typeof value !== 'object') return String(value)
+  const entries = Object.entries(value).map(([key, item]) => `${key}: ${literalOf(item)}`)
+  return `{ ${entries.join(', ')} }`
+}
+
 function attributesOf(values: ExampleProps) {
   return Object.entries(values)
     .map(([key, value]) =>
-      typeof value === 'string' ? ` ${key}="${value}"` : ` :${key}="${value}"`,
+      typeof value === 'string' ? ` ${key}="${value}"` : ` :${key}="${literalOf(value)}"`,
     )
     .join('')
 }
