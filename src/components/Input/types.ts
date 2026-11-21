@@ -41,5 +41,5 @@ export interface InputEmits {
 export interface InputSlots {
   leading?(): unknown
   trailing?(): unknown
-  clear?(): unknown
+  iconClear?(): unknown
 }

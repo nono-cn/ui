@@ -105,13 +105,15 @@ function inputBindings(state: InputGroupState) {
   return useUi(
     {
       ...inputProps.value,
-      class: inputVariants({
-        size: size.value,
-        variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
-        highlight: props.highlight,
-        leading: hasLeading.value,
-        trailing: (['none', 'one', 'two'] as const)[items],
-      }),
+      class: cn(
+        inputVariants({
+          size: size.value,
+          variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
+          highlight: props.highlight,
+          leading: hasLeading.value,
+          trailing: (['none', 'one', 'two'] as const)[items],
+        }),
+      ),
     },
     props.ui?.input,
   )
@@ -134,7 +136,7 @@ function inputBindings(state: InputGroupState) {
       <InputRoot data-ui="input-input" v-bind="inputBindings(state)" />
       <span v-if="hasTrailing || showsClear(state)" data-ui="input-trailing" v-bind="trailingProps">
         <InputClear v-if="clearable" data-ui="input-clear" v-bind="clearProps">
-          <slot name="clear">
+          <slot name="iconClear">
             <Icon data-ui="input-clear-icon" name="x" class="size-full" />
           </slot>
         </InputClear>
