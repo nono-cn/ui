@@ -9,6 +9,7 @@ export {
 export type {
   ButtonIconSize,
   ButtonProps,
+  ButtonUi,
   ButtonSize,
   ButtonSlots,
   ButtonTextSize,

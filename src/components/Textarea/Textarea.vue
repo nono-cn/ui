@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Textarea as TextareaRoot } from '@ui-sdk/vue/textarea'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
 import {
   textareaDefaults,
@@ -37,7 +37,22 @@ const attrs = useAttrs()
 const formField = useFormField()
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({
+    base: {
+      class: textareaVariants({
+        size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
+        variant: oneOf(props.variant, textareaVariantNames, textareaDefaults.variant),
+        autoResize: props.autoResize,
+        highlight: props.highlight,
+      }),
+      style: [
+        getColorVariables(props.color, 'textarea', textareaDefaults.color),
+        getRadiusVariables(props.radius, 'textarea', textareaDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: string) => emit('update:modelValue', value),
@@ -49,20 +64,6 @@ const rootProps = computed(() => ({
   required: props.required ?? formField?.required(),
   submitShortcut: props.submitShortcut,
   onSubmit: props.onSubmit,
-  class: cn(
-    textareaVariants({
-      size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
-      variant: oneOf(props.variant, textareaVariantNames, textareaDefaults.variant),
-      autoResize: props.autoResize,
-      highlight: props.highlight,
-    }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color, 'textarea', textareaDefaults.color),
-    getRadiusVariables(props.radius, 'textarea', textareaDefaults.radius),
-    attrs.style,
-  ],
 }))
 </script>
 

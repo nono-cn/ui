@@ -225,6 +225,12 @@ const textarea: ComponentDocConfig = {
         default: 'false',
         description: 'Needs text before its form submits.',
       },
+      {
+        name: 'ui',
+        type: 'TextareaUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root. See UI.',
+      },
     ],
     emits: [
       {
@@ -234,6 +240,7 @@ const textarea: ComponentDocConfig = {
       },
     ],
     slots: [],
+    ui: [{ node: 'root', tag: 'textarea' }],
     expose: [],
   },
 }

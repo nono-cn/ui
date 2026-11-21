@@ -186,8 +186,22 @@ const badge: ComponentDocConfig = {
       },
       { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
+      {
+        name: 'ui',
+        type: 'BadgeUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
+      },
     ],
     emits: [],
+    ui: [
+      { node: 'root', tag: 'span' },
+      { node: 'leading', tag: 'span' },
+      { node: 'leadingIcon', tag: 'svg' },
+      { node: 'label', tag: 'span' },
+      { node: 'trailing', tag: 'span' },
+      { node: 'trailingIcon', tag: 'svg' },
+    ],
     slots: [
       {
         name: 'default',

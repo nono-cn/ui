@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Separator as SeparatorRoot } from '@ui-sdk/vue/separator'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import {
   separatorDefaults,
   separatorOrientations,
@@ -32,27 +32,30 @@ const orientation = computed(() =>
 )
 const hasLabel = computed(() => Boolean(props.label || slots.default))
 
-const labelProps = {
-  class: separatorLabelVariants(),
-}
+const labelProps = computed(() =>
+  useUi({ base: { class: separatorLabelVariants() }, resolver: props.ui?.label }),
+)
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({
+    base: {
+      class: separatorVariants({
+        orientation: orientation.value,
+        type: oneOf(props.type, separatorTypes, separatorDefaults.type),
+        size: oneOf(props.size, separatorSizes, separatorDefaults.size),
+        position: oneOf(props.position, separatorPositions, separatorDefaults.position),
+      }),
+      style: getColorVariables(
+        props.color === 'neutral' ? 'border' : props.color,
+        'separator',
+        'border',
+      ),
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   orientation: orientation.value,
   decorative: props.decorative,
-  class: cn(
-    separatorVariants({
-      orientation: orientation.value,
-      type: oneOf(props.type, separatorTypes, separatorDefaults.type),
-      size: oneOf(props.size, separatorSizes, separatorDefaults.size),
-      position: oneOf(props.position, separatorPositions, separatorDefaults.position),
-    }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color === 'neutral' ? 'border' : props.color, 'separator', 'border'),
-    attrs.style,
-  ],
 }))
 </script>
 

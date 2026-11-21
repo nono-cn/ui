@@ -51,6 +51,12 @@ const label: ComponentDocConfig = {
         type: 'string',
         description: 'Id of the control the label names.',
       },
+      {
+        name: 'ui',
+        type: 'LabelUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root. See UI.',
+      },
     ],
     emits: [],
     slots: [
@@ -61,6 +67,7 @@ const label: ComponentDocConfig = {
           'Label content, such as text or a wrapped control; overrides the label fallback.',
       },
     ],
+    ui: [{ node: 'root', tag: 'label' }],
     expose: [],
   },
 }

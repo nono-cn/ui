@@ -12,6 +12,7 @@ export type FormFieldOrientation = (typeof formFieldOrientations)[number]
 export type FormFieldVariant = (typeof formFieldVariantNames)[number]
 
 export interface FormFieldUi {
+  root?: UiResolver
   header?: UiResolver
   label?: UiResolver
   hint?: UiResolver

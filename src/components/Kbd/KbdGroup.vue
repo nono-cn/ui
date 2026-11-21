@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
-import type { KbdGroupSlots } from '@/components/Kbd/types'
+import { useUi } from '@/composables/useUi'
+import type { KbdGroupProps, KbdGroupSlots } from '@/components/Kbd/types'
 import { kbdGroupVariants } from '@/components/Kbd/variants'
 
 defineOptions({ inheritAttrs: false })
 
+const props = defineProps<KbdGroupProps>()
 defineSlots<KbdGroupSlots>()
 const attrs = useAttrs()
 
-const rootProps = computed(() => ({
-  ...attrs,
-  class: cn(kbdGroupVariants(), attrs.class as ClassValue),
-}))
+const rootProps = computed(() =>
+  useUi({ base: { class: kbdGroupVariants() }, resolver: props.ui?.root, attrs }),
+)
 </script>
 
 <template>

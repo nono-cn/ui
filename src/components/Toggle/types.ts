@@ -7,6 +7,7 @@ import type {
   toggleVariantNames,
 } from '@/components/Toggle/constants'
 import type { Radius } from '@/composables/useTheme'
+import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type ToggleSize = (typeof toggleSizes)[number]
@@ -23,6 +24,15 @@ export interface ToggleSlotProps {
   pressed: boolean
 }
 
+export interface ToggleUi {
+  root?: UiResolver
+  leading?: UiResolver
+  leadingIcon?: UiResolver
+  label?: UiResolver
+  trailing?: UiResolver
+  trailingIcon?: UiResolver
+}
+
 export interface ToggleProps {
   modelValue?: boolean
   defaultValue?: boolean
@@ -35,6 +45,7 @@ export interface ToggleProps {
   trailingIcon?: IconName
   disabled?: boolean
   focusableWhenDisabled?: boolean
+  ui?: ToggleUi
 }
 
 export interface ToggleEmits {

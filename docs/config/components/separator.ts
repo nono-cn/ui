@@ -183,8 +183,18 @@ const separator: ComponentDocConfig = {
         default: `'${separatorDefaults.position}'`,
         description: 'Alignment of the label or default slot content along the line.',
       },
+      {
+        name: 'ui',
+        type: 'SeparatorUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
+      },
     ],
     emits: [],
+    ui: [
+      { node: 'root', tag: 'div', kept: 'role' },
+      { node: 'label', tag: 'span' },
+    ],
     slots: [
       {
         name: 'default',

@@ -224,6 +224,12 @@ const avatar: ComponentDocConfig = {
         description:
           'Milliseconds to wait before showing the fallback, so a fast image does not flash it first.',
       },
+      {
+        name: 'ui',
+        type: 'AvatarUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
+      },
     ],
     emits: [
       {
@@ -231,6 +237,13 @@ const avatar: ComponentDocConfig = {
         type: '(status: AvatarLoadingStatus, details: ChangeDetails) => void',
         description: 'Runs when the image status changes: idle, loading, loaded or error.',
       },
+    ],
+    ui: [
+      { node: 'root', tag: 'span' },
+      { node: 'image', tag: 'img', kept: 'aria-hidden' },
+      { node: 'fallback', tag: 'span' },
+      { node: 'text', tag: 'span' },
+      { node: 'icon', tag: 'svg' },
     ],
     slots: [
       {

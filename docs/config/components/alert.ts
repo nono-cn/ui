@@ -172,16 +172,9 @@ const alert: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: `{
-  icon?: () => HTMLAttributes
-  label?: () => HTMLAttributes
-  description?: () => HTMLAttributes
-  closeContainer?: () => HTMLAttributes
-  closeButton?: () => ButtonProps & ButtonHTMLAttributes
-}`,
-        typePre: true,
-        description:
-          'Attributes for the inner nodes: icon, label, description, closeContainer (the box around the close button) and closeButton (the close Button, which also takes Button props). Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes attributes directly.',
+        type: 'AlertUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [
@@ -190,6 +183,14 @@ const alert: ComponentDocConfig = {
         type: '[]',
         description: 'Emitted when the alert is closed with the button or the close slot.',
       },
+    ],
+    ui: [
+      { node: 'root', tag: 'div' },
+      { node: 'icon', tag: 'span' },
+      { node: 'label', tag: 'div' },
+      { node: 'description', tag: 'div' },
+      { node: 'closeContainer', tag: 'div' },
+      { node: 'closeButton', tag: 'button' },
     ],
     slots: [
       {

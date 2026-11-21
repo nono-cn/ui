@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { createToggleController, Toggle as ToggleRoot, ToggleIcon } from '@ui-sdk/vue/toggle'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { toggleDefaults, toggleSizes, toggleVariantNames } from '@/components/Toggle/constants'
 import type {
   ToggleEmits,
@@ -41,11 +41,44 @@ const size = computed(() => oneOf(props.size, toggleSizes, toggleDefaults.size))
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
-const slotProps = computed(() => ({ class: toggleSlotVariants({ size: size.value }) }))
-const iconClass = toggleIconVariants()
+const leadingProps = computed(() =>
+  useUi({ base: { class: toggleSlotVariants({ size: size.value }) }, resolver: props.ui?.leading }),
+)
+
+const trailingProps = computed(() =>
+  useUi({
+    base: { class: toggleSlotVariants({ size: size.value }) },
+    resolver: props.ui?.trailing,
+  }),
+)
+
+const labelProps = computed(() => useUi({ base: { class: 'truncate' }, resolver: props.ui?.label }))
+
+const leadingIconProps = computed(() => ({
+  ...useUi({ base: { class: toggleIconVariants() }, resolver: props.ui?.leadingIcon }),
+  name: props.leadingIcon!,
+}))
+
+const trailingIconProps = computed(() => ({
+  ...useUi({ base: { class: toggleIconVariants() }, resolver: props.ui?.trailingIcon }),
+  name: props.trailingIcon!,
+}))
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({
+    base: {
+      class: toggleVariants({
+        size: size.value,
+        variant: oneOf(props.variant, toggleVariantNames, toggleDefaults.variant),
+      }),
+      style: [
+        getColorVariables(props.color, 'toggle', toggleDefaults.color),
+        getRadiusVariables(props.radius, 'toggle', toggleDefaults.radius),
+      ],
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   pressed: props.modelValue,
   defaultPressed: props.defaultValue,
   'onUpdate:pressed': (value: boolean) => emit('update:modelValue', value),
@@ -54,18 +87,6 @@ const rootProps = computed(() => ({
   disabled: props.disabled,
   focusableWhenDisabled: props.focusableWhenDisabled,
   controller,
-  class: cn(
-    toggleVariants({
-      size: size.value,
-      variant: oneOf(props.variant, toggleVariantNames, toggleDefaults.variant),
-    }),
-    attrs.class as ClassValue,
-  ),
-  style: [
-    getColorVariables(props.color, 'toggle', toggleDefaults.color),
-    getRadiusVariables(props.radius, 'toggle', toggleDefaults.radius),
-    attrs.style,
-  ],
 }))
 
 defineExpose<ToggleExpose>({
@@ -79,27 +100,17 @@ defineExpose<ToggleExpose>({
 <template>
   <ToggleRoot data-ui="toggle-root" v-bind="rootProps">
     <template #default="{ state }">
-      <ToggleIcon v-if="hasLeading" data-ui="toggle-leading" v-bind="slotProps">
+      <ToggleIcon v-if="hasLeading" data-ui="toggle-leading" v-bind="leadingProps">
         <slot name="leading" :pressed="state.pressed">
-          <Icon
-            v-if="leadingIcon"
-            data-ui="toggle-leading-icon"
-            :name="leadingIcon"
-            :class="iconClass"
-          />
+          <Icon v-if="leadingIcon" data-ui="toggle-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </ToggleIcon>
       <slot :pressed="state.pressed">
-        <span v-if="label" data-ui="toggle-label" class="truncate">{{ label }}</span>
+        <span v-if="label" data-ui="toggle-label" v-bind="labelProps">{{ label }}</span>
       </slot>
-      <ToggleIcon v-if="hasTrailing" data-ui="toggle-trailing" v-bind="slotProps">
+      <ToggleIcon v-if="hasTrailing" data-ui="toggle-trailing" v-bind="trailingProps">
         <slot name="trailing" :pressed="state.pressed">
-          <Icon
-            v-if="trailingIcon"
-            data-ui="toggle-trailing-icon"
-            :name="trailingIcon"
-            :class="iconClass"
-          />
+          <Icon v-if="trailingIcon" data-ui="toggle-trailing-icon" v-bind="trailingIconProps" />
         </slot>
       </ToggleIcon>
     </template>

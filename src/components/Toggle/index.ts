@@ -16,6 +16,7 @@ export type {
   ToggleSlotProps,
   ToggleSlots,
   ToggleTextSize,
+  ToggleUi,
   ToggleVariant,
 } from '@/components/Toggle/types'
 export {

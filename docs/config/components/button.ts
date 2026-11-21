@@ -314,6 +314,12 @@ const button: ComponentDocConfig = {
         description:
           'What screen readers hear once the button has been pending for a second. An empty string says nothing.',
       },
+      {
+        name: 'ui',
+        type: 'ButtonUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
+      },
     ],
     emits: [
       {
@@ -321,6 +327,15 @@ const button: ComponentDocConfig = {
         type: '(event: MouseEvent, details: ButtonActionDetails) => unknown',
         description: 'Runs on press. Return a Promise to keep the button pending until it settles.',
       },
+    ],
+    ui: [
+      { node: 'root', tag: 'button' },
+      { node: 'leading', tag: 'span' },
+      { node: 'leadingIcon', tag: 'svg' },
+      { node: 'spinner', tag: 'svg' },
+      { node: 'label', tag: 'span' },
+      { node: 'trailing', tag: 'span' },
+      { node: 'trailingIcon', tag: 'svg' },
     ],
     slots: [
       {

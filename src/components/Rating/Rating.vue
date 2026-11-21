@@ -2,7 +2,6 @@
 import { createRatingController, type RatingItemState } from '@ui-sdk/core/rating'
 import { Rating as RatingRoot, RatingItem } from '@ui-sdk/vue/rating'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
@@ -66,11 +65,16 @@ const valueLabel = computed(() => {
 })
 
 const rootProps = computed(() => ({
-  'aria-orientation': props.readOnly ? undefined : orientation.value,
-  'data-orientation': orientation.value,
-  ...attrs,
-  class: cn(ratingVariants({ orientation: orientation.value }), attrs.class as ClassValue),
-  style: [getColorVariables(props.color, 'rating', ratingDefaults.color), attrs.style],
+  ...useUi({
+    base: {
+      'aria-orientation': props.readOnly ? undefined : orientation.value,
+      'data-orientation': orientation.value,
+      class: ratingVariants({ orientation: orientation.value }),
+      style: getColorVariables(props.color, 'rating', ratingDefaults.color),
+    },
+    resolver: props.ui?.root,
+    attrs,
+  }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: number | null) => emit('update:modelValue', value),
@@ -90,38 +94,32 @@ const rootProps = computed(() => ({
 }))
 
 function itemProps(itemAttrs: Record<string, unknown>, state: RatingItemState) {
-  return useUi(
-    {
-      ...itemAttrs,
-      class: cn(ratingItemVariants({ size: size.value }), itemAttrs.class as ClassValue),
-    },
-    props.ui?.item,
-    state,
-  )
+  return useUi({
+    base: { class: ratingItemVariants({ size: size.value }) },
+    resolver: props.ui?.item,
+    payload: state,
+    attrs: itemAttrs,
+  })
 }
 
 function emptyIconProps(state: RatingItemState) {
-  return useUi(
-    {
-      name: props.emptyIcon ?? props.icon,
-      fill: 'currentColor',
-      class: ratingEmptyIconVariants(),
-    },
-    props.ui?.emptyIcon,
-    state,
-  )
+  return {
+    ...useUi({
+      base: { class: ratingEmptyIconVariants() },
+      resolver: props.ui?.emptyIcon,
+      payload: state,
+    }),
+    name: props.emptyIcon ?? props.icon,
+    fill: 'currentColor',
+  }
 }
 
 function iconProps(state: RatingItemState) {
-  return useUi(
-    {
-      name: props.icon,
-      fill: 'currentColor',
-      class: ratingIconVariants(),
-    },
-    props.ui?.icon,
-    state,
-  )
+  return {
+    ...useUi({ base: { class: ratingIconVariants() }, resolver: props.ui?.icon, payload: state }),
+    name: props.icon,
+    fill: 'currentColor',
+  }
 }
 
 defineExpose<RatingExpose>({

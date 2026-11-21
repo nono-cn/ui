@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
 import { iconDefaults, iconSizes } from '@/components/Icon/constants'
 import type { IconProps } from '@/components/Icon/types'
 import { iconVariants } from '@/components/Icon/variants'
@@ -20,10 +20,18 @@ const attrs = useAttrs()
 const node = computed(() => icons[props.name] ?? [])
 
 const rootAttrs = computed(() => {
-  const labelled = attrs['aria-label'] != null || attrs['aria-labelledby'] != null
   const color = props.color?.trim() || iconDefaults.color
   const inherit = color === 'currentColor'
   const stroke = Number(props.stroke)
+  const ui = useUi({
+    base: {
+      class: iconVariants({ size: oneOf(props.size, iconSizes, iconDefaults.size), inherit }),
+      style: inherit ? {} : getColorVariables(color, 'icon', 'primary'),
+    },
+    resolver: props.ui?.root,
+    attrs,
+  })
+  const labelled = ui['aria-label'] != null || ui['aria-labelledby'] != null
 
   return {
     viewBox: '0 0 24 24',
@@ -33,12 +41,7 @@ const rootAttrs = computed(() => {
     'stroke-linecap': 'round' as const,
     'stroke-linejoin': 'round' as const,
     ...(labelled ? {} : { 'aria-hidden': 'true' as const }),
-    ...attrs,
-    class: cn(
-      iconVariants({ size: oneOf(props.size, iconSizes, iconDefaults.size), inherit }),
-      attrs.class as ClassValue,
-    ),
-    style: [inherit ? {} : getColorVariables(color, 'icon', 'primary'), attrs.style],
+    ...ui,
   }
 })
 </script>

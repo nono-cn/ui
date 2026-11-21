@@ -1,8 +1,14 @@
 import type { chipPositions, chipSizes } from '@/components/Chip/constants'
+import type { UiResolver } from '@/composables/useUi'
 
 export type ChipSize = (typeof chipSizes)[number]
 
 export type ChipPosition = (typeof chipPositions)[number]
+
+export interface ChipUi {
+  root?: UiResolver
+  indicator?: UiResolver
+}
 
 export interface ChipProps {
   color?: string
@@ -11,6 +17,7 @@ export interface ChipProps {
   show?: boolean
   inset?: boolean
   standalone?: boolean
+  ui?: ChipUi
 }
 
 export interface ChipSlots {

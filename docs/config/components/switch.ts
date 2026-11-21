@@ -8,6 +8,11 @@ function icon(state: Record<string, string | undefined>, key: string) {
   return state[key] && state[key] !== 'none' ? { [key]: state[key] } : {}
 }
 
+const thumbState = `{
+  checked: boolean
+  loading: boolean
+}`
+
 const switchDocs: ComponentDocConfig = {
   slug: 'switch',
   title: 'Switch',
@@ -233,19 +238,9 @@ const switchDocs: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: `{
-  thumb?: (state: {
-    checked: boolean
-    loading: boolean
-  }) => HTMLAttributes
-  icon?: (state: {
-    checked: boolean
-    loading: boolean
-  }) => HTMLAttributes
-}`,
-        typePre: true,
-        description:
-          'Attributes for the inner nodes: thumb and icon (the icon or spinner inside it). Each one receives the same state as the thumb slot. Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes class, style and every other attribute directly.',
+        type: 'SwitchUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [
@@ -260,6 +255,19 @@ const switchDocs: ComponentDocConfig = {
         description:
           'Runs before a change. details.reason says why (press, reset, restore or imperative), and details.cancel() stops it. While loading, only imperative changes reach it.',
       },
+    ],
+    ui: [
+      {
+        node: 'root',
+        tag: 'button',
+        kept: 'role, tabindex, aria-checked, aria-disabled, aria-busy',
+      },
+      {
+        node: 'thumb',
+        tag: 'span',
+        state: thumbState,
+      },
+      { node: 'icon', tag: 'svg', state: thumbState },
     ],
     slots: [
       {

@@ -3,6 +3,7 @@ import type { ComponentDocConfig } from '@docs/config/component-docs'
 import { exampleAnchor } from '@docs/config/docs-anchors'
 import ComponentExample from '@docs/components/ComponentExample.vue'
 import ApiTable from '@docs/components/docs/ApiTable.vue'
+import UiTable from '@docs/components/docs/UiTable.vue'
 
 const props = defineProps<{
   component: ComponentDocConfig
@@ -137,6 +138,7 @@ const sections = [
           :rows="component.api.expose"
           :show-default="false"
         />
+        <UiTable v-if="component.api.ui?.length" :slug="component.slug" :rows="component.api.ui" />
       </div>
     </section>
   </article>

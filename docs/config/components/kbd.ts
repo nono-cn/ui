@@ -138,6 +138,12 @@ const kbd: ComponentDocConfig = {
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
+      {
+        name: 'ui',
+        type: 'KbdUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root. See UI.',
+      },
     ],
     emits: [],
     slots: [
@@ -147,6 +153,7 @@ const kbd: ComponentDocConfig = {
         description: 'Content of the key; overrides the label fallback.',
       },
     ],
+    ui: [{ node: 'root', tag: 'kbd' }],
     expose: [],
   },
 }

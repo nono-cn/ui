@@ -4,6 +4,7 @@ export type {
   AvatarLoadingStatus,
   AvatarLoadingStatusChangeReason,
   AvatarProps,
+  AvatarUi,
   AvatarSize,
   AvatarSlots,
   AvatarVariant,

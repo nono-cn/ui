@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Label as LabelRoot } from '@ui-sdk/vue/label'
 import { computed, useAttrs } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
+import { useUi } from '@/composables/useUi'
 import type { LabelProps, LabelSlots } from '@/components/Label/types'
 import { labelVariants } from '@/components/Label/variants'
 
@@ -13,9 +13,8 @@ defineSlots<LabelSlots>()
 const attrs = useAttrs()
 
 const rootProps = computed(() => ({
-  ...attrs,
+  ...useUi({ base: { class: labelVariants() }, resolver: props.ui?.root, attrs }),
   for: props.for,
-  class: cn(labelVariants(), attrs.class as ClassValue),
 }))
 </script>
 

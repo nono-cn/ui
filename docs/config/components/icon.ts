@@ -127,9 +127,16 @@ const icon: ComponentDocConfig = {
         default: String(iconDefaults.stroke),
         description: 'SVG stroke width. The line scales with the rendered icon size.',
       },
+      {
+        name: 'ui',
+        type: 'IconUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root. See UI.',
+      },
     ],
     emits: [],
     slots: [],
+    ui: [{ node: 'root', tag: 'svg' }],
     expose: [],
   },
 }

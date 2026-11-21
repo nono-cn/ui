@@ -10,6 +10,15 @@ import {
 
 const name = { 'aria-label': 'Rate your stay' }
 
+const itemState = `{
+  index: number
+  fill: number
+  checked: boolean
+  highlighted: boolean
+  disabled: boolean
+  readOnly: boolean
+}`
+
 const rating: ComponentDocConfig = {
   slug: 'rating',
   title: 'Rating',
@@ -274,14 +283,9 @@ const rating: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: `{
-  item?: (state: RatingItemState) => HTMLAttributes
-  emptyIcon?: (state: RatingItemState) => HTMLAttributes
-  icon?: (state: RatingItemState) => HTMLAttributes
-}`,
-        typePre: true,
-        description:
-          'Attributes for the inner nodes: item (each star), and emptyIcon and icon inside it. Each one receives the state of its star. Classes are merged with the defaults and win on conflict, styles are combined, and other attributes replace the default. The root takes class, style and every other attribute directly.',
+        type: 'RatingUi',
+        typeLink: '#ui',
+        description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [
@@ -295,6 +299,24 @@ const rating: ComponentDocConfig = {
         type: '(value: number | null, details: RatingChangeDetails) => void',
         description:
           'Runs before a change. details.reason says why (item-press, list-navigation, reset, restore or imperative), and details.cancel() stops it.',
+      },
+    ],
+    ui: [
+      { node: 'root', tag: 'div', kept: 'role' },
+      {
+        node: 'item',
+        tag: 'span',
+        state: itemState,
+      },
+      {
+        node: 'emptyIcon',
+        tag: 'svg',
+        state: itemState,
+      },
+      {
+        node: 'icon',
+        tag: 'svg',
+        state: itemState,
       },
     ],
     slots: [
