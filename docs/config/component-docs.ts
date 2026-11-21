@@ -36,7 +36,9 @@ export interface ComponentApiConfig {
 
 export type ExampleState = Record<string, string>
 
-export type ExampleProps = Record<string, string | number | boolean>
+export type ExampleValue = string | number | boolean | { [key: string]: ExampleValue }
+
+export type ExampleProps = Record<string, ExampleValue>
 
 export interface ExampleControl {
   key: string

@@ -16,7 +16,16 @@ export interface LocaleOptions {
 
 export interface LocaleContext {
   locale: ComputedRef<Locale>
+  tag: ComputedRef<string>
   t: (key: MessageKey, params?: MessageParams) => string
+}
+
+export function toLocaleTag(value?: string): string | undefined {
+  try {
+    return Intl.getCanonicalLocales(value?.trim().replaceAll('_', '-') || [])[0]
+  } catch {
+    return undefined
+  }
 }
 
 const localeKey: InjectionKey<LocaleContext> = Symbol('nono-ui-locale')
@@ -26,6 +35,7 @@ function createLocaleContext(
   options: LocaleOptions = {},
 ): LocaleContext {
   const resolved = computed(() => resolveLocale(toValue(locale)))
+  const tag = computed(() => toLocaleTag(toValue(locale)) ?? resolved.value)
   const current = computed(() => ({ ...messages[resolved.value], ...toValue(options.messages) }))
 
   function t(key: MessageKey, params: MessageParams = {}) {
@@ -35,7 +45,7 @@ function createLocaleContext(
     )
   }
 
-  return { locale: resolved, t }
+  return { locale: resolved, tag, t }
 }
 
 export function provideLocale(
