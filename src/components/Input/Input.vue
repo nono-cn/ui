@@ -99,10 +99,8 @@ function showsClear(state: InputGroupState) {
   return props.clearable && state.filled && !state.disabled && !state.readOnly
 }
 
-function inputBindings(state: InputGroupState) {
-  const items = Number(hasTrailing.value) + Number(showsClear(state))
-
-  return useUi(
+const inputBindings = computed(() =>
+  useUi(
     {
       ...inputProps.value,
       class: cn(
@@ -111,13 +109,14 @@ function inputBindings(state: InputGroupState) {
           variant: oneOf(props.variant, inputVariantNames, inputDefaults.variant),
           highlight: props.highlight,
           leading: hasLeading.value,
-          trailing: (['none', 'one', 'two'] as const)[items],
+          trailing: hasTrailing.value,
+          clearable: props.clearable,
         }),
       ),
     },
     props.ui?.input,
-  )
-}
+  ),
+)
 </script>
 
 <template>
@@ -133,7 +132,7 @@ function inputBindings(state: InputGroupState) {
           />
         </slot>
       </span>
-      <InputRoot data-ui="input-input" v-bind="inputBindings(state)" />
+      <InputRoot data-ui="input-input" v-bind="inputBindings" />
       <span v-if="hasTrailing || showsClear(state)" data-ui="input-trailing" v-bind="trailingProps">
         <InputClear v-if="clearable" data-ui="input-clear" v-bind="clearProps">
           <slot name="iconClear">
