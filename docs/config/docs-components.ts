@@ -14,6 +14,7 @@ import rating from '@docs/config/components/rating'
 import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
 import textarea from '@docs/config/components/textarea'
+import toggle from '@docs/config/components/toggle'
 
 export const docsComponents: ComponentDocConfig[] = [
   alert,
@@ -31,6 +32,7 @@ export const docsComponents: ComponentDocConfig[] = [
   separator,
   switchDocs,
   textarea,
+  toggle,
 ].sort((a, b) => a.title.localeCompare(b.title))
 
 export const docsComponentsBySlug = Object.fromEntries(
