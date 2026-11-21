@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { createToggleController, Toggle as ToggleRoot, ToggleIcon } from '@ui-sdk/vue/toggle'
+import { createToggleController, Toggle as ToggleRoot } from '@ui-sdk/vue/toggle'
 import { computed, useAttrs } from 'vue'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
@@ -42,7 +42,10 @@ const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({ base: { class: toggleSlotVariants({ size: size.value }) }, resolver: props.ui?.leading }),
+  useUi({
+    base: { class: toggleSlotVariants({ size: size.value }) },
+    resolver: props.ui?.leading,
+  }),
 )
 
 const trailingProps = computed(() =>
@@ -100,19 +103,19 @@ defineExpose<ToggleExpose>({
 <template>
   <ToggleRoot data-ui="toggle-root" v-bind="rootProps">
     <template #default="{ state }">
-      <ToggleIcon v-if="hasLeading" data-ui="toggle-leading" v-bind="leadingProps">
+      <span v-if="hasLeading" data-ui="toggle-leading" v-bind="leadingProps">
         <slot name="leading" :pressed="state.pressed">
           <Icon v-if="leadingIcon" data-ui="toggle-leading-icon" v-bind="leadingIconProps" />
         </slot>
-      </ToggleIcon>
+      </span>
       <slot :pressed="state.pressed">
         <span v-if="label" data-ui="toggle-label" v-bind="labelProps">{{ label }}</span>
       </slot>
-      <ToggleIcon v-if="hasTrailing" data-ui="toggle-trailing" v-bind="trailingProps">
+      <span v-if="hasTrailing" data-ui="toggle-trailing" v-bind="trailingProps">
         <slot name="trailing" :pressed="state.pressed">
           <Icon v-if="trailingIcon" data-ui="toggle-trailing-icon" v-bind="trailingIconProps" />
         </slot>
-      </ToggleIcon>
+      </span>
     </template>
   </ToggleRoot>
 </template>
