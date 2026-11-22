@@ -4,7 +4,9 @@ import type { ToggleSize, ToggleVariant } from '@/components/Toggle/types'
 
 export const toggleVariants = cva(
   [
-    'inline-flex shrink-0 cursor-pointer gap-2 items-center justify-center rounded-(--toggle-radius) border border-transparent font-medium whitespace-nowrap select-none',
+    'inline-flex shrink-0 cursor-pointer gap-2 items-center justify-center rounded-(--toggle-radius) border border-transparent bg-transparent font-medium whitespace-nowrap select-none',
+    '[--toggle-color:var(--toggle-inactive-color)] [--toggle-color-foreground:var(--toggle-inactive-color-foreground)]',
+    'data-pressed:[--toggle-color:var(--toggle-active-color)] data-pressed:[--toggle-color-foreground:var(--toggle-active-color-foreground)]',
     'transition-[color,background-color,border-color,box-shadow,opacity] outline-none',
     'focus-visible:border-(--toggle-color) focus-visible:ring-[3px] focus-visible:ring-(--toggle-color)/30',
     'data-disabled:cursor-not-allowed data-disabled:opacity-50',
@@ -19,17 +21,55 @@ export const toggleVariants = cva(
         xl: 'h-11 text-xl',
       } satisfies Record<ToggleSize, string>,
       variant: {
+        solid: [
+          'not-data-pressed:bg-(--toggle-color) not-data-pressed:text-(--toggle-color-foreground)',
+          'not-data-pressed:interactive:hover:bg-(--toggle-color)/90',
+        ],
         outline: [
-          'border-(--toggle-color)/40 bg-transparent text-(--toggle-color) interactive:hover:bg-(--toggle-color)/10',
-          'data-pressed:border-(--toggle-color)/60 data-pressed:bg-(--toggle-color)/20 data-pressed:interactive:hover:bg-(--toggle-color)/25',
+          'not-data-pressed:border-(--toggle-color)/40 not-data-pressed:text-(--toggle-color)',
+          'not-data-pressed:interactive:hover:bg-(--toggle-color)/10',
         ],
         plain: [
-          'bg-transparent text-(--toggle-color) interactive:hover:bg-(--toggle-color)/10',
-          'data-pressed:bg-(--toggle-color)/20 data-pressed:interactive:hover:bg-(--toggle-color)/25',
+          'not-data-pressed:text-(--toggle-color)',
+          'not-data-pressed:interactive:hover:bg-(--toggle-color)/10',
         ],
+        subtle: [
+          'not-data-pressed:border-(--toggle-color)/20 not-data-pressed:bg-(--toggle-color)/10 not-data-pressed:text-(--toggle-color)',
+          'not-data-pressed:interactive:hover:bg-(--toggle-color)/15',
+        ],
+        soft: [
+          'not-data-pressed:bg-(--toggle-color)/10 not-data-pressed:text-(--toggle-color)',
+          'not-data-pressed:interactive:hover:bg-(--toggle-color)/20',
+        ],
+        link: [
+          'not-data-pressed:text-(--toggle-color) not-data-pressed:underline not-data-pressed:underline-offset-4',
+          'not-data-pressed:interactive:hover:no-underline',
+        ],
+      } satisfies Record<ToggleVariant, string[]>,
+      activeVariant: {
         solid: [
-          'bg-(--toggle-color)/10 text-(--toggle-color) interactive:hover:bg-(--toggle-color)/20',
-          'data-pressed:bg-(--toggle-color) data-pressed:text-(--toggle-color-foreground) data-pressed:interactive:hover:bg-(--toggle-color)/90',
+          'data-pressed:bg-(--toggle-color) data-pressed:text-(--toggle-color-foreground)',
+          'data-pressed:interactive:hover:bg-(--toggle-color)/90',
+        ],
+        outline: [
+          'data-pressed:border-(--toggle-color)/40 data-pressed:text-(--toggle-color)',
+          'data-pressed:interactive:hover:bg-(--toggle-color)/10',
+        ],
+        plain: [
+          'data-pressed:text-(--toggle-color)',
+          'data-pressed:interactive:hover:bg-(--toggle-color)/10',
+        ],
+        subtle: [
+          'data-pressed:border-(--toggle-color)/20 data-pressed:bg-(--toggle-color)/10 data-pressed:text-(--toggle-color)',
+          'data-pressed:interactive:hover:bg-(--toggle-color)/15',
+        ],
+        soft: [
+          'data-pressed:bg-(--toggle-color)/10 data-pressed:text-(--toggle-color)',
+          'data-pressed:interactive:hover:bg-(--toggle-color)/20',
+        ],
+        link: [
+          'data-pressed:text-(--toggle-color) data-pressed:underline data-pressed:underline-offset-4',
+          'data-pressed:interactive:hover:no-underline',
         ],
       } satisfies Record<ToggleVariant, string[]>,
       square: {
@@ -58,6 +98,7 @@ export const toggleVariants = cva(
     defaultVariants: {
       size: toggleDefaults.size,
       variant: toggleDefaults.variant,
+      activeVariant: toggleDefaults.activeVariant,
       square: false,
     },
   },

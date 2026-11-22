@@ -44,7 +44,7 @@ const { t } = useLocale()
 const formField = useFormField()
 
 const size = computed(() => oneOf(props.size ?? formField?.size(), inputSizes, inputDefaults.size))
-const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
+const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
@@ -67,7 +67,7 @@ const clearProps = computed(() =>
 
 const leadingIconProps = computed(() => ({
   ...useUi({ class: inputIconVariants() }, props.ui?.leadingIcon?.()),
-  name: props.leadingIcon!,
+  name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
@@ -139,7 +139,7 @@ function showsClear(state: InputGroupState) {
     <template #default="{ state }">
       <span v-if="hasLeading" data-ui="input-leading" v-bind="leadingProps">
         <slot name="leading">
-          <Icon v-if="leadingIcon" data-ui="input-leading-icon" v-bind="leadingIconProps" />
+          <Icon v-if="icon" data-ui="input-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
       <InputRoot data-ui="input-input" v-bind="inputProps" />

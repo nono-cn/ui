@@ -57,7 +57,7 @@ const closeButtonProps = computed(() => {
     radius: 'full' as const,
     variant: variant.value,
     color: props.color,
-    leadingIcon: 'x' as const,
+    icon: 'x' as const,
   }
 })
 

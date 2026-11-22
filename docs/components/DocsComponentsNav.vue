@@ -6,8 +6,6 @@ import { docsComposables } from '@docs/config/docs-composables'
 
 const emit = defineEmits<{ navigate: [] }>()
 const route = useRoute()
-const dev = import.meta.env.DEV
-
 const groups = [
   {
     title: 'Components',
@@ -43,18 +41,6 @@ const visibleGroups = computed(() => {
           @click="emit('navigate')"
         >
           {{ item.label }}
-        </RouterLink>
-      </nav>
-    </template>
-    <template v-if="dev">
-      <p class="docs-nav-heading"><span>Dev</span></p>
-      <nav class="docs-nav-list" aria-label="Dev">
-        <RouterLink
-          to="/playground"
-          :aria-current="route.path === '/playground' ? 'page' : undefined"
-          @click="emit('navigate')"
-        >
-          Playground
         </RouterLink>
       </nav>
     </template>

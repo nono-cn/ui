@@ -11,6 +11,7 @@ Vue component library on top of ui-sdk, with Tailwind v4 styles: `src/components
 - Every node a component renders gets `data-ui`: `<component>-root` on the root and `<component>-<node>` inside, named after its `ui` key in kebab case (`alert-close-button`). `data-slot` belongs to ui-sdk; never set it.
 - A native attribute of the rendered element is a prop only when the component reads it to decide behavior (`href` chooses router or plain link) or it is not native there (`disabled` on `<a>`); otherwise it falls through as an attr (`target`, `rel`). Values the component sets on a node are a base layer that attrs and `ui` override, except what ui-sdk keeps.
 - A new package export needs `package.json#exports`, the `vite.config.ts` lib entry, `aliases.ts` and, for TypeScript, `tsconfig.base.json#paths`.
+- In the docs API tables, object types (slot props, `ui` states) are multi-line, one field per line, with `typePre: true` on `type` rows; reuse one const when the same shape appears twice. Function signatures stay inline.
 - Work on a branch, never directly on `master`.
 
 ## Commands

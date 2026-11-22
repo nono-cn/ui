@@ -175,7 +175,7 @@ const link: ComponentDocConfig = {
         default: `'${linkDefaults.radius}'`,
         description: 'Button radius. Only applies with a variant.',
       },
-      { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
+      { name: 'icon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
       {
         name: 'block',

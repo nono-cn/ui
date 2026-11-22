@@ -242,7 +242,10 @@ const formField: ComponentDocConfig = {
       },
       {
         name: 'error',
-        type: '{ message: string }',
+        type: `{
+  message: string
+}`,
+        typePre: true,
         description:
           'Error content. Receives message: the error prop when it is a string, or the browser message.',
       },

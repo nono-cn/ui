@@ -93,7 +93,7 @@ const button: ComponentDocConfig = {
           default: buttonDefaults.size,
         },
       ],
-      props: (state) => ({ label: 'Button', leadingIcon: 'plus', size: state.size! }),
+      props: (state) => ({ label: 'Button', icon: 'plus', size: state.size! }),
     },
     {
       title: 'Radius',
@@ -114,8 +114,8 @@ const button: ComponentDocConfig = {
       description: 'Place an icon before or after the label.',
       controls: [
         {
-          key: 'leadingIcon',
-          label: 'Leading icon',
+          key: 'icon',
+          label: 'Icon',
           type: 'select',
           options: icons,
           default: 'plus',
@@ -130,7 +130,7 @@ const button: ComponentDocConfig = {
       ],
       props: (state) => ({
         label: 'Button',
-        ...icon(state, 'leadingIcon'),
+        ...icon(state, 'icon'),
         ...icon(state, 'trailingIcon'),
       }),
     },
@@ -155,7 +155,7 @@ const button: ComponentDocConfig = {
         },
       ],
       props: (state) => ({
-        leadingIcon: 'plus',
+        icon: 'plus',
         'aria-label': 'Add',
         size: state.size!,
         variant: state.variant!,
@@ -175,8 +175,8 @@ const button: ComponentDocConfig = {
         'Return a Promise from @click. The button shows a spinner, ignores presses and keeps focus until it settles.',
       controls: [
         {
-          key: 'leadingIcon',
-          label: 'Leading icon',
+          key: 'icon',
+          label: 'Icon',
           type: 'select',
           options: icons,
           default: 'save',
@@ -193,7 +193,7 @@ const button: ComponentDocConfig = {
         label: 'Save',
         pendingAnnouncement: 'Saving',
         variant: state.variant!,
-        ...icon(state, 'leadingIcon'),
+        ...icon(state, 'icon'),
       }),
       handlers: [
         {
@@ -291,7 +291,7 @@ const button: ComponentDocConfig = {
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
-      { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
+      { name: 'icon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
       { name: 'block', type: 'boolean', default: 'false', description: 'Takes the full width.' },
       {
@@ -357,7 +357,7 @@ const button: ComponentDocConfig = {
       {
         name: 'leading',
         type: '-',
-        description: 'Content displayed before the label; overrides the leadingIcon fallback.',
+        description: 'Content displayed before the label; overrides the icon fallback.',
       },
       {
         name: 'loading',

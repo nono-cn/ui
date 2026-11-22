@@ -24,7 +24,9 @@ const props = withDefaults(defineProps<ToggleProps>(), {
   modelValue: undefined,
   defaultValue: undefined,
   variant: toggleDefaults.variant,
+  activeVariant: toggleDefaults.activeVariant,
   color: toggleDefaults.color,
+  activeColor: toggleDefaults.activeColor,
   size: toggleDefaults.size,
   radius: toggleDefaults.radius,
   square: undefined,
@@ -39,7 +41,7 @@ const attrs = useAttrs()
 const controller = createToggleController()
 
 const size = computed(() => oneOf(props.size, toggleSizes, toggleDefaults.size))
-const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
+const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 const square = computed(
   () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
@@ -57,7 +59,7 @@ const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.
 
 const leadingIconProps = computed(() => ({
   ...useUi({ class: toggleIconVariants() }, props.ui?.leadingIcon?.()),
-  name: props.leadingIcon!,
+  name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
@@ -72,10 +74,16 @@ const rootProps = computed(() => ({
         class: toggleVariants({
           size: size.value,
           variant: oneOf(props.variant, toggleVariantNames, toggleDefaults.variant),
+          activeVariant: oneOf(
+            props.activeVariant,
+            toggleVariantNames,
+            toggleDefaults.activeVariant,
+          ),
           square: square.value,
         }),
         style: [
-          getColorVariables(props.color, 'toggle', toggleDefaults.color),
+          getColorVariables(props.color, 'toggle-inactive', toggleDefaults.color),
+          getColorVariables(props.activeColor, 'toggle-active', toggleDefaults.activeColor),
           getRadiusVariables(props.radius, 'toggle', toggleDefaults.radius),
         ],
       },
@@ -85,6 +93,7 @@ const rootProps = computed(() => ({
   ),
   pressed: props.modelValue,
   defaultPressed: props.defaultValue,
+  value: props.value,
   'onUpdate:pressed': (value: boolean) => emit('update:modelValue', value),
   onPressedChange: (value: boolean, details: TogglePressedChangeDetails) =>
     emit('pressedChange', value, details),
@@ -106,7 +115,7 @@ defineExpose<ToggleExpose>({
     <template #default="{ state }">
       <span v-if="hasLeading" data-ui="toggle-leading" v-bind="leadingProps">
         <slot name="leading" :pressed="state.pressed">
-          <Icon v-if="leadingIcon" data-ui="toggle-leading-icon" v-bind="leadingIconProps" />
+          <Icon v-if="icon" data-ui="toggle-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
       <slot :pressed="state.pressed">

@@ -80,7 +80,7 @@ const input: ComponentDocConfig = {
           default: inputDefaults.size,
         },
       ],
-      props: (state) => ({ placeholder, leadingIcon: 'search', size: state.size! }),
+      props: (state) => ({ placeholder, icon: 'search', size: state.size! }),
     },
     {
       title: 'Radius',
@@ -101,8 +101,8 @@ const input: ComponentDocConfig = {
       description: 'Place an icon before or after the text. Use the slots for anything else.',
       controls: [
         {
-          key: 'leadingIcon',
-          label: 'Leading icon',
+          key: 'icon',
+          label: 'Icon',
           type: 'select',
           options: icons,
           default: 'search',
@@ -117,7 +117,7 @@ const input: ComponentDocConfig = {
       ],
       props: (state) => ({
         placeholder,
-        ...icon(state, 'leadingIcon'),
+        ...icon(state, 'icon'),
         ...icon(state, 'trailingIcon'),
       }),
     },
@@ -238,7 +238,7 @@ const input: ComponentDocConfig = {
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
-      { name: 'leadingIcon', type: 'IconName', description: 'Icon before the text.' },
+      { name: 'icon', type: 'IconName', description: 'Icon before the text.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the text.' },
       {
         name: 'clearable',
@@ -300,7 +300,7 @@ const input: ComponentDocConfig = {
       {
         name: 'leading',
         type: '-',
-        description: 'Content displayed before the text; overrides the leadingIcon fallback.',
+        description: 'Content displayed before the text; overrides the icon fallback.',
       },
       {
         name: 'trailing',

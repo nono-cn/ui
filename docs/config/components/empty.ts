@@ -18,7 +18,7 @@ const text = {
 } as const
 
 const actions: ExampleSlotContent[] = [
-  { name: 'Button', component: Button, props: { label: 'Create project', leadingIcon: 'plus' } },
+  { name: 'Button', component: Button, props: { label: 'Create project', icon: 'plus' } },
   {
     name: 'Button',
     component: Button,
@@ -140,7 +140,7 @@ const empty: ComponentDocConfig = {
         {
           name: 'Input',
           component: Input,
-          props: { placeholder: 'Search pages...', leadingIcon: 'search' },
+          props: { placeholder: 'Search pages...', icon: 'search' },
         },
       ],
     },

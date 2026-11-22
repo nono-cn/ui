@@ -113,7 +113,10 @@ const time: ComponentDocConfig = {
     slots: [
       {
         name: 'default',
-        type: '{ formatted: string }',
+        type: `{
+  formatted: string
+}`,
+        typePre: true,
         description: 'Content of the time element; overrides the formatted text it receives.',
       },
     ],

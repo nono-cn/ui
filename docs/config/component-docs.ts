@@ -36,7 +36,40 @@ export interface ComponentApiConfig {
 
 export type ExampleState = Record<string, string>
 
-export type ExampleValue = string | number | boolean | { [key: string]: ExampleValue }
+const exampleSource = Symbol('example-source')
+
+export interface ExampleSource {
+  [exampleSource]: string
+  value: unknown
+}
+
+export function withSource(source: string, value: unknown): ExampleSource {
+  return { [exampleSource]: source, value }
+}
+
+export function sourceOf(value: unknown): string | undefined {
+  return typeof value === 'object' && value !== null && exampleSource in value
+    ? (value as ExampleSource)[exampleSource]
+    : undefined
+}
+
+export function runtimeValue(value: unknown): unknown {
+  if (sourceOf(value) !== undefined) return (value as ExampleSource).value
+  if (Array.isArray(value)) return value.map(runtimeValue)
+  if (typeof value === 'object' && value !== null) {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, runtimeValue(item)]))
+  }
+  return value
+}
+
+export type ExampleValue =
+  | string
+  | number
+  | boolean
+  | ExampleValue[]
+  | (() => ExampleValue)
+  | ExampleSource
+  | { [key: string]: ExampleValue }
 
 export type ExampleProps = Record<string, ExampleValue>
 

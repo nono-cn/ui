@@ -26,7 +26,7 @@ export interface LinkProps {
   color?: string
   size?: ButtonSize
   radius?: Radius
-  leadingIcon?: IconName
+  icon?: IconName
   trailingIcon?: IconName
   block?: boolean
   square?: boolean

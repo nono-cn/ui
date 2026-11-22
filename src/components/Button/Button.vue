@@ -36,7 +36,7 @@ const buttonGroup = useButtonGroup()
 const size = computed(() =>
   oneOf(props.size ?? buttonGroup?.size(), buttonSizes, buttonDefaults.size),
 )
-const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
+const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 const square = computed(
   () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
@@ -59,7 +59,7 @@ const spinnerProps = computed(() => ({
 
 const leadingIconProps = computed(() => ({
   ...useUi({ class: buttonIconVariants() }, props.ui?.leadingIcon?.()),
-  name: props.leadingIcon!,
+  name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
@@ -102,7 +102,7 @@ const rootProps = computed(() => ({
           <Icon data-ui="button-spinner" v-bind="spinnerProps" />
         </slot>
         <slot v-else name="leading">
-          <Icon v-if="leadingIcon" data-ui="button-leading-icon" v-bind="leadingIconProps" />
+          <Icon v-if="icon" data-ui="button-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
       <slot>

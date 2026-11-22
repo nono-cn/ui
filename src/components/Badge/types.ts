@@ -22,7 +22,7 @@ export interface BadgeProps {
   color?: string
   size?: BadgeSize
   radius?: Radius
-  leadingIcon?: IconName
+  icon?: IconName
   trailingIcon?: IconName
   ui?: BadgeUi
 }

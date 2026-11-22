@@ -86,7 +86,7 @@ const badge: ComponentDocConfig = {
           default: badgeDefaults.size,
         },
       ],
-      props: (state) => ({ label: 'Badge', leadingIcon: 'check', size: state.size! }),
+      props: (state) => ({ label: 'Badge', icon: 'check', size: state.size! }),
     },
     {
       title: 'Radius',
@@ -107,8 +107,8 @@ const badge: ComponentDocConfig = {
       description: 'Place an icon before or after the label.',
       controls: [
         {
-          key: 'leadingIcon',
-          label: 'Leading icon',
+          key: 'icon',
+          label: 'Icon',
           type: 'select',
           options: icons,
           default: 'check',
@@ -123,7 +123,7 @@ const badge: ComponentDocConfig = {
       ],
       props: (state) => ({
         label: 'Badge',
-        ...icon(state, 'leadingIcon'),
+        ...icon(state, 'icon'),
         ...icon(state, 'trailingIcon'),
       }),
     },
@@ -184,7 +184,7 @@ const badge: ComponentDocConfig = {
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
-      { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
+      { name: 'icon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
       {
         name: 'ui',
@@ -211,7 +211,7 @@ const badge: ComponentDocConfig = {
       {
         name: 'leading',
         type: '-',
-        description: 'Content displayed before the label; overrides the leadingIcon fallback.',
+        description: 'Content displayed before the label; overrides the icon fallback.',
       },
       {
         name: 'trailing',
