@@ -62,14 +62,24 @@ export interface ComponentExampleConfig {
   controls?: ExampleControl[]
   props: (state: ExampleState) => ExampleProps
   handlers?: ExampleHandler[]
-  slot?: ExampleSlotContent
+  slot?: ExampleSlotContent | ExampleSlotContent[]
 }
 
-export interface ExampleSlotContent {
+interface ExampleSlotTarget {
+  slot?: string
+}
+
+export interface ExampleComponentSlot extends ExampleSlotTarget {
   name: string
   component: Component
   props: ExampleProps
 }
+
+export interface ExampleTextSlot extends ExampleSlotTarget {
+  text: string
+}
+
+export type ExampleSlotContent = ExampleComponentSlot | ExampleTextSlot
 
 export interface ComponentAccessibilityConfig {
   title: string
@@ -82,7 +92,7 @@ export interface ComponentDocConfig {
   title: string
   description: string
   component: Component
-  slot?: ExampleSlotContent
+  slot?: ExampleSlotContent | ExampleSlotContent[]
   usage: ComponentExampleConfig[]
   examples: ComponentExampleConfig[]
   accessibility: ComponentAccessibilityConfig[]

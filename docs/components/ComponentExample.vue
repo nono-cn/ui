@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Check, Clipboard, RotateCcw } from 'lucide'
-import { computed, onBeforeUnmount, reactive, ref } from 'vue'
+import { computed, h, onBeforeUnmount, reactive, ref } from 'vue'
 import type {
   ComponentDocConfig,
   ComponentExampleConfig,
   ExampleProps,
+  ExampleSlotContent,
   ExampleState,
   ExampleValue,
 } from '@docs/config/component-docs'
@@ -35,7 +36,20 @@ const exampleBindings = computed(() => ({
     ]),
   ),
 }))
-const slot = computed(() => props.example.slot ?? props.component.slot)
+const slots = computed<ExampleSlotContent[]>(() => {
+  const slot = props.example.slot ?? props.component.slot
+  return slot ? [slot].flat() : []
+})
+const renderedSlots = computed(() =>
+  Object.fromEntries(
+    slots.value.map((content) => [
+      content.slot ?? 'default',
+      () => ('text' in content ? content.text : h(content.component, content.props)),
+    ]),
+  ),
+)
+const ExamplePreview = () =>
+  h(props.component.component, exampleBindings.value, renderedSlots.value)
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
@@ -61,12 +75,16 @@ const code = computed(() => {
     .map(({ event, name: handler }) => ` @${event}="${handler}"`)
     .join('')
   const sources = handlers.value.map(({ source }) => `\n${source}\n`).join('')
-  const content = slot.value
-  const imports = content ? [name, content.name].sort().join(', ') : name
-  const element = content
-    ? `<${name}${attributes}${listeners}>
-    <${content.name}${attributesOf(content.props)} />
-  </${name}>`
+  const names = slots.value.flatMap((content) => ('name' in content ? [content.name] : []))
+  const imports = [...new Set([name, ...names])].sort().join(', ')
+  const children = slots.value.map((content) => {
+    const markup =
+      'text' in content ? content.text : `<${content.name}${attributesOf(content.props)} />`
+    if (!content.slot || content.slot === 'default') return `\n    ${markup}`
+    return `\n    <template #${content.slot}>\n      ${markup}\n    </template>`
+  })
+  const element = children.length
+    ? `<${name}${attributes}${listeners}>${children.join('')}\n  </${name}>`
     : `<${name}${attributes}${listeners} />`
 
   return `<script setup lang="ts">
@@ -133,9 +151,7 @@ onBeforeUnmount(() => clearTimeout(copyTimer))
     </div>
 
     <div class="grid min-h-36 w-full max-w-full min-w-0 place-items-center p-8 sm:min-h-44">
-      <component :is="component.component" :key="renderKey" v-bind="exampleBindings">
-        <component :is="slot.component" v-if="slot" v-bind="slot.props" />
-      </component>
+      <ExamplePreview :key="renderKey" />
     </div>
 
     <div class="relative min-w-0 border-t bg-muted/40">
