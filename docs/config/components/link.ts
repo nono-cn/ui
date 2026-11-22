@@ -50,7 +50,7 @@ const link: ComponentDocConfig = {
     {
       title: 'Variant',
       description:
-        'Without a variant it is inline text. With one, it is a Button of that variant, rendered as a link.',
+        'Without a variant it is inline text. With one, it takes the look of a Button of that variant.',
       controls: [
         {
           key: 'variant',
@@ -82,7 +82,8 @@ const link: ComponentDocConfig = {
     },
     {
       title: 'New tab',
-      description: 'Set target. With _blank, rel="noopener noreferrer" is added.',
+      description:
+        'Set the native target attribute. With _blank, rel="noopener noreferrer" is added unless you pass your own rel.',
       controls: [],
       props: () => ({ href: 'https://ui-sdk.dev', target: '_blank', label: 'ui-sdk' }),
     },
@@ -130,7 +131,6 @@ const link: ComponentDocConfig = {
         description:
           'Skips the router. Detected for strings in to that start with a protocol or //.',
       },
-      { name: 'target', type: 'string', description: 'Where to open it, such as _blank.' },
       {
         name: 'replace',
         type: 'boolean',
@@ -153,7 +153,7 @@ const link: ComponentDocConfig = {
         name: 'variant',
         type: buttonVariantNames.map((variant) => `'${variant}'`).join(' | '),
         description:
-          'Without it, inline text with no height or padding. With it, a Button of that variant.',
+          'Without it, inline text with no height or padding. With it, the look of a Button of that variant.',
       },
       {
         name: 'color',
@@ -185,14 +185,14 @@ const link: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: 'ButtonUi',
+        type: 'LinkUi',
         typeLink: '#ui',
         description: 'HTML attributes for the root and each inner node. See UI.',
       },
     ],
     emits: [],
     ui: [
-      { node: 'root', tag: 'a', kept: 'href, target, rel, aria-disabled, tabindex' },
+      { node: 'root', tag: 'a' },
       { node: 'leading', tag: 'span' },
       { node: 'leadingIcon', tag: 'svg' },
       { node: 'label', tag: 'span' },

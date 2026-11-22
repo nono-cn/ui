@@ -2,17 +2,25 @@
 import {
   computed,
   getCurrentInstance,
+  mergeProps,
   useAttrs,
   type Component,
   type FunctionalComponent,
 } from 'vue'
-import { cn, type ClassValue } from '@/composables/cn'
-import type { UiAttributes, UiResolver } from '@/composables/useUi'
-import type { ButtonUi } from '@/components/Button/types'
+import { cn } from '@/composables/cn'
+import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
+import { buttonSizes, buttonVariantNames } from '@/components/Button/constants'
+import {
+  buttonIconVariants,
+  buttonLeadingVariants,
+  buttonTrailingVariants,
+  buttonVariants,
+} from '@/components/Button/variants'
 import { linkDefaults } from '@/components/Link/constants'
 import type { LinkProps, LinkSlots } from '@/components/Link/types'
-import { linkIconSlotClass, linkVariants } from '@/components/Link/variants'
-import Button from '@/components/Button/Button.vue'
+import { linkIconSlotVariants, linkVariants } from '@/components/Link/variants'
+import Icon from '@/components/Icon/Icon.vue'
 
 defineOptions({ inheritAttrs: false })
 
@@ -49,61 +57,77 @@ const routed = computed(
   () => Boolean(RouterLink) && props.to !== undefined && !props.href && !external.value,
 )
 
-const inline = computed(() => props.variant === undefined)
+const variant = computed(() =>
+  props.variant === undefined ? undefined : oneOf(props.variant, buttonVariantNames, 'link'),
+)
+const size = computed(() => oneOf(props.size, buttonSizes, linkDefaults.size))
+const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
+const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
-function withIconSlot(resolver?: UiResolver): UiResolver {
-  return () => {
-    const ui = resolver?.() ?? {}
-    return { ...ui, class: cn(linkIconSlotClass, ui.class as ClassValue) }
-  }
-}
-
-const ui = computed<ButtonUi | undefined>(() =>
-  inline.value
+const baseProps = computed(() =>
+  variant.value
     ? {
-        ...props.ui,
-        leading: withIconSlot(props.ui?.leading),
-        trailing: withIconSlot(props.ui?.trailing),
+        class: cn(
+          'no-underline',
+          buttonVariants({ size: size.value, variant: variant.value, block: props.block }),
+        ),
+        style: [
+          getColorVariables(props.color, 'button', linkDefaults.color),
+          getRadiusVariables(props.radius, 'button', linkDefaults.radius),
+        ],
       }
-    : props.ui,
+    : {
+        class: linkVariants(),
+        style: getColorVariables(props.color, 'link', linkDefaults.color),
+      },
 )
 
-function rootClass(buttonClass: unknown): string {
-  if (!inline.value) return cn(buttonClass as ClassValue)
-  const rootUi: UiAttributes = props.ui?.root?.() ?? {}
-  return cn(linkVariants(), attrs.class as ClassValue, rootUi.class as ClassValue)
-}
+const leadingProps = computed(() =>
+  useUi(
+    { class: variant.value ? buttonLeadingVariants({ size: size.value }) : linkIconSlotVariants() },
+    props.ui?.leading?.(),
+  ),
+)
 
-function buttonProps(link: RouterLinkScope) {
+const trailingProps = computed(() =>
+  useUi(
+    {
+      class: variant.value ? buttonTrailingVariants({ size: size.value }) : linkIconSlotVariants(),
+    },
+    props.ui?.trailing?.(),
+  ),
+)
+
+const labelProps = computed(() =>
+  useUi({ class: variant.value ? 'truncate' : undefined }, props.ui?.label?.()),
+)
+
+const leadingIconProps = computed(() => ({
+  ...useUi({ class: buttonIconVariants() }, props.ui?.leadingIcon?.()),
+  name: props.leadingIcon!,
+}))
+
+const trailingIconProps = computed(() => ({
+  ...useUi({ class: buttonIconVariants() }, props.ui?.trailingIcon?.()),
+  name: props.trailingIcon!,
+}))
+
+function rootProps(link: RouterLinkScope) {
   const active = props.exact ? link.isExactActive : link.isActive
-  const { navigate } = link
-  return {
-    ...attrs,
-    label: props.label,
-    variant: props.variant ?? 'link',
-    color: props.color,
-    size: props.size,
-    radius: props.radius,
-    leadingIcon: props.leadingIcon,
-    trailingIcon: props.trailingIcon,
-    block: props.block,
-    disabled: props.disabled,
-    ui: ui.value,
-    onClick: navigate
-      ? (event: MouseEvent) => {
-          navigate(event)
-        }
-      : undefined,
+  const base = {
+    ...baseProps.value,
+    href: props.href ?? link.href ?? (typeof props.to === 'string' ? props.to : undefined),
+    'aria-disabled': props.disabled ? 'true' : undefined,
+    tabindex: props.disabled ? -1 : undefined,
+    'data-disabled': props.disabled ? '' : undefined,
     'data-active': active ? '' : undefined,
   }
-}
-
-function anchorProps(link: RouterLinkScope) {
-  return {
-    href: props.href ?? link.href ?? (typeof props.to === 'string' ? props.to : undefined),
-    target: props.target,
-    rel: props.target === '_blank' ? 'noopener noreferrer' : undefined,
-  }
+  return mergeProps(useUi([base, attrs], props.ui?.root?.()), {
+    onClick: (event: MouseEvent) => {
+      if (props.disabled) event.preventDefault()
+      else link.navigate?.(event)
+    },
+  })
 }
 </script>
 
@@ -115,15 +139,20 @@ function anchorProps(link: RouterLinkScope) {
     :to="to"
     :replace="replace"
   >
-    <Button v-bind="buttonProps(link)">
-      <template v-if="slots.leading" #leading><slot name="leading" /></template>
-      <template v-if="slots.default" #default><slot /></template>
-      <template v-if="slots.trailing" #trailing><slot name="trailing" /></template>
-      <template #render="{ props: buttonAttrs, children }">
-        <a v-bind="{ ...buttonAttrs, ...anchorProps(link), class: rootClass(buttonAttrs.class) }">
-          <component :is="children" />
-        </a>
-      </template>
-    </Button>
+    <a data-ui="link-root" v-bind="rootProps(link)">
+      <span v-if="hasLeading" data-ui="link-leading" v-bind="leadingProps">
+        <slot name="leading">
+          <Icon v-if="leadingIcon" data-ui="link-leading-icon" v-bind="leadingIconProps" />
+        </slot>
+      </span>
+      <slot>
+        <span v-if="label" data-ui="link-label" v-bind="labelProps">{{ label }}</span>
+      </slot>
+      <span v-if="hasTrailing" data-ui="link-trailing" v-bind="trailingProps">
+        <slot name="trailing">
+          <Icon v-if="trailingIcon" data-ui="link-trailing-icon" v-bind="trailingIconProps" />
+        </slot>
+      </span>
+    </a>
   </component>
 </template>
