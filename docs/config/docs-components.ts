@@ -8,6 +8,7 @@ import chip from '@docs/config/components/chip'
 import formField from '@docs/config/components/form-field'
 import hoverCard from '@docs/config/components/hover-card'
 import icon from '@docs/config/components/icon'
+import iconTile from '@docs/config/components/icon-tile'
 import input from '@docs/config/components/input'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
@@ -29,6 +30,7 @@ export const docsComponents: ComponentDocConfig[] = [
   formField,
   hoverCard,
   icon,
+  iconTile,
   input,
   kbd,
   label,
