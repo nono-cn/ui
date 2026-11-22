@@ -1,21 +1,13 @@
 export { default as Toggle } from '@/components/Toggle/Toggle.vue'
-export {
-  toggleDefaults,
-  toggleIconSizes,
-  toggleSizes,
-  toggleTextSizes,
-  toggleVariantNames,
-} from '@/components/Toggle/constants'
+export { toggleDefaults, toggleSizes, toggleVariantNames } from '@/components/Toggle/constants'
 export type {
   ToggleEmits,
   ToggleExpose,
-  ToggleIconSize,
   TogglePressedChangeDetails,
   ToggleProps,
   ToggleSize,
   ToggleSlotProps,
   ToggleSlots,
-  ToggleTextSize,
   ToggleUi,
   ToggleVariant,
 } from '@/components/Toggle/types'

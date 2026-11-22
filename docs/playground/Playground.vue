@@ -21,14 +21,14 @@ import { dark } from '@docs/components/useDocsTheme'
           href="https://nono-ui.com"
           target="_blank"
           variant="outline"
-          size="icon-xl"
+          size="xl"
         />
         <Link
           trailing-icon="user"
           to="https://www.youtube.com/watch?v=WsWXequbzQ8&list=RDFHDw3Lg7X3o&index=6"
           target="_blank"
           variant="subtle"
-          size="icon-xl"
+          size="xl"
         />
       </div>
     </section>

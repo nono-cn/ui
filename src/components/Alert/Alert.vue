@@ -53,7 +53,7 @@ const closeButtonProps = computed(() => {
 
   return {
     ...ui,
-    size: 'icon-xs' as const,
+    size: 'xs' as const,
     radius: 'full' as const,
     variant: variant.value,
     color: props.color,

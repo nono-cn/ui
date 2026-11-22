@@ -184,6 +184,12 @@ const link: ComponentDocConfig = {
         description: 'Takes the full width. Only applies with a variant.',
       },
       {
+        name: 'square',
+        type: 'boolean',
+        description:
+          'Makes the link as wide as it is tall. On by default when it has an icon and no label or default slot. Only applies with a variant.',
+      },
+      {
         name: 'ui',
         type: 'LinkUi',
         typeLink: '#ui',

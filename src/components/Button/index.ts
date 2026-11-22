@@ -1,18 +1,10 @@
 export { default as Button } from '@/components/Button/Button.vue'
-export {
-  buttonDefaults,
-  buttonIconSizes,
-  buttonSizes,
-  buttonTextSizes,
-  buttonVariantNames,
-} from '@/components/Button/constants'
+export { buttonDefaults, buttonSizes, buttonVariantNames } from '@/components/Button/constants'
 export type {
-  ButtonIconSize,
   ButtonProps,
   ButtonUi,
   ButtonSize,
   ButtonSlots,
-  ButtonTextSize,
   ButtonVariant,
 } from '@/components/Button/types'
 export {
