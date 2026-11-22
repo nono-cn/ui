@@ -1,11 +1,11 @@
 import type { ComponentDocConfig, ExampleSlotContent } from '@docs/config/component-docs'
 import {
   Avatar,
-  Button,
   HoverCard,
   hoverCardAligns,
   hoverCardDefaults,
   hoverCardSides,
+  Link,
   themeRadii,
 } from '@nono/ui'
 
@@ -15,7 +15,11 @@ const preview: ExampleSlotContent = {
 }
 
 const trigger: ExampleSlotContent[] = [
-  { name: 'Button', component: Button, props: { label: 'Ada Lovelace', variant: 'link' } },
+  {
+    name: 'Link',
+    component: Link,
+    props: { label: 'Ada Lovelace', href: 'https://en.wikipedia.org/wiki/Ada_Lovelace' },
+  },
   preview,
 ]
 
