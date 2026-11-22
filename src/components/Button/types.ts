@@ -1,4 +1,5 @@
-import type { ButtonActionDetails } from '@ui-sdk/vue/button'
+import type { ButtonActionDetails, ButtonState } from '@ui-sdk/vue/button'
+import type { FunctionalComponent } from 'vue'
 import type {
   buttonIconSizes,
   buttonSizes,
@@ -49,4 +50,12 @@ export interface ButtonSlots {
   leading?(): unknown
   loading?(): unknown
   trailing?(): unknown
+}
+
+export interface ButtonInternalSlots {
+  render?(props: {
+    props: Record<string, unknown>
+    state: ButtonState
+    children: FunctionalComponent
+  }): unknown
 }
