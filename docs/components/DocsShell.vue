@@ -4,7 +4,9 @@ import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { docsComponentsBySlug } from '@docs/config/docs-components'
 import { exampleAnchor } from '@docs/config/docs-anchors'
+import { docsComposablesBySlug } from '@docs/config/docs-composables'
 import ComponentDocsPage from '@docs/components/ComponentDocsPage.vue'
+import ComposableDocsPage from '@docs/components/ComposableDocsPage.vue'
 import DocsComponentsNav from '@docs/components/DocsComponentsNav.vue'
 import DocsDrawer from '@docs/components/DocsDrawer.vue'
 import DocsIcon from '@docs/components/DocsIcon.vue'
@@ -34,12 +36,40 @@ function setVariable(name: string, value: string) {
   else document.documentElement.style.removeProperty(name)
 }
 
-const component = computed(() => docsComponentsBySlug[String(route.params.slug)])
-const pageTitle = computed(() =>
-  component.value ? `${component.value.title} · nono/ui` : 'nono/ui · Components',
+const slug = computed(() => String(route.params.slug))
+const composablesPage = computed(() => route.path.startsWith('/composables/'))
+const homePage = computed(() => route.path === '/')
+const component = computed(() =>
+  composablesPage.value ? undefined : docsComponentsBySlug[slug.value],
 )
+const composable = computed(() =>
+  composablesPage.value ? docsComposablesBySlug[slug.value] : undefined,
+)
+const current = computed(() => (component.value ? component.value.title : composable.value?.name))
+const section = computed(() => {
+  if (homePage.value) return { title: 'Home', to: '/' }
+  if (composablesPage.value) return { title: 'Composables', to: '/composables' }
+  return { title: 'Components', to: '/components' }
+})
+const pageTitle = computed(() => {
+  if (current.value) return `${current.value} · nono/ui`
+  return homePage.value ? 'nono/ui' : `nono/ui · ${section.value.title}`
+})
 
 const tocTree = computed<DocsTocItem[]>(() => {
+  if (composable.value) {
+    const { parameters, returns, types } = composable.value
+    const apiChildren: DocsTocItem[] = []
+    if (parameters.length) apiChildren.push({ id: 'parameters', label: 'Parameters' })
+    if (returns.length) apiChildren.push({ id: 'returns', label: 'Returns' })
+    if (types.length) apiChildren.push({ id: 'types', label: 'Types' })
+    return [
+      { id: 'import', label: 'Import' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API', children: apiChildren },
+    ]
+  }
+
   const current = component.value
   if (!current) return []
 
@@ -88,7 +118,7 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
 <template>
   <div class="docs-shell">
     <header class="docs-topbar">
-      <RouterLink to="/components" class="docs-brand"
+      <RouterLink to="/" class="docs-brand"
         ><span class="docs-brand-mark">N</span><span>nono/ui</span
         ><span class="docs-version">v{{ version }}</span></RouterLink
       >
@@ -167,10 +197,10 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
         >
           <DocsIcon :icon="Menu" />
         </button>
-        <RouterLink to="/components" class="docs-section-title">Components</RouterLink>
-        <span v-if="component" class="docs-section-current">/ {{ component.title }}</span>
+        <RouterLink :to="section.to" class="docs-section-title">{{ section.title }}</RouterLink>
+        <span v-if="current" class="docs-section-current">/ {{ current }}</span>
         <button
-          v-if="component"
+          v-if="tocTree.length"
           type="button"
           class="docs-icon-button docs-mobile-only docs-toc-button"
           @click="tocOpen = true"
@@ -187,14 +217,19 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
       </aside>
       <main class="docs-content">
         <ComponentDocsPage v-if="component" :key="component.slug" :component="component" />
+        <ComposableDocsPage
+          v-else-if="composable"
+          :key="composable.slug"
+          :composable="composable"
+        />
         <component :is="route.meta.page" v-else-if="route.meta.page" />
         <div v-else class="docs-empty">
-          <span class="docs-empty-kicker">Components</span>
-          <h1>Component not found</h1>
-          <p>Pick one of the available components in the navigation.</p>
+          <span class="docs-empty-kicker">{{ section.title }}</span>
+          <h1>{{ composablesPage ? 'Composable' : 'Component' }} not found</h1>
+          <p>Pick one of the available {{ section.title.toLowerCase() }} in the navigation.</p>
         </div>
       </main>
-      <aside v-if="component" class="docs-toc">
+      <aside v-if="tocTree.length" class="docs-toc">
         <DocsToc :items="tocTree" :active-id="activeId" />
       </aside>
     </div>
@@ -202,7 +237,7 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
     <DocsDrawer v-model:open="componentsOpen" side="left" label="Components">
       <DocsComponentsNav @navigate="componentsOpen = false" />
     </DocsDrawer>
-    <DocsDrawer v-if="component" v-model:open="tocOpen" side="right" label="On this page">
+    <DocsDrawer v-if="tocTree.length" v-model:open="tocOpen" side="right" label="On this page">
       <DocsToc :items="tocTree" :active-id="activeId" @navigate="tocOpen = false" />
     </DocsDrawer>
   </div>
