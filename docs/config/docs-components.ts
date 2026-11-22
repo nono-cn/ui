@@ -6,6 +6,7 @@ import button from '@docs/config/components/button'
 import buttonGroup from '@docs/config/components/button-group'
 import checkbox from '@docs/config/components/checkbox'
 import chip from '@docs/config/components/chip'
+import empty from '@docs/config/components/empty'
 import formField from '@docs/config/components/form-field'
 import hoverCard from '@docs/config/components/hover-card'
 import icon from '@docs/config/components/icon'
@@ -29,6 +30,7 @@ export const docsComponents: ComponentDocConfig[] = [
   buttonGroup,
   checkbox,
   chip,
+  empty,
   formField,
   hoverCard,
   icon,
