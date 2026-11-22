@@ -21,6 +21,7 @@ import switchDocs from '@docs/config/components/switch'
 import textarea from '@docs/config/components/textarea'
 import time from '@docs/config/components/time'
 import toggle from '@docs/config/components/toggle'
+import toggleGroup from '@docs/config/components/toggle-group'
 
 export const docsComponents: ComponentDocConfig[] = [
   alert,
@@ -45,6 +46,7 @@ export const docsComponents: ComponentDocConfig[] = [
   textarea,
   time,
   toggle,
+  toggleGroup,
 ].sort((a, b) => a.title.localeCompare(b.title))
 
 export const docsComponentsBySlug = Object.fromEntries(

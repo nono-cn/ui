@@ -9,6 +9,7 @@ import type {
   ExampleState,
   ExampleValue,
 } from '@docs/config/component-docs'
+import { runtimeValue, sourceOf } from '@docs/config/component-docs'
 import DocsIcon from '@docs/components/DocsIcon.vue'
 import ExampleColorControl from '@docs/components/controls/ExampleColorControl.vue'
 import ExampleSelectControl from '@docs/components/controls/ExampleSelectControl.vue'
@@ -28,7 +29,7 @@ const state = reactive<ExampleState>(initialState())
 const exampleProps = computed(() => props.example.props(state))
 const handlers = computed(() => props.example.handlers ?? [])
 const exampleBindings = computed(() => ({
-  ...exampleProps.value,
+  ...(runtimeValue(exampleProps.value) as ExampleProps),
   ...Object.fromEntries(
     handlers.value.map(({ event, handler }) => [
       `on${event[0]!.toUpperCase()}${event.slice(1)}`,
@@ -49,7 +50,9 @@ const renderedSlots = computed(() => {
         slots.value
           .filter((content) => (content.slot ?? 'default') === slot)
           .map((content) =>
-            'text' in content ? content.text : h(content.component, content.props),
+            'text' in content
+              ? content.text
+              : h(content.component, runtimeValue(content.props) as ExampleProps),
           ),
     ]),
   )
@@ -59,10 +62,27 @@ const ExamplePreview = () =>
 const visibleControls = computed(() =>
   controls.value.filter((control) => control.visible?.(state) ?? true),
 )
-function literalOf(value: ExampleValue): string {
+function keyOf(key: string) {
+  return /^[A-Za-z_$][\w$]*$/.test(key) ? key : `'${key}'`
+}
+
+function literalOf(value: ExampleValue, indent = '  '): string {
+  const source = sourceOf(value)
+  if (source !== undefined) return source
   if (typeof value === 'string') return `'${value}'`
+  if (typeof value === 'function') return `() => (${literalOf(value(), indent)})`
+  if (Array.isArray(value)) {
+    if (!value.some((item) => typeof item === 'object')) {
+      return `[${value.map((item) => literalOf(item, indent)).join(', ')}]`
+    }
+    const inner = `${indent}  `
+    const items = value.map((item) => `\n${inner}${literalOf(item, inner)},`)
+    return `[${items.join('')}\n${indent}]`
+  }
   if (typeof value !== 'object') return String(value)
-  const entries = Object.entries(value).map(([key, item]) => `${key}: ${literalOf(item)}`)
+  const entries = Object.entries(value).map(
+    ([key, item]) => `${keyOf(key)}: ${literalOf(item, indent)}`,
+  )
   return `{ ${entries.join(', ')} }`
 }
 

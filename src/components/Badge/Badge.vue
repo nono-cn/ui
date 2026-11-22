@@ -25,7 +25,7 @@ const slots = defineSlots<BadgeSlots>()
 const attrs = useAttrs()
 
 const size = computed(() => oneOf(props.size, badgeSizes, badgeDefaults.size))
-const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
+const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
@@ -40,7 +40,7 @@ const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.
 
 const leadingIconProps = computed(() => ({
   ...useUi({ class: badgeIconVariants() }, props.ui?.leadingIcon?.()),
-  name: props.leadingIcon!,
+  name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
@@ -72,7 +72,7 @@ const rootProps = computed(() =>
   <span data-ui="badge-root" v-bind="rootProps">
     <span v-if="hasLeading" data-ui="badge-leading" v-bind="leadingProps">
       <slot name="leading">
-        <Icon v-if="leadingIcon" data-ui="badge-leading-icon" v-bind="leadingIconProps" />
+        <Icon v-if="icon" data-ui="badge-leading-icon" v-bind="leadingIconProps" />
       </slot>
     </span>
     <slot>

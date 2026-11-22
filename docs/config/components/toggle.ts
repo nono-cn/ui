@@ -31,14 +31,14 @@ const toggle: ComponentDocConfig = {
       title: 'Basic usage',
       description:
         'Bind the pressed state with v-model, or set defaultValue to leave it uncontrolled. Keep the label the same in both states.',
-      props: () => ({ label: 'Favorite', leadingIcon: 'heart' }),
+      props: () => ({ label: 'Favorite', icon: 'heart' }),
     },
   ],
   examples: [
     {
-      title: 'Variant',
+      title: 'Variant and color',
       description:
-        'Choose how the toggle looks. Each variant changes its fill while pressed. Press it to compare.',
+        'variant and color apply while unpressed, activeVariant and activeColor while pressed. A color is a palette token or a hexadecimal color for the text, the border, the fill and the focus ring. Press it to compare.',
       controls: [
         {
           key: 'variant',
@@ -47,14 +47,13 @@ const toggle: ComponentDocConfig = {
           options: toggleVariantNames,
           default: toggleDefaults.variant,
         },
-      ],
-      props: (state) => ({ label: 'Bold', variant: state.variant! }),
-    },
-    {
-      title: 'Color',
-      description:
-        'Choose a palette token or a hexadecimal color. It colors the text, the border, the pressed fill and the focus ring.',
-      controls: [
+        {
+          key: 'activeVariant',
+          label: 'Active variant',
+          type: 'select',
+          options: toggleVariantNames,
+          default: toggleDefaults.activeVariant,
+        },
         {
           key: 'color',
           label: 'Color',
@@ -70,18 +69,26 @@ const toggle: ComponentDocConfig = {
           visible: (state) => state.color === 'custom',
         },
         {
-          key: 'variant',
-          label: 'Variant',
+          key: 'activeColor',
+          label: 'Active color',
           type: 'select',
-          options: toggleVariantNames,
-          default: toggleDefaults.variant,
+          options: [...themeColors, 'custom'],
+          default: toggleDefaults.activeColor,
+        },
+        {
+          key: 'activeCustom',
+          label: 'Custom active color',
+          type: 'color',
+          default: '#6366f1',
+          visible: (state) => state.activeColor === 'custom',
         },
       ],
       props: (state) => ({
         label: 'Bold',
-        defaultValue: true,
-        color: state.color === 'custom' ? state.custom! : state.color!,
         variant: state.variant!,
+        activeVariant: state.activeVariant!,
+        color: state.color === 'custom' ? state.custom! : state.color!,
+        activeColor: state.activeColor === 'custom' ? state.activeCustom! : state.activeColor!,
       }),
     },
     {
@@ -96,7 +103,7 @@ const toggle: ComponentDocConfig = {
           default: toggleDefaults.size,
         },
       ],
-      props: (state) => ({ label: 'Favorite', leadingIcon: 'heart', size: state.size! }),
+      props: (state) => ({ label: 'Favorite', icon: 'heart', size: state.size! }),
     },
     {
       title: 'Radius',
@@ -118,8 +125,8 @@ const toggle: ComponentDocConfig = {
         'Place an icon before or after the label. Screen readers skip it, so the label names the toggle.',
       controls: [
         {
-          key: 'leadingIcon',
-          label: 'Leading icon',
+          key: 'icon',
+          label: 'Icon',
           type: 'select',
           options: icons,
           default: 'heart',
@@ -134,7 +141,7 @@ const toggle: ComponentDocConfig = {
       ],
       props: (state) => ({
         label: 'Favorite',
-        ...option(state, 'leadingIcon'),
+        ...option(state, 'icon'),
         ...option(state, 'trailingIcon'),
       }),
     },
@@ -151,7 +158,7 @@ const toggle: ComponentDocConfig = {
           default: toggleDefaults.size,
         },
       ],
-      props: (state) => ({ leadingIcon: 'star', 'aria-label': 'Star', size: state.size! }),
+      props: (state) => ({ icon: 'star', 'aria-label': 'Star', size: state.size! }),
     },
     {
       title: 'Disabled',
@@ -225,15 +232,26 @@ const toggle: ComponentDocConfig = {
         name: 'variant',
         type: variants(toggleVariantNames),
         default: `'${toggleDefaults.variant}'`,
-        description:
-          'How the toggle looks. outline and plain tint the background while pressed; solid fills it with the color and switches the text to its contrast color.',
+        description: 'How the toggle looks while unpressed.',
+      },
+      {
+        name: 'activeVariant',
+        type: variants(toggleVariantNames),
+        default: `'${toggleDefaults.activeVariant}'`,
+        description: 'How the toggle looks while pressed.',
       },
       {
         name: 'color',
         type: 'string',
         default: `'${toggleDefaults.color}'`,
         description:
-          'Theme token such as primary or error, a custom token, or a CSS color such as #6366f1. Colors the text, border, pressed fill and focus ring.',
+          'Color while unpressed: a theme token such as primary or error, a custom token, or a CSS color such as #6366f1. Colors the text, border, fill and focus ring.',
+      },
+      {
+        name: 'activeColor',
+        type: 'string',
+        default: `'${toggleDefaults.activeColor}'`,
+        description: 'Color while pressed. Takes the same values as color.',
       },
       {
         name: 'size',
@@ -248,7 +266,7 @@ const toggle: ComponentDocConfig = {
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
-      { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
+      { name: 'icon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
       {
         name: 'square',
@@ -303,18 +321,27 @@ const toggle: ComponentDocConfig = {
     slots: [
       {
         name: 'default',
-        type: '{ pressed: boolean }',
+        type: `{
+  pressed: boolean
+}`,
+        typePre: true,
         description: 'Main content; overrides the label fallback.',
       },
       {
         name: 'leading',
-        type: '{ pressed: boolean }',
+        type: `{
+  pressed: boolean
+}`,
+        typePre: true,
         description:
-          'Content before the label, hidden from screen readers; overrides the leadingIcon fallback.',
+          'Content before the label, hidden from screen readers; overrides the icon fallback.',
       },
       {
         name: 'trailing',
-        type: '{ pressed: boolean }',
+        type: `{
+  pressed: boolean
+}`,
+        typePre: true,
         description:
           'Content after the label, hidden from screen readers; overrides the trailingIcon fallback.',
       },

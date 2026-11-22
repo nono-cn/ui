@@ -27,12 +27,15 @@ export interface ToggleUi {
 export interface ToggleProps {
   modelValue?: boolean
   defaultValue?: boolean
+  value?: string
   label?: string
   variant?: ToggleVariant
+  activeVariant?: ToggleVariant
   color?: string
+  activeColor?: string
   size?: ToggleSize
   radius?: Radius
-  leadingIcon?: IconName
+  icon?: IconName
   trailingIcon?: IconName
   square?: boolean
   disabled?: boolean

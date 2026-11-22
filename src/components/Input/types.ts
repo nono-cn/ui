@@ -27,7 +27,7 @@ export interface InputProps {
   color?: string
   size?: InputSize
   radius?: Radius
-  leadingIcon?: IconName
+  icon?: IconName
   trailingIcon?: IconName
   clearable?: boolean
   clearLabel?: string

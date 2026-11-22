@@ -70,7 +70,7 @@ const buttonGroup: ComponentDocConfig = {
         name: 'Button',
         component: Button,
         props: {
-          leadingIcon: icon,
+          icon: icon,
           variant: 'outline',
           color: 'neutral',
           'aria-label': label,

@@ -206,7 +206,10 @@ const alert: ComponentDocConfig = {
       },
       {
         name: 'close',
-        type: '{ close: () => void }',
+        type: `{
+  close: () => void
+}`,
+        typePre: true,
         description: 'Close control. Receives close, which hides the alert and emits close.',
       },
     ],
