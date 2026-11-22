@@ -5,6 +5,7 @@ import { cn } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { buttonDefaults, buttonSizes, buttonVariantNames } from '@/components/Button/constants'
+import { useButtonGroup } from '@/components/ButtonGroup/context'
 import type { ButtonInternalSlots, ButtonProps, ButtonSlots } from '@/components/Button/types'
 import {
   buttonIconVariants,
@@ -19,8 +20,9 @@ defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<ButtonProps>(), {
   variant: buttonDefaults.variant,
   color: buttonDefaults.color,
-  size: buttonDefaults.size,
+  size: undefined,
   radius: buttonDefaults.radius,
+  square: undefined,
   type: undefined,
   pendingAnnouncement: undefined,
   onClick: undefined,
@@ -29,9 +31,16 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 const slots = defineSlots<ButtonSlots & ButtonInternalSlots>()
 const attrs = useAttrs()
 
-const size = computed(() => oneOf(props.size, buttonSizes, buttonDefaults.size))
+const buttonGroup = useButtonGroup()
+
+const size = computed(() =>
+  oneOf(props.size ?? buttonGroup?.size(), buttonSizes, buttonDefaults.size),
+)
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+const square = computed(
+  () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
+)
 
 const leadingProps = computed(() =>
   useUi({ class: buttonLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
@@ -66,6 +75,7 @@ const rootProps = computed(() => ({
           size: size.value,
           variant: oneOf(props.variant, buttonVariantNames, buttonDefaults.variant),
           block: props.block,
+          square: square.value,
         }),
         style: [
           getColorVariables(props.color, 'button', buttonDefaults.color),

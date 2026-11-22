@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<LinkProps>(), {
   color: linkDefaults.color,
   size: linkDefaults.size,
   radius: linkDefaults.radius,
+  square: undefined,
 })
 
 const slots = defineSlots<LinkSlots>()
@@ -63,13 +64,21 @@ const variant = computed(() =>
 const size = computed(() => oneOf(props.size, buttonSizes, linkDefaults.size))
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+const square = computed(
+  () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
+)
 
 const baseProps = computed(() =>
   variant.value
     ? {
         class: cn(
           'no-underline',
-          buttonVariants({ size: size.value, variant: variant.value, block: props.block }),
+          buttonVariants({
+            size: size.value,
+            variant: variant.value,
+            block: props.block,
+            square: square.value,
+          }),
         ),
         style: [
           getColorVariables(props.color, 'button', linkDefaults.color),

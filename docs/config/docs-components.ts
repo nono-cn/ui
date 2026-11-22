@@ -3,6 +3,7 @@ import alert from '@docs/config/components/alert'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
+import buttonGroup from '@docs/config/components/button-group'
 import checkbox from '@docs/config/components/checkbox'
 import chip from '@docs/config/components/chip'
 import formField from '@docs/config/components/form-field'
@@ -25,6 +26,7 @@ export const docsComponents: ComponentDocConfig[] = [
   avatar,
   badge,
   button,
+  buttonGroup,
   checkbox,
   chip,
   formField,

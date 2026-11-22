@@ -2,9 +2,7 @@ import type { ComponentDocConfig, ExampleState } from '@docs/config/component-do
 import {
   Button,
   buttonDefaults,
-  buttonIconSizes,
   buttonSizes,
-  buttonTextSizes,
   buttonVariantNames,
   iconNames,
   themeColors,
@@ -91,7 +89,7 @@ const button: ComponentDocConfig = {
           key: 'size',
           label: 'Size',
           type: 'select',
-          options: buttonTextSizes,
+          options: buttonSizes,
           default: buttonDefaults.size,
         },
       ],
@@ -137,10 +135,17 @@ const button: ComponentDocConfig = {
       }),
     },
     {
-      title: 'Icon size',
-      description: 'Choose a square size for an icon-only button. Give it an aria-label.',
+      title: 'Icon only',
+      description:
+        'Without a label the button turns square. Its size follows the size prop, and it needs an aria-label.',
       controls: [
-        { key: 'size', label: 'Size', type: 'select', options: buttonIconSizes, default: 'icon' },
+        {
+          key: 'size',
+          label: 'Size',
+          type: 'select',
+          options: buttonSizes,
+          default: buttonDefaults.size,
+        },
         {
           key: 'variant',
           label: 'Variant',
@@ -277,7 +282,7 @@ const button: ComponentDocConfig = {
         type: buttonSizes.map((size) => `'${size}'`).join(' | '),
         default: `'${buttonDefaults.size}'`,
         description:
-          'Text button size from xs to xl, or square icon-only size from icon-xs to icon-xl. Icon is the medium icon size.',
+          'Height, padding and text size. Inside a ButtonGroup, the group size applies when this is not set.',
       },
       {
         name: 'radius',
@@ -289,6 +294,12 @@ const button: ComponentDocConfig = {
       { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
       { name: 'block', type: 'boolean', default: 'false', description: 'Takes the full width.' },
+      {
+        name: 'square',
+        type: 'boolean',
+        description:
+          'Makes the button as wide as it is tall. On by default when it has an icon and no label or default slot.',
+      },
       {
         name: 'disabled',
         type: 'boolean',

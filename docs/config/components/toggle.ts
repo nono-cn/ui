@@ -2,9 +2,7 @@ import type { ComponentDocConfig, ExampleState } from '@docs/config/component-do
 import {
   Toggle,
   toggleDefaults,
-  toggleIconSizes,
   toggleSizes,
-  toggleTextSizes,
   toggleVariantNames,
   iconNames,
   themeColors,
@@ -94,7 +92,7 @@ const toggle: ComponentDocConfig = {
           key: 'size',
           label: 'Size',
           type: 'select',
-          options: toggleTextSizes,
+          options: toggleSizes,
           default: toggleDefaults.size,
         },
       ],
@@ -141,10 +139,17 @@ const toggle: ComponentDocConfig = {
       }),
     },
     {
-      title: 'Icon size',
-      description: 'Choose a square size for an icon-only toggle. Give it an aria-label.',
+      title: 'Icon only',
+      description:
+        'Without a label the toggle turns square. Its size follows the size prop, and it needs an aria-label.',
       controls: [
-        { key: 'size', label: 'Size', type: 'select', options: toggleIconSizes, default: 'icon' },
+        {
+          key: 'size',
+          label: 'Size',
+          type: 'select',
+          options: toggleSizes,
+          default: toggleDefaults.size,
+        },
       ],
       props: (state) => ({ leadingIcon: 'star', 'aria-label': 'Star', size: state.size! }),
     },
@@ -234,8 +239,7 @@ const toggle: ComponentDocConfig = {
         name: 'size',
         type: variants(toggleSizes),
         default: `'${toggleDefaults.size}'`,
-        description:
-          'Text toggle size from xs to xl, or square icon-only size from icon-xs to icon-xl.',
+        description: 'Height, padding and text size.',
       },
       {
         name: 'radius',
@@ -246,6 +250,12 @@ const toggle: ComponentDocConfig = {
       },
       { name: 'leadingIcon', type: 'IconName', description: 'Icon before the label.' },
       { name: 'trailingIcon', type: 'IconName', description: 'Icon after the label.' },
+      {
+        name: 'square',
+        type: 'boolean',
+        description:
+          'Makes the toggle as wide as it is tall. On by default when it has an icon and no label or default slot.',
+      },
       {
         name: 'disabled',
         type: 'boolean',

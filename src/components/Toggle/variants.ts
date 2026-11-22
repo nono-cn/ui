@@ -12,16 +12,11 @@ export const toggleVariants = cva(
   {
     variants: {
       size: {
-        xs: 'h-7 gap-1 px-2.5 text-xs has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-2',
-        sm: 'h-8 gap-1.5 px-3 text-sm has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-2.5',
-        md: 'h-9 px-4 py-2 text-base has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-3',
-        lg: 'h-10 px-6 text-lg has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-4',
-        xl: 'h-11 px-7 text-xl has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-5',
-        'icon-xs': 'size-7 p-0',
-        'icon-sm': 'size-8 p-0',
-        icon: 'size-9 p-0',
-        'icon-lg': 'size-10 p-0',
-        'icon-xl': 'size-11 p-0',
+        xs: 'h-7 gap-1 text-xs',
+        sm: 'h-8 gap-1.5 text-sm',
+        md: 'h-9 text-base',
+        lg: 'h-10 text-lg',
+        xl: 'h-11 text-xl',
       } satisfies Record<ToggleSize, string>,
       variant: {
         outline: [
@@ -37,10 +32,33 @@ export const toggleVariants = cva(
           'data-pressed:bg-(--toggle-color) data-pressed:text-(--toggle-color-foreground) data-pressed:interactive:hover:bg-(--toggle-color)/90',
         ],
       } satisfies Record<ToggleVariant, string[]>,
+      square: {
+        true: 'p-0',
+        false: '',
+      },
     },
+    compoundVariants: [
+      ...(
+        [
+          ['xs', 'px-2.5 has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-2', 'w-7'],
+          ['sm', 'px-3 has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-2.5', 'w-8'],
+          [
+            'md',
+            'px-4 py-2 has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-3',
+            'w-9',
+          ],
+          ['lg', 'px-6 has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-4', 'w-10'],
+          ['xl', 'px-7 has-[>[data-ui=toggle-leading],>[data-ui=toggle-trailing]]:px-5', 'w-11'],
+        ] satisfies [ToggleSize, string, string][]
+      ).flatMap(([size, padding, width]) => [
+        { size, square: false, class: padding },
+        { size, square: true, class: width },
+      ]),
+    ],
     defaultVariants: {
       size: toggleDefaults.size,
       variant: toggleDefaults.variant,
+      square: false,
     },
   },
 )
@@ -53,11 +71,6 @@ export const toggleSlotVariants = cva('inline-flex shrink-0 items-center justify
       md: 'size-5',
       lg: 'size-6',
       xl: 'size-7',
-      'icon-xs': 'size-3',
-      'icon-sm': 'size-4',
-      icon: 'size-5',
-      'icon-lg': 'size-6',
-      'icon-xl': 'size-7',
     } satisfies Record<ToggleSize, string>,
   },
   defaultVariants: { size: toggleDefaults.size },

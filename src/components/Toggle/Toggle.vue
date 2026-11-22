@@ -27,6 +27,7 @@ const props = withDefaults(defineProps<ToggleProps>(), {
   color: toggleDefaults.color,
   size: toggleDefaults.size,
   radius: toggleDefaults.radius,
+  square: undefined,
   disabled: undefined,
   focusableWhenDisabled: undefined,
 })
@@ -40,6 +41,9 @@ const controller = createToggleController()
 const size = computed(() => oneOf(props.size, toggleSizes, toggleDefaults.size))
 const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+const square = computed(
+  () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
+)
 
 const leadingProps = computed(() =>
   useUi({ class: toggleSlotVariants({ size: size.value }) }, props.ui?.leading?.()),
@@ -68,6 +72,7 @@ const rootProps = computed(() => ({
         class: toggleVariants({
           size: size.value,
           variant: oneOf(props.variant, toggleVariantNames, toggleDefaults.variant),
+          square: square.value,
         }),
         style: [
           getColorVariables(props.color, 'toggle', toggleDefaults.color),

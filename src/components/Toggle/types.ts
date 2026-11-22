@@ -1,20 +1,11 @@
 import type { ChangeDetails } from '@ui-sdk/core'
 import type { ToggleController, TogglePressedChangeReason } from '@ui-sdk/core/toggle'
-import type {
-  toggleIconSizes,
-  toggleSizes,
-  toggleTextSizes,
-  toggleVariantNames,
-} from '@/components/Toggle/constants'
+import type { toggleSizes, toggleVariantNames } from '@/components/Toggle/constants'
 import type { Radius } from '@/composables/useTheme'
 import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type ToggleSize = (typeof toggleSizes)[number]
-
-export type ToggleTextSize = (typeof toggleTextSizes)[number]
-
-export type ToggleIconSize = (typeof toggleIconSizes)[number]
 
 export type ToggleVariant = (typeof toggleVariantNames)[number]
 
@@ -43,6 +34,7 @@ export interface ToggleProps {
   radius?: Radius
   leadingIcon?: IconName
   trailingIcon?: IconName
+  square?: boolean
   disabled?: boolean
   focusableWhenDisabled?: boolean
   ui?: ToggleUi

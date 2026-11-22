@@ -40,14 +40,20 @@ const slots = computed<ExampleSlotContent[]>(() => {
   const slot = props.example.slot ?? props.component.slot
   return slot ? [slot].flat() : []
 })
-const renderedSlots = computed(() =>
-  Object.fromEntries(
-    slots.value.map((content) => [
-      content.slot ?? 'default',
-      () => ('text' in content ? content.text : h(content.component, content.props)),
+const renderedSlots = computed(() => {
+  const names = [...new Set(slots.value.map((content) => content.slot ?? 'default'))]
+  return Object.fromEntries(
+    names.map((slot) => [
+      slot,
+      () =>
+        slots.value
+          .filter((content) => (content.slot ?? 'default') === slot)
+          .map((content) =>
+            'text' in content ? content.text : h(content.component, content.props),
+          ),
     ]),
-  ),
-)
+  )
+})
 const ExamplePreview = () =>
   h(props.component.component, exampleBindings.value, renderedSlots.value)
 const visibleControls = computed(() =>

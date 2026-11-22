@@ -29,6 +29,7 @@ export interface LinkProps {
   leadingIcon?: IconName
   trailingIcon?: IconName
   block?: boolean
+  square?: boolean
   ui?: LinkUi
 }
 
