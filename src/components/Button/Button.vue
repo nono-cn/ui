@@ -5,7 +5,7 @@ import { cn } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { buttonDefaults, buttonSizes, buttonVariantNames } from '@/components/Button/constants'
-import type { ButtonProps, ButtonSlots } from '@/components/Button/types'
+import type { ButtonInternalSlots, ButtonProps, ButtonSlots } from '@/components/Button/types'
 import {
   buttonIconVariants,
   buttonLeadingVariants,
@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   onClick: undefined,
 })
 
-const slots = defineSlots<ButtonSlots>()
+const slots = defineSlots<ButtonSlots & ButtonInternalSlots>()
 const attrs = useAttrs()
 
 const size = computed(() => oneOf(props.size, buttonSizes, buttonDefaults.size))
@@ -103,6 +103,9 @@ const rootProps = computed(() => ({
           <Icon v-if="trailingIcon" data-ui="button-trailing-icon" v-bind="trailingIconProps" />
         </slot>
       </span>
+    </template>
+    <template v-if="slots.render" #render="scope">
+      <slot name="render" v-bind="scope" />
     </template>
   </ButtonRoot>
 </template>

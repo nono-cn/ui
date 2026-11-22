@@ -1,0 +1,158 @@
+<script setup lang="ts">
+import {
+  computed,
+  getCurrentInstance,
+  mergeProps,
+  useAttrs,
+  type Component,
+  type FunctionalComponent,
+} from 'vue'
+import { cn } from '@/composables/cn'
+import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useUi } from '@/composables/useUi'
+import { buttonSizes, buttonVariantNames } from '@/components/Button/constants'
+import {
+  buttonIconVariants,
+  buttonLeadingVariants,
+  buttonTrailingVariants,
+  buttonVariants,
+} from '@/components/Button/variants'
+import { linkDefaults } from '@/components/Link/constants'
+import type { LinkProps, LinkSlots } from '@/components/Link/types'
+import { linkIconSlotVariants, linkVariants } from '@/components/Link/variants'
+import Icon from '@/components/Icon/Icon.vue'
+
+defineOptions({ inheritAttrs: false })
+
+const props = withDefaults(defineProps<LinkProps>(), {
+  to: undefined,
+  external: undefined,
+  variant: undefined,
+  color: linkDefaults.color,
+  size: linkDefaults.size,
+  radius: linkDefaults.radius,
+})
+
+const slots = defineSlots<LinkSlots>()
+const attrs = useAttrs()
+
+interface RouterLinkScope {
+  href?: string
+  navigate?: (event: MouseEvent) => unknown
+  isActive?: boolean
+  isExactActive?: boolean
+}
+
+const PlainLink: FunctionalComponent = (_, context) => context.slots.default?.({})
+PlainLink.inheritAttrs = false
+
+const RouterLink = getCurrentInstance()?.appContext.components.RouterLink as Component | undefined
+
+const external = computed(
+  () =>
+    props.external ?? (typeof props.to === 'string' && /^([a-z][\w+.-]*:|\/\/)/i.test(props.to)),
+)
+
+const routed = computed(
+  () => Boolean(RouterLink) && props.to !== undefined && !props.href && !external.value,
+)
+
+const variant = computed(() =>
+  props.variant === undefined ? undefined : oneOf(props.variant, buttonVariantNames, 'link'),
+)
+const size = computed(() => oneOf(props.size, buttonSizes, linkDefaults.size))
+const hasLeading = computed(() => Boolean(props.leadingIcon || slots.leading))
+const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+
+const baseProps = computed(() =>
+  variant.value
+    ? {
+        class: cn(
+          'no-underline',
+          buttonVariants({ size: size.value, variant: variant.value, block: props.block }),
+        ),
+        style: [
+          getColorVariables(props.color, 'button', linkDefaults.color),
+          getRadiusVariables(props.radius, 'button', linkDefaults.radius),
+        ],
+      }
+    : {
+        class: linkVariants(),
+        style: getColorVariables(props.color, 'link', linkDefaults.color),
+      },
+)
+
+const leadingProps = computed(() =>
+  useUi(
+    { class: variant.value ? buttonLeadingVariants({ size: size.value }) : linkIconSlotVariants() },
+    props.ui?.leading?.(),
+  ),
+)
+
+const trailingProps = computed(() =>
+  useUi(
+    {
+      class: variant.value ? buttonTrailingVariants({ size: size.value }) : linkIconSlotVariants(),
+    },
+    props.ui?.trailing?.(),
+  ),
+)
+
+const labelProps = computed(() =>
+  useUi({ class: variant.value ? 'truncate' : undefined }, props.ui?.label?.()),
+)
+
+const leadingIconProps = computed(() => ({
+  ...useUi({ class: buttonIconVariants() }, props.ui?.leadingIcon?.()),
+  name: props.leadingIcon!,
+}))
+
+const trailingIconProps = computed(() => ({
+  ...useUi({ class: buttonIconVariants() }, props.ui?.trailingIcon?.()),
+  name: props.trailingIcon!,
+}))
+
+function rootProps(link: RouterLinkScope) {
+  const active = props.exact ? link.isExactActive : link.isActive
+  const base = {
+    ...baseProps.value,
+    href: props.href ?? link.href ?? (typeof props.to === 'string' ? props.to : undefined),
+    'aria-disabled': props.disabled ? 'true' : undefined,
+    tabindex: props.disabled ? -1 : undefined,
+    'data-disabled': props.disabled ? '' : undefined,
+    'data-active': active ? '' : undefined,
+  }
+  return mergeProps(useUi([base, attrs], props.ui?.root?.()), {
+    onClick: (event: MouseEvent) => {
+      if (props.disabled) event.preventDefault()
+      else link.navigate?.(event)
+    },
+  })
+}
+</script>
+
+<template>
+  <component
+    :is="routed ? RouterLink : PlainLink"
+    v-slot="link: RouterLinkScope"
+    custom
+    :to="to"
+    :replace="replace"
+  >
+    <a data-ui="link-root" v-bind="rootProps(link)">
+      <span v-if="hasLeading" data-ui="link-leading" v-bind="leadingProps">
+        <slot name="leading">
+          <Icon v-if="leadingIcon" data-ui="link-leading-icon" v-bind="leadingIconProps" />
+        </slot>
+      </span>
+      <slot>
+        <span v-if="label" data-ui="link-label" v-bind="labelProps">{{ label }}</span>
+      </slot>
+      <span v-if="hasTrailing" data-ui="link-trailing" v-bind="trailingProps">
+        <slot name="trailing">
+          <Icon v-if="trailingIcon" data-ui="link-trailing-icon" v-bind="trailingIconProps" />
+        </slot>
+      </span>
+    </a>
+  </component>
+</template>
