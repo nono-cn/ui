@@ -18,18 +18,16 @@ export interface TooltipTriggerState {
 
 export interface TooltipContentState {
   open: boolean
-  instant: boolean
 }
 
-export interface TooltipArrowState {
-  open: boolean
+export interface TooltipShortcutState {
+  text: string
 }
 
 export interface TooltipUi {
   content?: UiResolver<TooltipContentState>
-  text?: UiResolver<TooltipContentState>
   shortcut?: UiResolver<TooltipContentState>
-  arrow?: UiResolver<TooltipArrowState>
+  arrow?: UiResolver<TooltipContentState>
 }
 
 export interface TooltipProps {
@@ -65,6 +63,7 @@ export interface TooltipEmits {
 export interface TooltipSlots {
   default?(props: TooltipTriggerState): unknown
   content?(props: TooltipContentState): unknown
+  shortcut?(props: TooltipShortcutState): unknown
 }
 
 export type TooltipExpose = Pick<

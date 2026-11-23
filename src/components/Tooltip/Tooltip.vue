@@ -7,16 +7,9 @@ import {
   TooltipShortcut,
   TooltipTrigger,
 } from '@ui-sdk/vue/tooltip'
-import {
-  cloneVNode,
-  Comment,
-  computed,
-  Fragment,
-  Text,
-  type FunctionalComponent,
-  type VNode,
-} from 'vue'
+import { computed } from 'vue'
 import Kbd from '@/components/Kbd/Kbd.vue'
+import AsChild from '@/components/AsChild/AsChild'
 import { getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import {
@@ -26,7 +19,6 @@ import {
   tooltipTypes,
 } from '@/components/Tooltip/constants'
 import type {
-  TooltipArrowState,
   TooltipContentState,
   TooltipEmits,
   TooltipExpose,
@@ -34,11 +26,7 @@ import type {
   TooltipProps,
   TooltipSlots,
 } from '@/components/Tooltip/types'
-import {
-  tooltipArrowVariants,
-  tooltipContentVariants,
-  tooltipTextVariants,
-} from '@/components/Tooltip/variants'
+import { tooltipArrowVariants, tooltipContentVariants } from '@/components/Tooltip/variants'
 
 defineOptions({ inheritAttrs: false })
 
@@ -79,49 +67,9 @@ const rootProps = computed(() => ({
   onOpenChangeComplete: (open: boolean) => emit('openChangeComplete', open),
 }))
 
-function elementOf(value: unknown): Element | null {
-  let node = (value as { $el?: Node } | null)?.$el ?? (value as Node | null)
-  while (node && !(node instanceof Element)) node = node.nextSibling
-  return node
+function triggerProps(attrs: Record<string, unknown>) {
+  return { ...attrs, type: undefined }
 }
-
-type ElementRef = (el: Element | null) => void
-
-const elementRefs = new WeakMap<ElementRef, (value: unknown) => void>()
-
-/* A component's $el can be a fragment's text node, and ui-sdk needs the element to position against. */
-function elementRef(ref: ElementRef) {
-  let wrapped = elementRefs.get(ref)
-  if (!wrapped) {
-    wrapped = (value) => ref(elementOf(value))
-    elementRefs.set(ref, wrapped)
-  }
-  return wrapped
-}
-
-function firstElement(nodes: VNode[]): VNode | undefined {
-  for (const node of nodes) {
-    if (node.type === Fragment) {
-      const child = firstElement(node.children as VNode[])
-      if (child) return child
-    } else if (node.type !== Comment && node.type !== Text) {
-      return node
-    }
-  }
-}
-
-const SlotTrigger: FunctionalComponent<{ attrs: Record<string, unknown> }> = (
-  { attrs },
-  { slots },
-) => {
-  const child = firstElement(slots.default?.() ?? [])
-  if (!child) return null
-  const props = { ...attrs }
-  delete props.type
-  props.ref = elementRef(props.ref as ElementRef)
-  return cloneVNode(child, props, true)
-}
-SlotTrigger.props = ['attrs']
 
 const positionProps = computed(() => ({
   side: oneOf(props.side, tooltipSides, tooltipDefaults.side),
@@ -146,15 +94,11 @@ function contentProps(attrs: Record<string, unknown>, state: TooltipContentState
   )
 }
 
-function textProps(state: TooltipContentState) {
-  return useUi({ class: tooltipTextVariants() }, props.ui?.text?.(state))
-}
-
 function shortcutProps(attrs: Record<string, unknown>, state: TooltipContentState) {
   return useUi(attrs, props.ui?.shortcut?.(state))
 }
 
-function arrowProps(state: TooltipArrowState) {
+function arrowProps(state: TooltipContentState) {
   return useUi({ class: tooltipArrowVariants() }, props.ui?.arrow?.(state))
 }
 
@@ -171,9 +115,9 @@ defineExpose<TooltipExpose>({
   <TooltipRoot v-bind="rootProps">
     <TooltipTrigger>
       <template #render="{ props: attrs, state }">
-        <SlotTrigger :attrs="attrs">
+        <AsChild v-bind="triggerProps(attrs)">
           <slot v-bind="state" />
-        </SlotTrigger>
+        </AsChild>
       </template>
     </TooltipTrigger>
     <TooltipContent v-bind="positionProps">
@@ -183,17 +127,16 @@ defineExpose<TooltipExpose>({
         </div>
       </template>
       <template #default="{ state }">
-        <slot name="content" :open="state.open" :instant="state.instant">
-          <span v-if="text" data-ui="tooltip-text" v-bind="textProps(state)">{{ text }}</span>
+        <slot name="content" :open="state.open">
+          {{ text }}
         </slot>
         <TooltipShortcut v-if="shortcut">
           <template #render="{ props: attrs, state: shortcutState }">
-            <Kbd
-              data-ui="tooltip-shortcut"
-              size="sm"
-              :label="shortcutState.text"
-              v-bind="shortcutProps(attrs, state)"
-            />
+            <AsChild data-ui="tooltip-shortcut" v-bind="shortcutProps(attrs, state)">
+              <slot name="shortcut" :text="shortcutState.text">
+                <Kbd size="sm" :label="shortcutState.text" />
+              </slot>
+            </AsChild>
           </template>
         </TooltipShortcut>
         <TooltipArrow v-if="arrow" data-ui="tooltip-arrow" v-bind="arrowProps(state)" />

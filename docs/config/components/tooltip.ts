@@ -21,13 +21,12 @@ const iconButton: ExampleSlotContent = {
   props: { icon: 'save', variant: 'outline', 'aria-label': 'Save' },
 }
 
-const triggerState = `{
+const contentState = `{
   open: boolean
 }`
 
-const contentState = `{
-  open: boolean
-  instant: boolean
+const shortcutState = `{
+  text: string
 }`
 
 const hint = 'Anyone with the link can view'
@@ -311,14 +310,13 @@ const tooltip: ComponentDocConfig = {
     ],
     ui: [
       { node: 'content', tag: 'div', state: contentState, kept: 'id, role, popover, style' },
-      { node: 'text', tag: 'span', state: contentState },
       { node: 'shortcut', tag: 'kbd', state: contentState },
-      { node: 'arrow', tag: 'div', state: triggerState, kept: 'aria-hidden, style' },
+      { node: 'arrow', tag: 'div', state: contentState, kept: 'aria-hidden, style' },
     ],
     slots: [
       {
         name: 'default',
-        type: triggerState,
+        type: contentState,
         typePre: true,
         description:
           'The trigger. Its first element gets the tooltip attributes, listeners and ref, so put one element or component, not plain text.',
@@ -327,8 +325,14 @@ const tooltip: ComponentDocConfig = {
         name: 'content',
         type: contentState,
         typePre: true,
+        description: 'Replaces text. open turns false while it animates out.',
+      },
+      {
+        name: 'shortcut',
+        type: shortcutState,
+        typePre: true,
         description:
-          'Replaces text. open turns false while it animates out, and instant is true when it opened without delay.',
+          'Replaces the shortcut kbd. Its first element gets the shortcut attributes, like aria-hidden, and ui.shortcut, so put one element or component, not plain text. text is the shortcut formatted for the platform, like ⌘S or Ctrl+S. Only renders with the shortcut prop.',
       },
     ],
     expose: [

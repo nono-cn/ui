@@ -2,14 +2,12 @@ import { cva } from 'class-variance-authority'
 
 export const tooltipContentVariants = cva([
   'z-50 m-0 flex max-w-(--available-width) items-center gap-1.5 overflow-visible rounded-(--tooltip-radius)',
-  'border bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md outline-none',
+  'border bg-popover px-2 py-1 text-xs text-balance text-popover-foreground shadow-md outline-none',
   'origin-(--transform-origin) transition-[opacity,scale] duration-150 motion-reduce:transition-opacity',
   'data-starting-style:scale-95 data-starting-style:opacity-0',
   'data-ending-style:scale-95 data-ending-style:opacity-0',
   'data-instant:transition-none',
 ])
-
-export const tooltipTextVariants = cva('text-balance')
 
 export const tooltipArrowVariants = cva([
   'pointer-events-none size-2.5 rotate-45 border border-transparent bg-popover',
