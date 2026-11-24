@@ -16,6 +16,7 @@ import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
 import link from '@docs/config/components/link'
 import password from '@docs/config/components/password'
+import popover from '@docs/config/components/popover'
 import rating from '@docs/config/components/rating'
 import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
@@ -43,6 +44,7 @@ export const docsComponents: ComponentDocConfig[] = [
   label,
   link,
   password,
+  popover,
   rating,
   separator,
   switchDocs,
