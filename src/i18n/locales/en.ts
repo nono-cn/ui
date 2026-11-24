@@ -4,4 +4,5 @@ export default {
   close: 'Close',
   clear: 'Clear',
   ratingValue: '{value} of {max}',
+  showPassword: 'Show password',
 } satisfies Messages
