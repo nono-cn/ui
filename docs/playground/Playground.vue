@@ -6,11 +6,11 @@ import {
   FormField,
   Icon,
   Label,
-  PasswordInput,
+  Password,
   inputSizes,
   inputVariantNames,
   themeColors,
-  type PasswordInputUi,
+  type PasswordUi,
 } from '@nono/ui'
 import { dark } from '@docs/components/useDocsTheme'
 
@@ -48,7 +48,7 @@ function onSubmit(event: Event) {
   submitted.value = JSON.stringify(Object.fromEntries(data))
 }
 
-const styled: PasswordInputUi = {
+const styled: PasswordUi = {
   root: () => ({ class: 'shadow-sm' }),
   input: () => ({ class: 'font-mono tracking-widest' }),
   toggle: () => ({ class: 'text-primary' }),
@@ -68,16 +68,16 @@ function onVisible(value: boolean) {
     </header>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · basic, v-model and defaultValue</h2>
-      <PasswordInput v-model="password" placeholder="Password" />
+      <h2 class="font-medium">Password · basic, v-model and defaultValue</h2>
+      <Password v-model="password" placeholder="Password" />
       <p class="text-sm text-muted-foreground">modelValue: {{ password || '—' }}</p>
-      <PasswordInput default-value="correct horse" placeholder="Uncontrolled" />
+      <Password default-value="correct horse" placeholder="Uncontrolled" />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · variants</h2>
+      <h2 class="font-medium">Password · variants</h2>
       <div class="grid grid-cols-2 gap-2">
-        <PasswordInput
+        <Password
           v-for="variant in inputVariantNames"
           :key="variant"
           :variant="variant"
@@ -87,18 +87,13 @@ function onVisible(value: boolean) {
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · colors (focus) and highlight</h2>
+      <h2 class="font-medium">Password · colors (focus) and highlight</h2>
       <div class="grid grid-cols-2 gap-2">
-        <PasswordInput
-          v-for="color in themeColors"
-          :key="color"
-          :color="color"
-          :placeholder="color"
-        />
-        <PasswordInput color="#6366f1" placeholder="#6366f1" />
+        <Password v-for="color in themeColors" :key="color" :color="color" :placeholder="color" />
+        <Password color="#6366f1" placeholder="#6366f1" />
       </div>
       <div class="grid grid-cols-2 gap-2">
-        <PasswordInput
+        <Password
           v-for="color in themeColors"
           :key="color"
           :color="color"
@@ -109,8 +104,8 @@ function onVisible(value: boolean) {
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · sizes with icon</h2>
-      <PasswordInput
+      <h2 class="font-medium">Password · sizes with icon</h2>
+      <Password
         v-for="size in inputSizes"
         :key="size"
         :size="size"
@@ -121,9 +116,9 @@ function onVisible(value: boolean) {
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · radius</h2>
+      <h2 class="font-medium">Password · radius</h2>
       <div class="grid grid-cols-2 gap-2">
-        <PasswordInput
+        <Password
           v-for="radius in radii"
           :key="radius"
           :radius="radius"
@@ -133,19 +128,19 @@ function onVisible(value: boolean) {
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · variants × states</h2>
+      <h2 class="font-medium">Password · variants × states</h2>
       <div v-for="variant in inputVariantNames" :key="variant" class="grid grid-cols-3 gap-2">
-        <PasswordInput :variant="variant" :placeholder="`${variant}`" icon="lock" />
-        <PasswordInput :variant="variant" default-value="read only" read-only icon="lock" />
-        <PasswordInput :variant="variant" placeholder="disabled" disabled icon="lock" />
+        <Password :variant="variant" :placeholder="`${variant}`" icon="lock" />
+        <Password :variant="variant" default-value="read only" read-only icon="lock" />
+        <Password :variant="variant" placeholder="disabled" disabled icon="lock" />
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · visibility</h2>
-      <PasswordInput default-value="shown at first" default-visible />
+      <h2 class="font-medium">Password · visibility</h2>
+      <Password default-value="shown at first" default-visible />
       <div class="flex items-center gap-2">
-        <PasswordInput
+        <Password
           v-model:visible="visible"
           default-value="controlled"
           class="flex-1"
@@ -157,63 +152,63 @@ function onVisible(value: boolean) {
       <ul class="text-xs text-muted-foreground">
         <li v-for="(entry, index) in visibleLog" :key="index">{{ entry }}</li>
       </ul>
-      <PasswordInput :visible="true" default-value="always visible (no v-model)" />
+      <Password :visible="true" default-value="always visible (no v-model)" />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · leading slot</h2>
-      <PasswordInput placeholder="Icon prop" icon="lock" />
-      <PasswordInput placeholder="Custom leading">
+      <h2 class="font-medium">Password · leading slot</h2>
+      <Password placeholder="Icon prop" icon="lock" />
+      <Password placeholder="Custom leading">
         <template #leading>
           <Icon name="user" class="size-4 text-primary" />
         </template>
-      </PasswordInput>
-      <PasswordInput placeholder="Text leading">
+      </Password>
+      <Password placeholder="Text leading">
         <template #leading>
           <span class="text-xs font-medium text-muted-foreground">PIN</span>
         </template>
-      </PasswordInput>
+      </Password>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · trailing slot (caps lock, visible state)</h2>
-      <PasswordInput placeholder="Turn Caps Lock on while focused">
+      <h2 class="font-medium">Password · trailing slot (caps lock, visible state)</h2>
+      <Password placeholder="Turn Caps Lock on while focused">
         <template #trailing="{ capsLock }">
           <Badge v-if="capsLock" size="sm" variant="soft" color="warning" label="Caps" />
         </template>
-      </PasswordInput>
-      <PasswordInput default-value="secret" placeholder="Shows the state">
+      </Password>
+      <Password default-value="secret" placeholder="Shows the state">
         <template #trailing="{ visible: isVisible }">
           <span class="text-xs text-muted-foreground">{{ isVisible ? 'shown' : 'hidden' }}</span>
         </template>
-      </PasswordInput>
+      </Password>
       <div v-for="size in inputSizes" :key="size" class="flex">
-        <PasswordInput :size="size" icon="lock" default-value="trailing padding" class="flex-1">
+        <Password :size="size" icon="lock" default-value="trailing padding" class="flex-1">
           <template #trailing>
             <Icon name="warning" class="size-4 text-warning" />
           </template>
-        </PasswordInput>
+        </Password>
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · iconToggle slot and toggleLabel</h2>
-      <PasswordInput default-value="secret" toggle-label="Reveal">
+      <h2 class="font-medium">Password · iconToggle slot and toggleLabel</h2>
+      <Password default-value="secret" toggle-label="Reveal">
         <template #iconToggle="{ visible: isVisible }">
           <Icon :name="isVisible ? 'x' : 'search'" class="size-full" />
         </template>
-      </PasswordInput>
-      <PasswordInput default-value="secret" :ui="{ toggle: () => ({ class: 'w-auto px-1' }) }">
+      </Password>
+      <Password default-value="secret" :ui="{ toggle: () => ({ class: 'w-auto px-1' }) }">
         <template #iconToggle="{ visible: isVisible }">
           <span class="text-xs font-medium">{{ isVisible ? 'Hide' : 'Show' }}</span>
         </template>
-      </PasswordInput>
+      </Password>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · ui and attrs</h2>
-      <PasswordInput default-value="styled via ui" :ui="styled" />
-      <PasswordInput
+      <h2 class="font-medium">Password · ui and attrs</h2>
+      <Password default-value="styled via ui" :ui="styled" />
+      <Password
         id="attrs-password"
         placeholder="class, style, aria and data attrs"
         class="max-w-xs"
@@ -226,32 +221,32 @@ function onVisible(value: boolean) {
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · Label and FormField</h2>
+      <h2 class="font-medium">Password · Label and FormField</h2>
       <div class="flex flex-col gap-1">
         <Label for="label-password" label="With Label" />
-        <PasswordInput id="label-password" placeholder="Password" />
+        <Password id="label-password" placeholder="Password" />
       </div>
       <FormField label="Current password" hint="Required" required>
-        <PasswordInput placeholder="Inherits required" />
+        <Password placeholder="Inherits required" />
       </FormField>
       <FormField label="Large field" description="Size comes from the FormField" size="lg">
-        <PasswordInput icon="lock" placeholder="lg" />
+        <Password icon="lock" placeholder="lg" />
       </FormField>
       <FormField label="Invalid" error="Wrong password">
-        <PasswordInput default-value="wrong" />
+        <Password default-value="wrong" />
       </FormField>
       <FormField label="Disabled field" disabled>
-        <PasswordInput placeholder="Disabled by FormField" />
+        <Password placeholder="Disabled by FormField" />
       </FormField>
       <FormField label="Horizontal" orientation="horizontal">
-        <PasswordInput placeholder="Password" />
+        <Password placeholder="Password" />
       </FormField>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · sign up (strength and confirm)</h2>
+      <h2 class="font-medium">Password · sign up (strength and confirm)</h2>
       <FormField label="New password" :description="strengthLabel">
-        <PasswordInput
+        <Password
           v-model="strengthPassword"
           auto-complete="new-password"
           placeholder="At least 8 characters"
@@ -261,7 +256,7 @@ function onVisible(value: boolean) {
           <template #trailing="{ capsLock }">
             <Badge v-if="capsLock" size="sm" variant="soft" color="warning" label="Caps" />
           </template>
-        </PasswordInput>
+        </Password>
       </FormField>
       <div class="flex gap-1">
         <span
@@ -272,15 +267,15 @@ function onVisible(value: boolean) {
         />
       </div>
       <FormField label="Confirm password" :error="confirmError">
-        <PasswordInput v-model="confirm" auto-complete="new-password" />
+        <Password v-model="confirm" auto-complete="new-password" />
       </FormField>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">PasswordInput · native form (name, required, reset hides)</h2>
+      <h2 class="font-medium">Password · native form (name, required, reset hides)</h2>
       <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
-        <PasswordInput name="password" required default-value="initial" placeholder="Required" />
-        <PasswordInput name="pin" auto-complete="off" placeholder="PIN (off)" />
+        <Password name="password" required default-value="initial" placeholder="Required" />
+        <Password name="pin" auto-complete="off" placeholder="PIN (off)" />
         <div class="flex gap-2">
           <Button type="submit" label="Submit" />
           <Button type="reset" variant="outline" label="Reset" />
@@ -289,7 +284,7 @@ function onVisible(value: boolean) {
       <form id="outside-form" @submit.prevent="onSubmit">
         <Button type="submit" variant="outline" label="Submit outside form" />
       </form>
-      <PasswordInput name="outside" form="outside-form" placeholder="Belongs to #outside-form" />
+      <Password name="outside" form="outside-form" placeholder="Belongs to #outside-form" />
       <p class="text-sm text-muted-foreground">submitted: {{ submitted ?? '—' }}</p>
     </section>
   </main>

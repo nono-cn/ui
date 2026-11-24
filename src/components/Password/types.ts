@@ -3,9 +3,9 @@ import type { Radius } from '@/composables/useTheme'
 import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
-export type PasswordInputAutoComplete = 'current-password' | 'new-password' | 'off' | (string & {})
+export type PasswordAutoComplete = 'current-password' | 'new-password' | 'off' | (string & {})
 
-export interface PasswordInputUi {
+export interface PasswordUi {
   root?: UiResolver
   input?: UiResolver
   leading?: UiResolver
@@ -15,12 +15,12 @@ export interface PasswordInputUi {
   toggleIcon?: UiResolver
 }
 
-export interface PasswordInputProps {
+export interface PasswordProps {
   modelValue?: string
   defaultValue?: string
   visible?: boolean
   defaultVisible?: boolean
-  autoComplete?: PasswordInputAutoComplete
+  autoComplete?: PasswordAutoComplete
   name?: string
   form?: string
   placeholder?: string
@@ -34,21 +34,21 @@ export interface PasswordInputProps {
   disabled?: boolean
   readOnly?: boolean
   required?: boolean
-  ui?: PasswordInputUi
+  ui?: PasswordUi
 }
 
-export interface PasswordInputEmits {
+export interface PasswordEmits {
   'update:modelValue': [value: string]
   'update:visible': [visible: boolean]
 }
 
-export interface PasswordInputSlotProps {
+export interface PasswordSlotProps {
   visible: boolean
   capsLock: boolean
 }
 
-export interface PasswordInputSlots {
+export interface PasswordSlots {
   leading?(): unknown
-  trailing?(props: PasswordInputSlotProps): unknown
+  trailing?(props: PasswordSlotProps): unknown
   iconToggle?(props: { visible: boolean }): unknown
 }

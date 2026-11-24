@@ -15,7 +15,7 @@ import input from '@docs/config/components/input'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
 import link from '@docs/config/components/link'
-import passwordInput from '@docs/config/components/password-input'
+import password from '@docs/config/components/password'
 import rating from '@docs/config/components/rating'
 import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
@@ -42,7 +42,7 @@ export const docsComponents: ComponentDocConfig[] = [
   kbd,
   label,
   link,
-  passwordInput,
+  password,
   rating,
   separator,
   switchDocs,

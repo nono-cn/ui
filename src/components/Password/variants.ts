@@ -1,8 +1,8 @@
 import { cva } from 'class-variance-authority'
-import { passwordInputDefaults } from '@/components/PasswordInput/constants'
+import { passwordDefaults } from '@/components/Password/constants'
 import type { InputSize } from '@/components/Input/types'
 
-export const passwordInputTrailingPaddingVariants = cva('', {
+export const passwordTrailingPaddingVariants = cva('', {
   variants: {
     size: {
       xs: 'pe-11',
@@ -12,10 +12,10 @@ export const passwordInputTrailingPaddingVariants = cva('', {
       xl: 'pe-22',
     } satisfies Record<InputSize, string>,
   },
-  defaultVariants: { size: passwordInputDefaults.size },
+  defaultVariants: { size: passwordDefaults.size },
 })
 
-export const passwordInputToggleVariants = cva(
+export const passwordToggleVariants = cva(
   [
     'inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground',
     'transition-[color,box-shadow] outline-none interactive:hover:text-foreground',
@@ -32,6 +32,6 @@ export const passwordInputToggleVariants = cva(
         xl: 'size-7',
       } satisfies Record<InputSize, string>,
     },
-    defaultVariants: { size: passwordInputDefaults.size },
+    defaultVariants: { size: passwordDefaults.size },
   },
 )

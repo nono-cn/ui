@@ -1,4 +1,4 @@
-export const passwordInputDefaults = {
+export const passwordDefaults = {
   variant: 'outline',
   color: 'primary',
   size: 'md',
