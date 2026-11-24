@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useShortcutHint } from '@/composables/useShortcut'
 import { useUi } from '@/composables/useUi'
 import { kbdDefaults, kbdSizes, kbdVariantNames } from '@/components/Kbd/constants'
 import type { KbdProps, KbdSlots } from '@/components/Kbd/types'
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<KbdProps>(), {
 
 defineSlots<KbdSlots>()
 const attrs = useAttrs()
+const { text } = useShortcutHint(() => props.shortcut)
 
 const rootProps = computed(() =>
   useUi(
@@ -40,6 +42,6 @@ const rootProps = computed(() =>
 
 <template>
   <kbd data-ui="kbd-root" v-bind="rootProps">
-    <slot>{{ label }}</slot>
+    <slot>{{ text }}</slot>
   </kbd>
 </template>
