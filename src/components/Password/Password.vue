@@ -16,34 +16,30 @@ import {
   inputTrailingVariants,
   inputVariants,
 } from '@/components/Input/variants'
-import { passwordInputDefaults } from '@/components/PasswordInput/constants'
-import type {
-  PasswordInputEmits,
-  PasswordInputProps,
-  PasswordInputSlots,
-} from '@/components/PasswordInput/types'
+import { passwordDefaults } from '@/components/Password/constants'
+import type { PasswordEmits, PasswordProps, PasswordSlots } from '@/components/Password/types'
 import {
-  passwordInputToggleVariants,
-  passwordInputTrailingPaddingVariants,
-} from '@/components/PasswordInput/variants'
+  passwordToggleVariants,
+  passwordTrailingPaddingVariants,
+} from '@/components/Password/variants'
 import Icon from '@/components/Icon/Icon.vue'
 import { useLocale } from '@/i18n/useLocale'
 
 defineOptions({ inheritAttrs: false })
 
-const props = withDefaults(defineProps<PasswordInputProps>(), {
+const props = withDefaults(defineProps<PasswordProps>(), {
   modelValue: undefined,
   defaultValue: undefined,
   visible: undefined,
   defaultVisible: undefined,
-  autoComplete: passwordInputDefaults.autoComplete,
+  autoComplete: passwordDefaults.autoComplete,
   name: undefined,
   form: undefined,
   placeholder: undefined,
-  variant: passwordInputDefaults.variant,
-  color: passwordInputDefaults.color,
+  variant: passwordDefaults.variant,
+  color: passwordDefaults.color,
   size: undefined,
-  radius: passwordInputDefaults.radius,
+  radius: passwordDefaults.radius,
   toggleLabel: undefined,
   highlight: false,
   disabled: undefined,
@@ -51,14 +47,14 @@ const props = withDefaults(defineProps<PasswordInputProps>(), {
   required: undefined,
 })
 
-const emit = defineEmits<PasswordInputEmits>()
-const slots = defineSlots<PasswordInputSlots>()
+const emit = defineEmits<PasswordEmits>()
+const slots = defineSlots<PasswordSlots>()
 const attrs = useAttrs()
 const { t } = useLocale()
 const formField = useFormField()
 
 const size = computed(() =>
-  oneOf(props.size ?? formField?.size(), inputSizes, passwordInputDefaults.size),
+  oneOf(props.size ?? formField?.size(), inputSizes, passwordDefaults.size),
 )
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 
@@ -68,8 +64,8 @@ const rootProps = computed(() => ({
       {
         class: inputRootVariants(),
         style: [
-          getColorVariables(props.color, 'input', passwordInputDefaults.color),
-          getRadiusVariables(props.radius, 'input', passwordInputDefaults.radius),
+          getColorVariables(props.color, 'input', passwordDefaults.color),
+          getRadiusVariables(props.radius, 'input', passwordDefaults.radius),
         ],
       },
       { class: attrs.class, style: attrs.style },
@@ -103,12 +99,12 @@ const inputProps = computed(() => {
           class: [
             inputVariants({
               size: size.value,
-              variant: oneOf(props.variant, inputVariantNames, passwordInputDefaults.variant),
+              variant: oneOf(props.variant, inputVariantNames, passwordDefaults.variant),
               highlight: props.highlight,
               leading: hasLeading.value,
               trailing: true,
             }),
-            slots.trailing && passwordInputTrailingPaddingVariants({ size: size.value }),
+            slots.trailing && passwordTrailingPaddingVariants({ size: size.value }),
           ],
         },
         rest,
@@ -135,7 +131,7 @@ const toggleProps = computed(() =>
   useUi(
     {
       'aria-label': props.toggleLabel || t('showPassword'),
-      class: passwordInputToggleVariants({ size: size.value }),
+      class: passwordToggleVariants({ size: size.value }),
     },
     props.ui?.toggle?.(),
   ),
@@ -150,19 +146,19 @@ function toggleIconProps(visible: boolean) {
 </script>
 
 <template>
-  <PasswordInputRoot data-ui="password-input-root" v-bind="rootProps">
+  <PasswordInputRoot data-ui="password-root" v-bind="rootProps">
     <template #default="{ state }">
-      <span v-if="hasLeading" data-ui="password-input-leading" v-bind="leadingProps">
+      <span v-if="hasLeading" data-ui="password-leading" v-bind="leadingProps">
         <slot name="leading">
-          <Icon v-if="icon" data-ui="password-input-leading-icon" v-bind="leadingIconProps" />
+          <Icon v-if="icon" data-ui="password-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
-      <PasswordInputControl data-ui="password-input-input" v-bind="inputProps" />
-      <span data-ui="password-input-trailing" v-bind="trailingProps">
+      <PasswordInputControl data-ui="password-input" v-bind="inputProps" />
+      <span data-ui="password-trailing" v-bind="trailingProps">
         <slot name="trailing" v-bind="{ visible: state.visible, capsLock: state.capsLock }" />
-        <PasswordInputToggle data-ui="password-input-toggle" v-bind="toggleProps">
+        <PasswordInputToggle data-ui="password-toggle" v-bind="toggleProps">
           <slot name="iconToggle" :visible="state.visible">
-            <Icon data-ui="password-input-toggle-icon" v-bind="toggleIconProps(state.visible)" />
+            <Icon data-ui="password-toggle-icon" v-bind="toggleIconProps(state.visible)" />
           </slot>
         </PasswordInputToggle>
       </span>

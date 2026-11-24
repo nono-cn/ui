@@ -1,19 +1,13 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
-import {
-  PasswordInput,
-  inputSizes,
-  inputVariantNames,
-  passwordInputDefaults,
-  themeColors,
-} from '@nono/ui'
+import { Password, inputSizes, inputVariantNames, passwordDefaults, themeColors } from '@nono/ui'
 
 const placeholder = 'Password'
 
-const passwordInput: ComponentDocConfig = {
-  slug: 'password-input',
-  title: 'Password Input',
+const password: ComponentDocConfig = {
+  slug: 'password',
+  title: 'Password',
   description: 'Takes a password, with a button that shows or hides it.',
-  component: PasswordInput,
+  component: Password,
   usage: [
     {
       title: 'Basic usage',
@@ -32,7 +26,7 @@ const passwordInput: ComponentDocConfig = {
           label: 'Variant',
           type: 'select',
           options: inputVariantNames,
-          default: passwordInputDefaults.variant,
+          default: passwordDefaults.variant,
         },
       ],
       props: (state) => ({ placeholder, variant: state.variant! }),
@@ -46,7 +40,7 @@ const passwordInput: ComponentDocConfig = {
           label: 'Color',
           type: 'select',
           options: themeColors,
-          default: passwordInputDefaults.color,
+          default: passwordDefaults.color,
         },
       ],
       props: (state) => ({ placeholder, color: state.color! }),
@@ -60,7 +54,7 @@ const passwordInput: ComponentDocConfig = {
           label: 'Size',
           type: 'select',
           options: inputSizes,
-          default: passwordInputDefaults.size,
+          default: passwordDefaults.size,
         },
       ],
       props: (state) => ({ placeholder, icon: 'lock', size: state.size! }),
@@ -97,7 +91,7 @@ const passwordInput: ComponentDocConfig = {
     {
       title: 'Roles and attributes',
       description:
-        'PasswordInput renders the ui-sdk password input. class and style reach the root; every other attribute, such as id or aria-label, reaches the input.',
+        'Password renders the ui-sdk password input. class and style reach the root; every other attribute, such as id or aria-label, reaches the input.',
       table: {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
@@ -155,7 +149,7 @@ const passwordInput: ComponentDocConfig = {
       {
         name: 'autoComplete',
         type: "'current-password' | 'new-password' | 'off' | string",
-        default: `'${passwordInputDefaults.autoComplete}'`,
+        default: `'${passwordDefaults.autoComplete}'`,
         description: 'Tells password managers whether to fill a saved password or offer a new one.',
       },
       { name: 'name', type: 'string', description: 'Submits the password under this name.' },
@@ -168,27 +162,27 @@ const passwordInput: ComponentDocConfig = {
       {
         name: 'variant',
         type: inputVariantNames.map((variant) => `'${variant}'`).join(' | '),
-        default: `'${passwordInputDefaults.variant}'`,
+        default: `'${passwordDefaults.variant}'`,
         description: 'How the field stands out from the page.',
       },
       {
         name: 'color',
         type: 'string',
-        default: `'${passwordInputDefaults.color}'`,
+        default: `'${passwordDefaults.color}'`,
         description:
           'Theme token such as primary or error, a custom token, or a CSS color such as #6366f1. Only the focus border and ring use it.',
       },
       {
         name: 'size',
         type: inputSizes.map((size) => `'${size}'`).join(' | '),
-        default: `'${passwordInputDefaults.size}'`,
+        default: `'${passwordDefaults.size}'`,
         description:
           'Height, padding, text, icon and toggle size. Inside a FormField, it defaults to the field size.',
       },
       {
         name: 'radius',
         type: 'string | number',
-        default: `'${passwordInputDefaults.radius}'`,
+        default: `'${passwordDefaults.radius}'`,
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
@@ -225,7 +219,7 @@ const passwordInput: ComponentDocConfig = {
       },
       {
         name: 'ui',
-        type: 'PasswordInputUi',
+        type: 'PasswordUi',
         typeLink: '#ui',
         description: 'HTML attributes for the root and each inner node. See UI.',
       },
@@ -282,4 +276,4 @@ const passwordInput: ComponentDocConfig = {
   },
 }
 
-export default passwordInput
+export default password
