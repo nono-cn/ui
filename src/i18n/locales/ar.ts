@@ -4,4 +4,5 @@ export default {
   close: 'إغلاق',
   clear: 'مسح',
   ratingValue: '{value} من {max}',
+  showPassword: 'إظهار كلمة المرور',
 } satisfies Messages

@@ -4,4 +4,5 @@ export default {
   close: 'Fechar',
   clear: 'Limpar',
   ratingValue: '{value} de {max}',
+  showPassword: 'Mostrar palavra-passe',
 } satisfies Messages
