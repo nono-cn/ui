@@ -1,36 +1,62 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
+import { computed, ref } from 'vue'
 import {
   Badge,
   Button,
-  Link,
-  Tooltip,
-  tooltipSides,
-  type TooltipOpenChangeDetails,
-  type TooltipUi,
+  FormField,
+  Icon,
+  Label,
+  PasswordInput,
+  inputSizes,
+  inputVariantNames,
+  themeColors,
+  type PasswordInputUi,
 } from '@nono/ui'
 import { dark } from '@docs/components/useDocsTheme'
 
-const aligns = ['start', 'center', 'end'] as const
+const radii = ['none', 'sm', 'md', 'lg', 'full', 0, 12, '1.5rem'] as const
 
-const highlight: TooltipUi = {
-  content: ({ open }) => ({
-    class: open ? 'bg-primary font-semibold text-primary-foreground' : '',
-  }),
+const password = ref('')
+const visible = ref(false)
+const visibleLog = ref<string[]>([])
+
+const strengthPassword = ref('')
+const strength = computed(() => {
+  const value = strengthPassword.value
+  let score = 0
+  if (value.length >= 8) score++
+  if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score++
+  if (/\d/.test(value)) score++
+  if (/[^A-Za-z0-9]/.test(value)) score++
+  return score
+})
+const strengthLabel = computed(
+  () => ['Too short', 'Weak', 'Fair', 'Good', 'Strong'][strength.value],
+)
+const strengthColor = computed(
+  () => (['error', 'error', 'warning', 'info', 'success'] as const)[strength.value],
+)
+
+const confirm = ref('')
+const confirmError = computed(() =>
+  confirm.value && confirm.value !== strengthPassword.value ? 'Passwords do not match' : undefined,
+)
+
+const submitted = ref<string | null>(null)
+function onSubmit(event: Event) {
+  const data = new FormData(event.target as HTMLFormElement)
+  submitted.value = JSON.stringify(Object.fromEntries(data))
 }
 
-const open = ref(false)
-const locked = ref(false)
-const log = ref<string[]>([])
+const styled: PasswordInputUi = {
+  root: () => ({ class: 'shadow-sm' }),
+  input: () => ({ class: 'font-mono tracking-widest' }),
+  toggle: () => ({ class: 'text-primary' }),
+  toggleIcon: () => ({ class: 'stroke-[2.5]' }),
+}
 
-const tooltip = useTemplateRef<InstanceType<typeof Tooltip>>('tooltip')
-
-function onOpenChange(value: boolean, details: TooltipOpenChangeDetails) {
-  if (value && locked.value) details.cancel()
-  log.value = [
-    `${details.reason}: ${value}${value && locked.value ? ' (canceled)' : ''}`,
-    ...log.value,
-  ].slice(0, 5)
+function onVisible(value: boolean) {
+  visibleLog.value = [`update:visible → ${value}`, ...visibleLog.value].slice(0, 5)
 }
 </script>
 
@@ -42,210 +68,229 @@ function onOpenChange(value: boolean, details: TooltipOpenChangeDetails) {
     </header>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Link</h2>
+      <h2 class="font-medium">PasswordInput · basic, v-model and defaultValue</h2>
+      <PasswordInput v-model="password" placeholder="Password" />
+      <p class="text-sm text-muted-foreground">modelValue: {{ password || '—' }}</p>
+      <PasswordInput default-value="correct horse" placeholder="Uncontrolled" />
+    </section>
 
-      <div class="flex gap-2">
-        <Link
-          trailing-icon="user"
-          href="https://nono-ui.com"
-          target="_blank"
-          variant="outline"
-          size="xl"
-        />
-        <Link
-          trailing-icon="user"
-          to="https://www.youtube.com/watch?v=WsWXequbzQ8&list=RDFHDw3Lg7X3o&index=6"
-          target="_blank"
-          variant="subtle"
-          size="xl"
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · variants</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <PasswordInput
+          v-for="variant in inputVariantNames"
+          :key="variant"
+          :variant="variant"
+          :placeholder="variant"
         />
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · text and shortcut</h2>
-      <div class="flex gap-2">
-        <Tooltip text="Save changes">
-          <Button variant="outline" label="Save" />
-        </Tooltip>
-        <Tooltip text="Copy" shortcut="mod+c">
-          <Button variant="outline" icon="file" square aria-label="Copy" />
-        </Tooltip>
-        <Tooltip shortcut="shift+?">
-          <Button variant="outline" label="Shortcut only" />
-        </Tooltip>
+      <h2 class="font-medium">PasswordInput · colors (focus) and highlight</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <PasswordInput
+          v-for="color in themeColors"
+          :key="color"
+          :color="color"
+          :placeholder="color"
+        />
+        <PasswordInput color="#6366f1" placeholder="#6366f1" />
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <PasswordInput
+          v-for="color in themeColors"
+          :key="color"
+          :color="color"
+          highlight
+          :placeholder="`${color} highlight`"
+        />
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · sides with arrow</h2>
-      <div class="flex gap-2">
-        <Tooltip v-for="side in tooltipSides" :key="side" :text="side" :side="side" arrow>
-          <Button variant="outline" :label="side" />
-        </Tooltip>
-      </div>
+      <h2 class="font-medium">PasswordInput · sizes with icon</h2>
+      <PasswordInput
+        v-for="size in inputSizes"
+        :key="size"
+        :size="size"
+        icon="lock"
+        :placeholder="size"
+        default-value="secret"
+      />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · align and offsets</h2>
-      <div class="flex gap-2">
-        <Tooltip
-          v-for="align in aligns"
-          :key="align"
-          :text="`A longer tooltip aligned to ${align}`"
-          side="bottom"
-          :align="align"
-          :side-offset="12"
-        >
-          <Button variant="outline" :label="align" />
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · radius</h2>
-      <div class="flex gap-2">
-        <Tooltip
-          v-for="radius in ['none', 'sm', 'md', 'lg', 'full'] as const"
+      <h2 class="font-medium">PasswordInput · radius</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <PasswordInput
+          v-for="radius in radii"
           :key="radius"
-          :text="`radius ${radius}`"
           :radius="radius"
-        >
-          <Button variant="outline" :label="radius" />
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · delays, toggleable and closeOnPress</h2>
-      <div class="flex gap-2">
-        <Tooltip text="Instant" :delay="0" :close-delay="0">
-          <Button variant="outline" label="No delay" />
-        </Tooltip>
-        <Tooltip text="Slow" :delay="1000" :close-delay="500">
-          <Button variant="outline" label="1s delay" />
-        </Tooltip>
-        <Tooltip text="Click toggles me" toggleable>
-          <Button variant="outline" label="Toggleable" />
-        </Tooltip>
-        <Tooltip text="Stays after click" :close-on-press="false">
-          <Button variant="outline" label="Keep on press" />
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · triggers: plain element, link, disabled</h2>
-      <div class="flex items-center gap-2">
-        <Tooltip text="On a span">
-          <span tabindex="0" class="rounded border px-2 py-1 text-sm">Span</span>
-        </Tooltip>
-        <Tooltip text="Opens nono-ui.com" type="description">
-          <Link href="https://nono-ui.com" target="_blank" label="Link" variant="subtle" />
-        </Tooltip>
-        <Tooltip text="Never shown" disabled>
-          <Button variant="outline" label="Disabled tooltip" />
-        </Tooltip>
-        <Tooltip text="Button is disabled">
-          <Button variant="outline" label="Disabled button" disabled />
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · default slot (trigger state)</h2>
-      <div class="flex gap-2">
-        <Tooltip text="Trigger knows it is open">
-          <template #default="{ open: isOpen }">
-            <Button :variant="isOpen ? 'solid' : 'outline'" :label="isOpen ? 'Open' : 'Closed'" />
-          </template>
-        </Tooltip>
-        <Tooltip text="Component with fragment root">
-          <Link href="https://nono-ui.com" target="_blank" label="Link trigger" />
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · content slot</h2>
-      <div class="flex gap-2">
-        <Tooltip arrow>
-          <Button variant="outline" label="Rich content" />
-          <template #content>
-            <span class="font-semibold">Rich</span>
-            <span class="text-muted-foreground">content</span>
-          </template>
-        </Tooltip>
-        <Tooltip shortcut="mod+s">
-          <Button variant="outline" label="Content + shortcut" />
-          <template #content="{ open: isOpen }">
-            <span>Save {{ isOpen ? '·' : '' }}</span>
-          </template>
-        </Tooltip>
-        <Tooltip text="Styled via ui" shortcut="mod+k" :ui="highlight">
-          <Button variant="outline" label="ui" />
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · shortcut slot (replaces the kbd)</h2>
-      <div class="flex gap-2">
-        <Tooltip text="Search" shortcut="mod+k">
-          <Button variant="outline" label="Badge" />
-          <template #shortcut="{ text }">
-            <Badge size="sm" variant="soft" color="primary" :label="text" />
-          </template>
-        </Tooltip>
-        <Tooltip text="Undo" shortcut="mod+z">
-          <Button variant="outline" label="Plain element" :close-on-press="false" />
-          <template #shortcut="{ text }">
-            <span class="font-mono text-muted-foreground">{{ text }}</span>
-          </template>
-        </Tooltip>
-        <Tooltip text="Copy" shortcut="mod+c" :ui="{ shortcut: () => ({ class: 'text-primary' }) }">
-          <Button variant="outline" label="With ui.shortcut" />
-          <template #shortcut="{ text }">
-            <span>{{ text }}</span>
-          </template>
-        </Tooltip>
-        <Tooltip text="Without shortcut prop the slot does not render">
-          <Button variant="outline" label="No shortcut prop" />
-          <template #shortcut="{ text }">
-            <Badge size="sm" :label="text" />
-          </template>
-        </Tooltip>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Tooltip · v-model:open, openChange and expose</h2>
-      <Tooltip
-        ref="tooltip"
-        v-model:open="open"
-        text="Controlled"
-        side="right"
-        arrow
-        @open-change="onOpenChange"
-      >
-        <Button variant="outline" label="Controlled" class="self-start" />
-      </Tooltip>
-      <div class="flex gap-2">
-        <Button size="sm" variant="outline" label="Open" @click="tooltip?.setOpen(true)" />
-        <Button size="sm" variant="outline" label="Close" @click="tooltip?.close()" />
-        <Button size="sm" variant="outline" label="Toggle" @click="tooltip?.toggle()" />
-        <Button size="sm" variant="outline" label="Focus" @click="tooltip?.focus()" />
-        <Button
-          size="sm"
-          :variant="locked ? 'solid' : 'outline'"
-          :label="locked ? 'Unlock' : 'Lock (cancel open)'"
-          @click="locked = !locked"
+          :placeholder="`radius ${radius}`"
         />
       </div>
-      <p class="text-sm text-muted-foreground">open: {{ open }}</p>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · variants × states</h2>
+      <div v-for="variant in inputVariantNames" :key="variant" class="grid grid-cols-3 gap-2">
+        <PasswordInput :variant="variant" :placeholder="`${variant}`" icon="lock" />
+        <PasswordInput :variant="variant" default-value="read only" read-only icon="lock" />
+        <PasswordInput :variant="variant" placeholder="disabled" disabled icon="lock" />
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · visibility</h2>
+      <PasswordInput default-value="shown at first" default-visible />
+      <div class="flex items-center gap-2">
+        <PasswordInput
+          v-model:visible="visible"
+          default-value="controlled"
+          class="flex-1"
+          @update:visible="onVisible"
+        />
+        <Button variant="outline" :label="visible ? 'Hide' : 'Show'" @click="visible = !visible" />
+      </div>
+      <p class="text-sm text-muted-foreground">visible: {{ visible }}</p>
       <ul class="text-xs text-muted-foreground">
-        <li v-for="entry in log" :key="entry">{{ entry }}</li>
+        <li v-for="(entry, index) in visibleLog" :key="index">{{ entry }}</li>
       </ul>
+      <PasswordInput :visible="true" default-value="always visible (no v-model)" />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · leading slot</h2>
+      <PasswordInput placeholder="Icon prop" icon="lock" />
+      <PasswordInput placeholder="Custom leading">
+        <template #leading>
+          <Icon name="user" class="size-4 text-primary" />
+        </template>
+      </PasswordInput>
+      <PasswordInput placeholder="Text leading">
+        <template #leading>
+          <span class="text-xs font-medium text-muted-foreground">PIN</span>
+        </template>
+      </PasswordInput>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · trailing slot (caps lock, visible state)</h2>
+      <PasswordInput placeholder="Turn Caps Lock on while focused">
+        <template #trailing="{ capsLock }">
+          <Badge v-if="capsLock" size="sm" variant="soft" color="warning" label="Caps" />
+        </template>
+      </PasswordInput>
+      <PasswordInput default-value="secret" placeholder="Shows the state">
+        <template #trailing="{ visible: isVisible }">
+          <span class="text-xs text-muted-foreground">{{ isVisible ? 'shown' : 'hidden' }}</span>
+        </template>
+      </PasswordInput>
+      <div v-for="size in inputSizes" :key="size" class="flex">
+        <PasswordInput :size="size" icon="lock" default-value="trailing padding" class="flex-1">
+          <template #trailing>
+            <Icon name="warning" class="size-4 text-warning" />
+          </template>
+        </PasswordInput>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · iconToggle slot and toggleLabel</h2>
+      <PasswordInput default-value="secret" toggle-label="Reveal">
+        <template #iconToggle="{ visible: isVisible }">
+          <Icon :name="isVisible ? 'x' : 'search'" class="size-full" />
+        </template>
+      </PasswordInput>
+      <PasswordInput default-value="secret" :ui="{ toggle: () => ({ class: 'w-auto px-1' }) }">
+        <template #iconToggle="{ visible: isVisible }">
+          <span class="text-xs font-medium">{{ isVisible ? 'Hide' : 'Show' }}</span>
+        </template>
+      </PasswordInput>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · ui and attrs</h2>
+      <PasswordInput default-value="styled via ui" :ui="styled" />
+      <PasswordInput
+        id="attrs-password"
+        placeholder="class, style, aria and data attrs"
+        class="max-w-xs"
+        style="opacity: 0.9"
+        aria-describedby="attrs-hint"
+        data-test="attrs"
+        maxlength="12"
+      />
+      <p id="attrs-hint" class="text-xs text-muted-foreground">maxlength 12, id on the input</p>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · Label and FormField</h2>
+      <div class="flex flex-col gap-1">
+        <Label for="label-password" label="With Label" />
+        <PasswordInput id="label-password" placeholder="Password" />
+      </div>
+      <FormField label="Current password" hint="Required" required>
+        <PasswordInput placeholder="Inherits required" />
+      </FormField>
+      <FormField label="Large field" description="Size comes from the FormField" size="lg">
+        <PasswordInput icon="lock" placeholder="lg" />
+      </FormField>
+      <FormField label="Invalid" error="Wrong password">
+        <PasswordInput default-value="wrong" />
+      </FormField>
+      <FormField label="Disabled field" disabled>
+        <PasswordInput placeholder="Disabled by FormField" />
+      </FormField>
+      <FormField label="Horizontal" orientation="horizontal">
+        <PasswordInput placeholder="Password" />
+      </FormField>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · sign up (strength and confirm)</h2>
+      <FormField label="New password" :description="strengthLabel">
+        <PasswordInput
+          v-model="strengthPassword"
+          auto-complete="new-password"
+          placeholder="At least 8 characters"
+          :color="strengthColor"
+          :highlight="strengthPassword.length > 0"
+        >
+          <template #trailing="{ capsLock }">
+            <Badge v-if="capsLock" size="sm" variant="soft" color="warning" label="Caps" />
+          </template>
+        </PasswordInput>
+      </FormField>
+      <div class="flex gap-1">
+        <span
+          v-for="step in 4"
+          :key="step"
+          class="h-1 flex-1 rounded-full"
+          :class="step <= strength ? 'bg-primary' : 'bg-muted'"
+        />
+      </div>
+      <FormField label="Confirm password" :error="confirmError">
+        <PasswordInput v-model="confirm" auto-complete="new-password" />
+      </FormField>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">PasswordInput · native form (name, required, reset hides)</h2>
+      <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
+        <PasswordInput name="password" required default-value="initial" placeholder="Required" />
+        <PasswordInput name="pin" auto-complete="off" placeholder="PIN (off)" />
+        <div class="flex gap-2">
+          <Button type="submit" label="Submit" />
+          <Button type="reset" variant="outline" label="Reset" />
+        </div>
+      </form>
+      <form id="outside-form" @submit.prevent="onSubmit">
+        <Button type="submit" variant="outline" label="Submit outside form" />
+      </form>
+      <PasswordInput name="outside" form="outside-form" placeholder="Belongs to #outside-form" />
+      <p class="text-sm text-muted-foreground">submitted: {{ submitted ?? '—' }}</p>
     </section>
   </main>
 </template>
