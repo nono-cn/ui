@@ -9,11 +9,33 @@ const kbd: ComponentDocConfig = {
   usage: [
     {
       title: 'Basic usage',
-      description: 'Pass the key to show with the label prop, or put it in the default slot.',
-      props: () => ({ label: 'K' }),
+      description:
+        'Pass the keys with the shortcut prop. They are shown the way the platform writes them, so the same Kbd reads ⌘K on Apple and Ctrl+K elsewhere.',
+      props: () => ({ shortcut: 'mod+k' }),
+    },
+    {
+      title: 'Any content',
+      description: 'Put anything else, such as a word, in the default slot.',
+      props: () => ({}),
+      slot: { text: 'Fn' },
     },
   ],
   examples: [
+    {
+      title: 'Shortcut',
+      description:
+        'Join keys with +. mod is Command on Apple and Control elsewhere, and named keys such as escape, enter or arrowup get their symbol or short name. It only shows the keys: register what they do with useShortcut.',
+      controls: [
+        {
+          key: 'shortcut',
+          label: 'Shortcut',
+          type: 'select',
+          options: ['mod+k', 'mod+shift+p', 'alt+enter', 'escape', 'shift+arrowup', '?'],
+          default: 'mod+k',
+        },
+      ],
+      props: (state) => ({ shortcut: state.shortcut! }),
+    },
     {
       title: 'Variant',
       description: 'Choose how much visual weight the key has.',
@@ -26,7 +48,7 @@ const kbd: ComponentDocConfig = {
           default: kbdDefaults.variant,
         },
       ],
-      props: (state) => ({ label: 'K', variant: state.variant! }),
+      props: (state) => ({ shortcut: 'k', variant: state.variant! }),
     },
     {
       title: 'Color',
@@ -55,7 +77,7 @@ const kbd: ComponentDocConfig = {
         },
       ],
       props: (state) => ({
-        label: 'K',
+        shortcut: 'k',
         color: state.color === 'custom' ? state.custom! : state.color!,
         variant: state.variant!,
       }),
@@ -72,7 +94,7 @@ const kbd: ComponentDocConfig = {
           default: kbdDefaults.size,
         },
       ],
-      props: (state) => ({ label: 'Ctrl', size: state.size! }),
+      props: (state) => ({ shortcut: 'mod+k', size: state.size! }),
     },
     {
       title: 'Radius',
@@ -86,7 +108,7 @@ const kbd: ComponentDocConfig = {
           default: kbdDefaults.radius,
         },
       ],
-      props: (state) => ({ label: 'K', radius: state.radius! }),
+      props: (state) => ({ shortcut: 'k', radius: state.radius! }),
     },
   ],
   accessibility: [
@@ -102,15 +124,16 @@ const kbd: ComponentDocConfig = {
     {
       title: 'Readable shortcuts',
       description:
-        'Keep the shortcut visible. Symbols such as ⌘ or ⇧ may be read literally or not at all, so give them a readable name with aria-label or nearby text, such as "Control K". Do not rely on color alone to communicate an action.',
+        'Keep the shortcut visible. Symbols such as ⌘ or ⇧ may be read literally or not at all. Inside a button, hide the Kbd with aria-hidden and put aria-keyshortcuts on the button, which useShortcut returns. Elsewhere, give it a readable name with aria-label or nearby text, such as "Control K". Do not rely on color alone to communicate an action.',
     },
   ],
   api: {
     props: [
       {
-        name: 'label',
+        name: 'shortcut',
         type: 'string',
-        description: 'Text of the key. The default slot replaces it.',
+        description:
+          'Keys joined with +, like mod+k, shown the way the platform writes them: ⌘K on Apple and Ctrl+K elsewhere. The server and the first client render agree. The default slot replaces it.',
       },
       {
         name: 'variant',
@@ -150,7 +173,7 @@ const kbd: ComponentDocConfig = {
       {
         name: 'default',
         type: '-',
-        description: 'Content of the key; overrides the label fallback.',
+        description: 'Content of the key; overrides the shortcut.',
       },
     ],
     ui: [{ node: 'root', tag: 'kbd' }],

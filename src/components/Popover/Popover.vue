@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { formatShortcut } from '@ui-sdk/core'
 import { createPopoverController } from '@ui-sdk/core/popover'
 import {
   Popover as PopoverRoot,
@@ -12,6 +11,7 @@ import {
 import { computed } from 'vue'
 import AsChild from '@/components/AsChild/AsChild'
 import { getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { useShortcutHint } from '@/composables/useShortcut'
 import { useUi } from '@/composables/useUi'
 import { popoverAligns, popoverDefaults, popoverSides } from '@/components/Popover/constants'
 import type {
@@ -55,7 +55,7 @@ const controller = createPopoverController()
 
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
-const shortcutText = computed(() => (props.shortcut ? formatShortcut(props.shortcut) : ''))
+const { text: shortcutText } = useShortcutHint(() => props.shortcut)
 
 const rootProps = computed(() => ({
   open: props.open,

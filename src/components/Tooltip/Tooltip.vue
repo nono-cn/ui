@@ -134,7 +134,7 @@ defineExpose<TooltipExpose>({
           <template #render="{ props: attrs, state: shortcutState }">
             <AsChild data-ui="tooltip-shortcut" v-bind="shortcutProps(attrs, state)">
               <slot name="shortcut" :text="shortcutState.text">
-                <Kbd size="sm" :label="shortcutState.text" />
+                <Kbd size="sm" :shortcut="shortcut" />
               </slot>
             </AsChild>
           </template>

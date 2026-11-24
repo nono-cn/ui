@@ -15,7 +15,7 @@ export interface KbdGroupUi {
 }
 
 export interface KbdProps {
-  label?: string
+  shortcut?: string
   variant?: KbdVariant
   color?: string
   size?: KbdSize
