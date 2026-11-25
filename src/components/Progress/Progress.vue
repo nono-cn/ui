@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { ProgressState as SdkState } from '@ui-sdk/core/progress'
+import type {
+  ProgressState as SdkState,
+  ProgressValueState as SdkValueState,
+} from '@ui-sdk/core/progress'
 import {
   Progress as ProgressRoot,
   ProgressIndicator,
@@ -11,6 +14,7 @@ import { computed, useAttrs } from 'vue'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { useLocale } from '@/i18n/useLocale'
+import { toProgressState, toProgressValueState } from '@/components/Progress/state'
 import {
   progressAnimations,
   progressDefaults,
@@ -62,8 +66,12 @@ const valuePosition = computed(() =>
 )
 const inside = computed(() => hasValue.value && valuePosition.value === 'inside')
 
-function toState<S extends SdkState>(state: S): S & Pick<ProgressState, 'min' | 'max'> {
-  return { ...state, min: props.min, max: props.max }
+function toState(state: SdkState) {
+  return toProgressState(state, props.min, props.max)
+}
+
+function toValueState(state: SdkValueState) {
+  return toProgressValueState(state, props.min, props.max)
 }
 
 const rootProps = computed(() => ({
@@ -146,12 +154,12 @@ function indicatorProps(state: ProgressState) {
       </ProgressLabel>
       <ProgressValue v-if="hasValue && !inside">
         <template #render="{ props: partAttrs, state: valueState, children }">
-          <span data-ui="progress-value" v-bind="valueProps(partAttrs, toState(valueState))">
+          <span data-ui="progress-value" v-bind="valueProps(partAttrs, toValueState(valueState))">
             <component :is="children" />
           </span>
         </template>
         <template #default="{ state: valueState }">
-          <slot name="value" v-bind="toState(valueState)">{{ valueState.text }}</slot>
+          <slot name="value" v-bind="toValueState(valueState)">{{ valueState.text }}</slot>
         </template>
       </ProgressValue>
       <ProgressTrack data-ui="progress-track" v-bind="trackProps(toState(sdkState))">
@@ -161,12 +169,12 @@ function indicatorProps(state: ProgressState) {
         />
         <ProgressValue v-if="inside">
           <template #render="{ props: partAttrs, state: valueState, children }">
-            <span data-ui="progress-value" v-bind="valueProps(partAttrs, toState(valueState))">
+            <span data-ui="progress-value" v-bind="valueProps(partAttrs, toValueState(valueState))">
               <component :is="children" />
             </span>
           </template>
           <template #default="{ state: valueState }">
-            <slot name="value" v-bind="toState(valueState)">{{ valueState.text }}</slot>
+            <slot name="value" v-bind="toValueState(valueState)">{{ valueState.text }}</slot>
           </template>
         </ProgressValue>
       </ProgressTrack>

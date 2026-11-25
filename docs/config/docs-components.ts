@@ -18,6 +18,7 @@ import link from '@docs/config/components/link'
 import password from '@docs/config/components/password'
 import popover from '@docs/config/components/popover'
 import progress from '@docs/config/components/progress'
+import progressCircular from '@docs/config/components/progress-circular'
 import rating from '@docs/config/components/rating'
 import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
@@ -47,6 +48,7 @@ export const docsComponents: ComponentDocConfig[] = [
   password,
   popover,
   progress,
+  progressCircular,
   rating,
   separator,
   switchDocs,
