@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { docsComponents } from '@docs/config/docs-components'
-import { docsComposables } from '@docs/config/docs-composables'
 
 const emit = defineEmits<{ navigate: [] }>()
 const route = useRoute()
@@ -11,11 +10,6 @@ const groups = [
     title: 'Components',
     base: '/components',
     items: docsComponents.map(({ slug, title }) => ({ slug, label: title })),
-  },
-  {
-    title: 'Composables',
-    base: '/composables',
-    items: docsComposables.map(({ slug, name }) => ({ slug, label: name })),
   },
 ]
 

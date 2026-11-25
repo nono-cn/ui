@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { docsComponents } from '@docs/config/docs-components'
-import { docsComposables } from '@docs/config/docs-composables'
 
 const cards = [
   {
@@ -9,12 +8,6 @@ const cards = [
     description: 'Accessible Vue components styled with Tailwind, built on ui-sdk.',
     to: `/components/${docsComponents[0]!.slug}`,
     count: docsComponents.length,
-  },
-  {
-    title: 'Composables',
-    description: 'Functions to use inside setup that share the configuration of the components.',
-    to: `/composables/${docsComposables[0]!.slug}`,
-    count: docsComposables.length,
   },
 ]
 </script>
