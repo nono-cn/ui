@@ -57,3 +57,81 @@
   --radius-3xl: 1.5rem;
   --radius-4xl: 2rem;
 }
+
+/* Registered so the value inside the bar can transition its color split along with the fill. */
+@property --progress-fill {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@theme static {
+  --animate-progress-carousel-inline: progress-carousel-inline 2s linear infinite;
+  --animate-progress-carousel-block: progress-carousel-block 2s linear infinite;
+  --animate-progress-swing-inline: progress-swing-inline 2s ease-in-out infinite;
+  --animate-progress-swing-block: progress-swing-block 2s ease-in-out infinite;
+  --animate-progress-elastic-inline: progress-elastic-inline 2s ease-in-out infinite;
+  --animate-progress-elastic-block: progress-elastic-block 2s ease-in-out infinite;
+
+  @keyframes progress-carousel-inline {
+    from {
+      inset-inline: -50% 100%;
+    }
+    to {
+      inset-inline: 100% -50%;
+    }
+  }
+
+  @keyframes progress-carousel-block {
+    from {
+      inset-block: 100% -50%;
+    }
+    to {
+      inset-block: -50% 100%;
+    }
+  }
+
+  @keyframes progress-swing-inline {
+    0%,
+    100% {
+      inset-inline: 0 50%;
+    }
+    50% {
+      inset-inline: 50% 0;
+    }
+  }
+
+  @keyframes progress-swing-block {
+    0%,
+    100% {
+      inset-block: 0 50%;
+    }
+    50% {
+      inset-block: 50% 0;
+    }
+  }
+
+  @keyframes progress-elastic-inline {
+    0% {
+      inset-inline: 0 100%;
+    }
+    50% {
+      inset-inline: 0 0;
+    }
+    100% {
+      inset-inline: 100% 0;
+    }
+  }
+
+  @keyframes progress-elastic-block {
+    0% {
+      inset-block: 100% 0;
+    }
+    50% {
+      inset-block: 0 0;
+    }
+    100% {
+      inset-block: 0 100%;
+    }
+  }
+}
