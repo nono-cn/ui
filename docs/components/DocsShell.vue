@@ -4,9 +4,7 @@ import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { docsComponentsBySlug } from '@docs/config/docs-components'
 import { exampleAnchor } from '@docs/config/docs-anchors'
-import { docsComposablesBySlug } from '@docs/config/docs-composables'
 import ComponentDocsPage from '@docs/components/ComponentDocsPage.vue'
-import ComposableDocsPage from '@docs/components/ComposableDocsPage.vue'
 import DocsComponentsNav from '@docs/components/DocsComponentsNav.vue'
 import DocsDrawer from '@docs/components/DocsDrawer.vue'
 import DocsIcon from '@docs/components/DocsIcon.vue'
@@ -37,39 +35,18 @@ function setVariable(name: string, value: string) {
 }
 
 const slug = computed(() => String(route.params.slug))
-const composablesPage = computed(() => route.path.startsWith('/composables/'))
 const homePage = computed(() => route.path === '/')
-const component = computed(() =>
-  composablesPage.value ? undefined : docsComponentsBySlug[slug.value],
+const component = computed(() => docsComponentsBySlug[slug.value])
+const current = computed(() => component.value?.title)
+const section = computed(() =>
+  homePage.value ? { title: 'Home', to: '/' } : { title: 'Components', to: '/components' },
 )
-const composable = computed(() =>
-  composablesPage.value ? docsComposablesBySlug[slug.value] : undefined,
-)
-const current = computed(() => (component.value ? component.value.title : composable.value?.name))
-const section = computed(() => {
-  if (homePage.value) return { title: 'Home', to: '/' }
-  if (composablesPage.value) return { title: 'Composables', to: '/composables' }
-  return { title: 'Components', to: '/components' }
-})
 const pageTitle = computed(() => {
   if (current.value) return `${current.value} · nono/ui`
   return homePage.value ? 'nono/ui' : `nono/ui · ${section.value.title}`
 })
 
 const tocTree = computed<DocsTocItem[]>(() => {
-  if (composable.value) {
-    const { parameters, returns, types } = composable.value
-    const apiChildren: DocsTocItem[] = []
-    if (parameters.length) apiChildren.push({ id: 'parameters', label: 'Parameters' })
-    if (returns.length) apiChildren.push({ id: 'returns', label: 'Returns' })
-    if (types.length) apiChildren.push({ id: 'types', label: 'Types' })
-    return [
-      { id: 'import', label: 'Import' },
-      { id: 'usage', label: 'Usage' },
-      { id: 'api', label: 'API', children: apiChildren },
-    ]
-  }
-
   const current = component.value
   if (!current) return []
 
@@ -217,15 +194,10 @@ watch(pageTitle, (value) => (document.title = value), { immediate: true })
       </aside>
       <main class="docs-content">
         <ComponentDocsPage v-if="component" :key="component.slug" :component="component" />
-        <ComposableDocsPage
-          v-else-if="composable"
-          :key="composable.slug"
-          :composable="composable"
-        />
         <component :is="route.meta.page" v-else-if="route.meta.page" />
         <div v-else class="docs-empty">
           <span class="docs-empty-kicker">{{ section.title }}</span>
-          <h1>{{ composablesPage ? 'Composable' : 'Component' }} not found</h1>
+          <h1>Component not found</h1>
           <p>Pick one of the available {{ section.title.toLowerCase() }} in the navigation.</p>
         </div>
       </main>
