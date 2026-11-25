@@ -135,3 +135,29 @@
     }
   }
 }
+
+@theme static {
+  --animate-progress-circular-spin: progress-circular-spin 1.4s linear infinite;
+  --animate-progress-circular-dash: progress-circular-dash 1.4s ease-in-out infinite;
+
+  @keyframes progress-circular-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes progress-circular-dash {
+    0% {
+      stroke-dasharray: 1 200;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 80 200;
+      stroke-dashoffset: -12;
+    }
+    100% {
+      stroke-dasharray: 80 200;
+      stroke-dashoffset: -99;
+    }
+  }
+}
