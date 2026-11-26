@@ -312,10 +312,8 @@ const toggle: ComponentDocConfig = {
         tag: 'button',
         kept: 'aria-pressed',
       },
-      { node: 'leading', tag: 'span' },
       { node: 'leadingIcon', tag: 'svg' },
       { node: 'label', tag: 'span' },
-      { node: 'trailing', tag: 'span' },
       { node: 'trailingIcon', tag: 'svg' },
     ],
     slots: [

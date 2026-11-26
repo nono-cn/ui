@@ -7,6 +7,7 @@ import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
 import { useLocale } from '@/i18n/useLocale'
 import { ratingDefaults, ratingOrientations, ratingSizes } from '@/components/Rating/constants'
+import { ratingUiExclude } from '@/components/Rating/exclude'
 import type {
   RatingChangeDetails,
   RatingEmits,
@@ -76,6 +77,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: ratingUiExclude.root,
   }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
@@ -99,22 +101,29 @@ function itemProps(itemAttrs: Record<string, unknown>, state: RatingItemState) {
   return useUi({
     base: [{ class: ratingItemVariants({ size: size.value }) }, itemAttrs],
     ui: props.ui?.item?.(state),
+    exclude: ratingUiExclude.item,
   })
 }
 
 function emptyIconProps(state: RatingItemState) {
   return {
-    ...useUi({ base: { class: ratingEmptyIconVariants() }, ui: props.ui?.emptyIcon?.(state) }),
+    ...useUi({
+      base: { class: ratingEmptyIconVariants(), fill: 'currentColor' },
+      ui: props.ui?.emptyIcon?.(state),
+      exclude: ratingUiExclude.emptyIcon,
+    }),
     name: props.emptyIcon ?? props.icon,
-    fill: 'currentColor',
   }
 }
 
 function iconProps(state: RatingItemState) {
   return {
-    ...useUi({ base: { class: ratingIconVariants() }, ui: props.ui?.icon?.(state) }),
+    ...useUi({
+      base: { class: ratingIconVariants(), fill: 'currentColor' },
+      ui: props.ui?.icon?.(state),
+      exclude: ratingUiExclude.icon,
+    }),
     name: props.icon,
-    fill: 'currentColor',
   }
 }
 

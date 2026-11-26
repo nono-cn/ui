@@ -14,12 +14,10 @@ export interface TextareaUi {
 export interface TextareaProps {
   modelValue?: string
   defaultValue?: string
-  placeholder?: string
   variant?: TextareaVariant
   color?: string
   size?: TextareaSize
   radius?: Radius
-  rows?: number
   autoResize?: boolean
   highlight?: boolean
   disabled?: boolean

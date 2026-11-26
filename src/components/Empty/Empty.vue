@@ -3,6 +3,7 @@ import { computed, useAttrs } from 'vue'
 import { getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { emptyDefaults, emptySizes, emptyVariantNames } from '@/components/Empty/constants'
+import { emptyUiExclude } from '@/components/Empty/exclude'
 import type { EmptyProps, EmptySize, EmptySlots } from '@/components/Empty/types'
 import {
   emptyContentVariants,
@@ -34,33 +35,44 @@ const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
 const hasHeader = computed(() => hasMedia.value || hasLabel.value || hasDescription.value)
 
-const headerProps = computed(() =>
-  useUi({ base: { class: emptyHeaderVariants({ size: size.value }) }, ui: props.ui?.header?.() }),
-)
+const headerProps = computed(() => ({ class: emptyHeaderVariants({ size: size.value }) }))
 
 const mediaProps = computed(() =>
-  useUi({ base: { class: emptyMediaVariants({ size: size.value }) }, ui: props.ui?.media?.() }),
+  useUi({
+    base: { class: emptyMediaVariants({ size: size.value }) },
+    ui: props.ui?.media?.(),
+    exclude: emptyUiExclude.media,
+  }),
 )
 
 const iconProps = computed(() => ({
-  ...useUi({ base: {}, ui: props.ui?.icon?.() }),
+  ...useUi({ base: {}, ui: props.ui?.icon?.(), exclude: emptyUiExclude.icon }),
   icon: props.icon,
   size: iconTileSizes[size.value],
 }))
 
 const labelProps = computed(() =>
-  useUi({ base: { class: emptyLabelVariants({ size: size.value }) }, ui: props.ui?.label?.() }),
+  useUi({
+    base: { class: emptyLabelVariants({ size: size.value }) },
+    ui: props.ui?.label?.(),
+    exclude: emptyUiExclude.label,
+  }),
 )
 
 const descriptionProps = computed(() =>
   useUi({
     base: { class: emptyDescriptionVariants({ size: size.value }) },
     ui: props.ui?.description?.(),
+    exclude: emptyUiExclude.description,
   }),
 )
 
 const contentProps = computed(() =>
-  useUi({ base: { class: emptyContentVariants() }, ui: props.ui?.content?.() }),
+  useUi({
+    base: { class: emptyContentVariants() },
+    ui: props.ui?.content?.(),
+    exclude: emptyUiExclude.content,
+  }),
 )
 
 const rootProps = computed(() =>
@@ -76,6 +88,7 @@ const rootProps = computed(() =>
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: emptyUiExclude.root,
   }),
 )
 </script>

@@ -1,5 +1,6 @@
 export { default as Toggle } from '@/components/Toggle/Toggle.vue'
 export { toggleDefaults, toggleSizes, toggleVariantNames } from '@/components/Toggle/constants'
+export { toggleUiExclude } from '@/components/Toggle/exclude'
 export type {
   ToggleEmits,
   ToggleExpose,

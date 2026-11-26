@@ -18,6 +18,7 @@ import {
   buttonVariants,
 } from '@/components/Button/variants'
 import { linkDefaults } from '@/components/Link/constants'
+import { linkUiExclude } from '@/components/Link/exclude'
 import type { LinkProps, LinkSlots } from '@/components/Link/types'
 import { linkIconSlotVariants, linkVariants } from '@/components/Link/variants'
 import Icon from '@/components/Icon/Icon.vue'
@@ -91,35 +92,37 @@ const baseProps = computed(() =>
       },
 )
 
-const leadingProps = computed(() =>
-  useUi({
-    base: {
-      class: variant.value ? buttonLeadingVariants({ size: size.value }) : linkIconSlotVariants(),
-    },
-    ui: props.ui?.leading?.(),
-  }),
-)
+const leadingProps = computed(() => ({
+  class: variant.value ? buttonLeadingVariants({ size: size.value }) : linkIconSlotVariants(),
+}))
 
-const trailingProps = computed(() =>
-  useUi({
-    base: {
-      class: variant.value ? buttonTrailingVariants({ size: size.value }) : linkIconSlotVariants(),
-    },
-    ui: props.ui?.trailing?.(),
-  }),
-)
+const trailingProps = computed(() => ({
+  class: variant.value ? buttonTrailingVariants({ size: size.value }) : linkIconSlotVariants(),
+}))
 
 const labelProps = computed(() =>
-  useUi({ base: { class: variant.value ? 'truncate' : undefined }, ui: props.ui?.label?.() }),
+  useUi({
+    base: { class: variant.value ? 'truncate' : undefined },
+    ui: props.ui?.label?.(),
+    exclude: linkUiExclude.label,
+  }),
 )
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: buttonIconVariants() }, ui: props.ui?.leadingIcon?.() }),
+  ...useUi({
+    base: { class: buttonIconVariants() },
+    ui: props.ui?.leadingIcon?.(),
+    exclude: linkUiExclude.leadingIcon,
+  }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: buttonIconVariants() }, ui: props.ui?.trailingIcon?.() }),
+  ...useUi({
+    base: { class: buttonIconVariants() },
+    ui: props.ui?.trailingIcon?.(),
+    exclude: linkUiExclude.trailingIcon,
+  }),
   name: props.trailingIcon!,
 }))
 
@@ -133,12 +136,15 @@ function rootProps(link: RouterLinkScope) {
     'data-disabled': props.disabled ? '' : undefined,
     'data-active': active ? '' : undefined,
   }
-  return mergeProps(useUi({ base: [base, attrs], ui: props.ui?.root?.() }), {
-    onClick: (event: MouseEvent) => {
-      if (props.disabled) event.preventDefault()
-      else link.navigate?.(event)
+  return mergeProps(
+    useUi({ base: [base, attrs], ui: props.ui?.root?.(), exclude: linkUiExclude.root }),
+    {
+      onClick: (event: MouseEvent) => {
+        if (props.disabled) event.preventDefault()
+        else link.navigate?.(event)
+      },
     },
-  })
+  )
 }
 </script>
 

@@ -1,5 +1,6 @@
 export { default as Input } from '@/components/Input/Input.vue'
 export { inputDefaults, inputSizes, inputVariantNames } from '@/components/Input/constants'
+export { inputUiExclude } from '@/components/Input/exclude'
 export type {
   InputEmits,
   InputProps,

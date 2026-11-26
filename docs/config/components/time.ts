@@ -120,7 +120,7 @@ const time: ComponentDocConfig = {
         description: 'Content of the time element; overrides the formatted text it receives.',
       },
     ],
-    ui: [{ node: 'root', tag: 'time' }],
+    ui: [{ node: 'root', tag: 'time', kept: 'datetime' }],
     expose: [],
   },
 }

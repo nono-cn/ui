@@ -3,6 +3,7 @@ import { computed, useAttrs } from 'vue'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { badgeDefaults, badgeSizes, badgeVariantNames } from '@/components/Badge/constants'
+import { badgeUiExclude } from '@/components/Badge/exclude'
 import type { BadgeProps, BadgeSlots } from '@/components/Badge/types'
 import {
   badgeIconVariants,
@@ -28,26 +29,29 @@ const size = computed(() => oneOf(props.size, badgeSizes, badgeDefaults.size))
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
-const leadingProps = computed(() =>
-  useUi({ base: { class: badgeLeadingVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
-)
+const leadingProps = computed(() => ({ class: badgeLeadingVariants({ size: size.value }) }))
 
-const trailingProps = computed(() =>
-  useUi({
-    base: { class: badgeTrailingVariants({ size: size.value }) },
-    ui: props.ui?.trailing?.(),
-  }),
-)
+const trailingProps = computed(() => ({ class: badgeTrailingVariants({ size: size.value }) }))
 
-const labelProps = computed(() => useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.() }))
+const labelProps = computed(() =>
+  useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.(), exclude: badgeUiExclude.label }),
+)
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: badgeIconVariants() }, ui: props.ui?.leadingIcon?.() }),
+  ...useUi({
+    base: { class: badgeIconVariants() },
+    ui: props.ui?.leadingIcon?.(),
+    exclude: badgeUiExclude.leadingIcon,
+  }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: badgeIconVariants() }, ui: props.ui?.trailingIcon?.() }),
+  ...useUi({
+    base: { class: badgeIconVariants() },
+    ui: props.ui?.trailingIcon?.(),
+    exclude: badgeUiExclude.trailingIcon,
+  }),
   name: props.trailingIcon!,
 }))
 
@@ -67,6 +71,7 @@ const rootProps = computed(() =>
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: badgeUiExclude.root,
   }),
 )
 </script>

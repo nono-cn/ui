@@ -6,6 +6,7 @@ import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useT
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
 import { checkboxDefaults, checkboxSizes } from '@/components/Checkbox/constants'
+import { checkboxUiExclude } from '@/components/Checkbox/exclude'
 import type {
   CheckboxChangeDetails,
   CheckboxEmits,
@@ -60,6 +61,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: checkboxUiExclude.root,
   }),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
@@ -80,12 +82,20 @@ function indicatorState(state: CheckboxIndicatorState): CheckboxIndicatorState {
 }
 
 function indicatorProps(state: CheckboxIndicatorState) {
-  return useUi({ base: { class: checkboxIndicatorVariants() }, ui: props.ui?.indicator?.(state) })
+  return useUi({
+    base: { class: checkboxIndicatorVariants() },
+    ui: props.ui?.indicator?.(state),
+    exclude: checkboxUiExclude.indicator,
+  })
 }
 
 function iconProps(state: CheckboxIndicatorState) {
   return {
-    ...useUi({ base: { class: checkboxIconVariants() }, ui: props.ui?.icon?.(state) }),
+    ...useUi({
+      base: { class: checkboxIconVariants() },
+      ui: props.ui?.icon?.(state),
+      exclude: checkboxUiExclude.icon,
+    }),
     name: state.indeterminate ? props.indeterminateIcon : props.icon,
     stroke: 3,
   }

@@ -10,6 +10,7 @@ import {
   separatorSizes,
   separatorTypes,
 } from '@/components/Separator/constants'
+import { separatorUiExclude } from '@/components/Separator/exclude'
 import type { SeparatorProps, SeparatorSlots } from '@/components/Separator/types'
 import { separatorLabelVariants, separatorVariants } from '@/components/Separator/variants'
 
@@ -33,7 +34,11 @@ const orientation = computed(() =>
 const hasLabel = computed(() => Boolean(props.label || slots.default))
 
 const labelProps = computed(() =>
-  useUi({ base: { class: separatorLabelVariants() }, ui: props.ui?.label?.() }),
+  useUi({
+    base: { class: separatorLabelVariants() },
+    ui: props.ui?.label?.(),
+    exclude: separatorUiExclude.label,
+  }),
 )
 
 const rootProps = computed(() => ({
@@ -55,6 +60,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: separatorUiExclude.root,
   }),
   orientation: orientation.value,
   decorative: props.decorative,

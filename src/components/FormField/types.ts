@@ -13,7 +13,6 @@ export type FormFieldVariant = (typeof formFieldVariantNames)[number]
 
 export interface FormFieldUi {
   root?: UiResolver
-  header?: UiResolver
   label?: UiResolver
   hint?: UiResolver
   description?: UiResolver

@@ -1,5 +1,6 @@
 export { default as Popover } from '@/components/Popover/Popover.vue'
 export { popoverAligns, popoverDefaults, popoverSides } from '@/components/Popover/constants'
+export { popoverUiExclude } from '@/components/Popover/exclude'
 export type {
   PopoverAlign,
   PopoverContentSlotProps,

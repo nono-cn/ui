@@ -9,10 +9,8 @@ export type BadgeVariant = (typeof badgeVariantNames)[number]
 
 export interface BadgeUi {
   root?: UiResolver
-  leading?: UiResolver
   leadingIcon?: UiResolver
   label?: UiResolver
-  trailing?: UiResolver
   trailingIcon?: UiResolver
 }
 

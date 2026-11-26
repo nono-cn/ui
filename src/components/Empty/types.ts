@@ -9,7 +9,6 @@ export type EmptyVariant = (typeof emptyVariantNames)[number]
 
 export interface EmptyUi {
   root?: UiResolver
-  header?: UiResolver
   media?: UiResolver
   icon?: UiResolver
   label?: UiResolver

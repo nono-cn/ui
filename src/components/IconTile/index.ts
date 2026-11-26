@@ -4,6 +4,7 @@ export {
   iconTileSizes,
   iconTileVariantNames,
 } from '@/components/IconTile/constants'
+export { iconTileUiExclude } from '@/components/IconTile/exclude'
 export type {
   IconTileProps,
   IconTileSize,

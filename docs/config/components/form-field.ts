@@ -223,8 +223,7 @@ const formField: ComponentDocConfig = {
     ],
     emits: [],
     ui: [
-      { node: 'root', tag: 'div' },
-      { node: 'header', tag: 'div' },
+      { node: 'root', tag: 'div', kept: 'data-orientation, data-variant' },
       { node: 'label', tag: 'label' },
       { node: 'hint', tag: 'span' },
       { node: 'container', tag: 'div' },

@@ -4,6 +4,7 @@ export {
   hoverCardDefaults,
   hoverCardSides,
 } from '@/components/HoverCard/constants'
+export { hoverCardUiExclude } from '@/components/HoverCard/exclude'
 export type {
   HoverCardAlign,
   HoverCardContentState,

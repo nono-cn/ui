@@ -7,6 +7,7 @@ import {
   iconTileSizes,
   iconTileVariantNames,
 } from '@/components/IconTile/constants'
+import { iconTileUiExclude } from '@/components/IconTile/exclude'
 import type { IconTileProps, IconTileSlots } from '@/components/IconTile/types'
 import { iconTileIconVariants, iconTileVariants } from '@/components/IconTile/variants'
 import Icon from '@/components/Icon/Icon.vue'
@@ -26,7 +27,11 @@ const attrs = useAttrs()
 const size = computed(() => oneOf(props.size, iconTileSizes, iconTileDefaults.size))
 
 const iconProps = computed(() => ({
-  ...useUi({ base: { class: iconTileIconVariants({ size: size.value }) }, ui: props.ui?.icon?.() }),
+  ...useUi({
+    base: { class: iconTileIconVariants({ size: size.value }) },
+    ui: props.ui?.icon?.(),
+    exclude: iconTileUiExclude.icon,
+  }),
   name: props.icon!,
 }))
 
@@ -46,6 +51,7 @@ const rootProps = computed(() =>
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: iconTileUiExclude.root,
   }),
 )
 </script>

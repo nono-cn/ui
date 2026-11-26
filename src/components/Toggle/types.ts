@@ -17,10 +17,8 @@ export interface ToggleSlotProps {
 
 export interface ToggleUi {
   root?: UiResolver
-  leading?: UiResolver
   leadingIcon?: UiResolver
   label?: UiResolver
-  trailing?: UiResolver
   trailingIcon?: UiResolver
 }
 

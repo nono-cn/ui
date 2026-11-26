@@ -1,5 +1,6 @@
 export { default as Password } from '@/components/Password/Password.vue'
 export { passwordDefaults } from '@/components/Password/constants'
+export { passwordUiExclude } from '@/components/Password/exclude'
 export type {
   PasswordAutoComplete,
   PasswordEmits,

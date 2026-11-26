@@ -45,7 +45,10 @@ const hoverCard: ComponentDocConfig = {
       description:
         'Put any component in the default slot, such as an Avatar. Content that cannot take focus opens the card only on hover.',
       props: () => ({}),
-      slot: [{ name: 'Avatar', component: Avatar, props: { alt: 'Ada Lovelace' } }, preview],
+      slot: [
+        { name: 'Avatar', component: Avatar, props: { 'aria-label': 'Ada Lovelace', text: 'AL' } },
+        preview,
+      ],
     },
   ],
   examples: [

@@ -4,6 +4,7 @@ export {
   textareaSizes,
   textareaVariantNames,
 } from '@/components/Textarea/constants'
+export { textareaUiExclude } from '@/components/Textarea/exclude'
 export type {
   TextareaEmits,
   TextareaProps,

@@ -10,9 +10,7 @@ export type InputVariant = (typeof inputVariantNames)[number]
 export interface InputUi {
   root?: UiResolver
   input?: UiResolver
-  leading?: UiResolver
   leadingIcon?: UiResolver
-  trailing?: UiResolver
   trailingIcon?: UiResolver
   clear?: UiResolver
   clearIcon?: UiResolver
@@ -21,8 +19,6 @@ export interface InputUi {
 export interface InputProps {
   modelValue?: string
   defaultValue?: string
-  type?: string
-  placeholder?: string
   variant?: InputVariant
   color?: string
   size?: InputSize
@@ -30,7 +26,6 @@ export interface InputProps {
   icon?: IconName
   trailingIcon?: IconName
   clearable?: boolean
-  clearLabel?: string
   highlight?: boolean
   disabled?: boolean
   readOnly?: boolean

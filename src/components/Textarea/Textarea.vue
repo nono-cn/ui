@@ -9,6 +9,7 @@ import {
   textareaSizes,
   textareaVariantNames,
 } from '@/components/Textarea/constants'
+import { textareaUiExclude } from '@/components/Textarea/exclude'
 import type { TextareaEmits, TextareaProps } from '@/components/Textarea/types'
 import { textareaVariants } from '@/components/Textarea/variants'
 
@@ -17,12 +18,10 @@ defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<TextareaProps>(), {
   modelValue: undefined,
   defaultValue: undefined,
-  placeholder: undefined,
   variant: textareaDefaults.variant,
   color: textareaDefaults.color,
   size: undefined,
   radius: textareaDefaults.radius,
-  rows: textareaDefaults.rows,
   autoResize: false,
   highlight: false,
   disabled: undefined,
@@ -40,6 +39,7 @@ const rootProps = computed(() => ({
   ...useUi({
     base: [
       {
+        rows: textareaDefaults.rows,
         class: textareaVariants({
           size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
           variant: oneOf(props.variant, textareaVariantNames, textareaDefaults.variant),
@@ -54,12 +54,11 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: textareaUiExclude.root,
   }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: string) => emit('update:modelValue', value),
-  placeholder: props.placeholder,
-  rows: props.rows,
   autoResize: props.autoResize,
   disabled: props.disabled,
   readOnly: props.readOnly,

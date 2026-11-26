@@ -104,7 +104,7 @@ const password: ComponentDocConfig = {
           [
             'button',
             'Toggle',
-            'Native button with type="button", named by toggleLabel ("Show password" by default).',
+            'Native button with type="button", named "Show password" in the locale from provideLocale; ui.toggle overrides it.',
           ],
           ['aria-pressed', 'Toggle', 'true while the password is shown.'],
           ['aria-controls', 'Toggle', 'Points at the input.'],
@@ -158,7 +158,6 @@ const password: ComponentDocConfig = {
         type: 'string',
         description: 'Id of the form it belongs to, when it is not inside it.',
       },
-      { name: 'placeholder', type: 'string', description: 'Hint shown while it is empty.' },
       {
         name: 'variant',
         type: inputVariantNames.map((variant) => `'${variant}'`).join(' | '),
@@ -187,12 +186,6 @@ const password: ComponentDocConfig = {
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
       },
       { name: 'icon', type: 'IconName', description: 'Icon before the text.' },
-      {
-        name: 'toggleLabel',
-        type: 'string',
-        default: "'Show password'",
-        description: 'Accessible name of the toggle. Translated by the locale.',
-      },
       {
         name: 'highlight',
         type: 'boolean',
@@ -240,9 +233,7 @@ const password: ComponentDocConfig = {
     ui: [
       { node: 'root', tag: 'div' },
       { node: 'input', tag: 'input', kept: 'type' },
-      { node: 'leading', tag: 'span' },
       { node: 'leadingIcon', tag: 'svg' },
-      { node: 'trailing', tag: 'span' },
       { node: 'toggle', tag: 'button', kept: 'type, aria-pressed, aria-controls' },
       { node: 'toggleIcon', tag: 'svg' },
     ],

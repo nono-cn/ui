@@ -18,6 +18,7 @@ import {
   tooltipSides,
   tooltipTypes,
 } from '@/components/Tooltip/constants'
+import { tooltipUiExclude } from '@/components/Tooltip/exclude'
 import type {
   TooltipContentState,
   TooltipEmits,
@@ -91,15 +92,20 @@ function contentProps(attrs: Record<string, unknown>, state: TooltipContentState
       attrs,
     ],
     ui: props.ui?.content?.(state),
+    exclude: tooltipUiExclude.content,
   })
 }
 
 function shortcutProps(attrs: Record<string, unknown>, state: TooltipContentState) {
-  return useUi({ base: attrs, ui: props.ui?.shortcut?.(state) })
+  return useUi({ base: attrs, ui: props.ui?.shortcut?.(state), exclude: tooltipUiExclude.shortcut })
 }
 
 function arrowProps(state: TooltipContentState) {
-  return useUi({ base: { class: tooltipArrowVariants() }, ui: props.ui?.arrow?.(state) })
+  return useUi({
+    base: { class: tooltipArrowVariants() },
+    ui: props.ui?.arrow?.(state),
+    exclude: tooltipUiExclude.arrow,
+  })
 }
 
 defineExpose<TooltipExpose>({

@@ -1,6 +1,8 @@
 export { default as Alert } from '@/components/Alert/Alert.vue'
 export { alertDefaults, alertVariantNames } from '@/components/Alert/constants'
+export { alertUiExclude } from '@/components/Alert/exclude'
 export type {
+  AlertCloseButtonProps,
   AlertEmits,
   AlertProps,
   AlertSlots,
@@ -10,7 +12,7 @@ export type {
 export {
   alertCloseContainerVariants,
   alertDescriptionVariants,
-  alertIconVariants,
+  alertLeadingVariants,
   alertLabelVariants,
   alertVariants,
 } from '@/components/Alert/variants'

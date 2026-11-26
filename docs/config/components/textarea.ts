@@ -139,7 +139,7 @@ const textarea: ComponentDocConfig = {
     {
       title: 'Roles and attributes',
       description:
-        'Textarea renders the ui-sdk textarea, a native textarea element. Attributes passed to Textarea reach that element.',
+        'Textarea renders the ui-sdk textarea, a native textarea element. Attributes passed to Textarea reach that element, such as placeholder or rows (3 by default).',
       table: {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
@@ -166,7 +166,6 @@ const textarea: ComponentDocConfig = {
         type: 'string',
         description: 'Initial text when the textarea is uncontrolled.',
       },
-      { name: 'placeholder', type: 'string', description: 'Hint shown while it is empty.' },
       {
         name: 'variant',
         type: textareaVariantNames.map((variant) => `'${variant}'`).join(' | '),
@@ -193,12 +192,6 @@ const textarea: ComponentDocConfig = {
         default: `'${textareaDefaults.radius}'`,
         description:
           'Theme radius such as sm or lg, none, full, a number in pixels, or a CSS length.',
-      },
-      {
-        name: 'rows',
-        type: 'number',
-        default: String(textareaDefaults.rows),
-        description: 'Visible lines of text.',
       },
       {
         name: 'autoResize',

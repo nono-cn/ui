@@ -23,8 +23,7 @@ export interface AvatarUi {
 }
 
 export interface AvatarProps {
-  src?: string
-  alt?: string
+  image?: string
   text?: string
   icon?: IconName
   variant?: AvatarVariant

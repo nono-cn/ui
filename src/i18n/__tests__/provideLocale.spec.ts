@@ -49,10 +49,15 @@ describe('provideLocale', () => {
     expect(renderAlert('es', { messages: { close: 'Descartar' } }).closeLabel()).toBe('Descartar')
   })
 
-  it('lets closeLabel override the translation', () => {
+  it('lets closeButton.ui.root override the translation', () => {
     const Root = defineComponent(() => {
       provideLocale('es')
-      return () => h(Alert, { label: 'Alert', closable: true, closeLabel: 'Ocultar' })
+      return () =>
+        h(Alert, {
+          label: 'Alert',
+          closable: true,
+          closeButton: { ui: { root: () => ({ 'aria-label': 'Ocultar' }) } },
+        })
     })
 
     expect(mount(Root).get('[data-ui="alert-close-button"]').attributes('aria-label')).toBe(

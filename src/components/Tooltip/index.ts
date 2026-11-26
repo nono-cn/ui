@@ -5,6 +5,7 @@ export {
   tooltipSides,
   tooltipTypes,
 } from '@/components/Tooltip/constants'
+export { tooltipUiExclude } from '@/components/Tooltip/exclude'
 export type {
   TooltipAlign,
   TooltipContentState,

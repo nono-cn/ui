@@ -6,6 +6,7 @@ import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useT
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
 import { inputDefaults, inputSizes, inputVariantNames } from '@/components/Input/constants'
+import { inputUiExclude } from '@/components/Input/exclude'
 import type { InputEmits, InputProps, InputSlots } from '@/components/Input/types'
 import {
   inputClearVariants,
@@ -23,14 +24,11 @@ defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<InputProps>(), {
   modelValue: undefined,
   defaultValue: undefined,
-  type: inputDefaults.type,
-  placeholder: undefined,
   variant: inputDefaults.variant,
   color: inputDefaults.color,
   size: undefined,
   radius: inputDefaults.radius,
   clearable: false,
-  clearLabel: undefined,
   highlight: false,
   disabled: undefined,
   readOnly: undefined,
@@ -47,39 +45,45 @@ const size = computed(() => oneOf(props.size ?? formField?.size(), inputSizes, i
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
-const leadingProps = computed(() =>
-  useUi({ base: { class: inputLeadingVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
-)
+const leadingProps = computed(() => ({ class: inputLeadingVariants({ size: size.value }) }))
 
-const trailingProps = computed(() =>
-  useUi({
-    base: { class: inputTrailingVariants({ size: size.value }) },
-    ui: props.ui?.trailing?.(),
-  }),
-)
+const trailingProps = computed(() => ({ class: inputTrailingVariants({ size: size.value }) }))
 
 const clearProps = computed(() =>
   useUi({
     base: {
-      'aria-label': props.clearLabel || t('clear'),
+      'aria-label': t('clear'),
       class: inputClearVariants({ size: size.value }),
     },
     ui: props.ui?.clear?.(),
+    exclude: inputUiExclude.clear,
   }),
 )
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: inputIconVariants() }, ui: props.ui?.leadingIcon?.() }),
+  ...useUi({
+    base: { class: inputIconVariants() },
+    ui: props.ui?.leadingIcon?.(),
+    exclude: inputUiExclude.leadingIcon,
+  }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: inputIconVariants() }, ui: props.ui?.trailingIcon?.() }),
+  ...useUi({
+    base: { class: inputIconVariants() },
+    ui: props.ui?.trailingIcon?.(),
+    exclude: inputUiExclude.trailingIcon,
+  }),
   name: props.trailingIcon!,
 }))
 
 const clearIconProps = computed(() => ({
-  ...useUi({ base: { class: 'size-full' }, ui: props.ui?.clearIcon?.() }),
+  ...useUi({
+    base: { class: 'size-full' },
+    ui: props.ui?.clearIcon?.(),
+    exclude: inputUiExclude.clearIcon,
+  }),
   name: 'x' as const,
 }))
 
@@ -96,6 +100,7 @@ const rootProps = computed(() =>
       { class: attrs.class, style: attrs.style },
     ],
     ui: props.ui?.root?.(),
+    exclude: inputUiExclude.root,
   }),
 )
 
@@ -120,12 +125,11 @@ const inputProps = computed(() => {
         rest,
       ],
       ui: props.ui?.input?.(),
+      exclude: inputUiExclude.input,
     }),
-    type: props.type,
     modelValue: props.modelValue,
     defaultValue: props.defaultValue,
     'onUpdate:modelValue': (value: string) => emit('update:modelValue', value),
-    placeholder: props.placeholder,
     disabled: props.disabled,
     readOnly: props.readOnly,
     required: props.required ?? formField?.required(),

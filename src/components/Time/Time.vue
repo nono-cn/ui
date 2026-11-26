@@ -2,6 +2,7 @@
 import { computed, useAttrs } from 'vue'
 import { useDates } from '@/composables/useDates'
 import { useUi } from '@/composables/useUi'
+import { timeUiExclude } from '@/components/Time/exclude'
 import type { TimeProps, TimeSlots } from '@/components/Time/types'
 
 defineOptions({ inheritAttrs: false })
@@ -18,6 +19,7 @@ const rootProps = computed(() =>
   useUi({
     base: [{ datetime: toDate(props.datetime)?.toISOString() }, attrs],
     ui: props.ui?.root?.(),
+    exclude: timeUiExclude.root,
   }),
 )
 </script>
