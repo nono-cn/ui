@@ -1,40 +1,57 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
-  Badge,
   Button,
-  Tabs,
-  tabsSizes,
-  tabsVariantNames,
+  Icon,
+  MeterGroup,
+  meterGroupLegends,
+  meterGroupSizes,
   themeColors,
-  type TabsExpose,
-  type TabsItem,
+  type MeterGroupItem,
 } from '@nono/ui'
 import { dark } from '@docs/components/useDocsTheme'
 
-const settings: TabsItem[] = [
-  { value: 'account', label: 'Account', content: 'Update your name, photo and email address.' },
-  { value: 'password', label: 'Password', content: 'Choose a new password of 12 characters.' },
-  { value: 'billing', label: 'Billing', content: 'Change your plan and payment method.' },
+const gigabytes: Intl.NumberFormatOptions = {
+  style: 'unit',
+  unit: 'gigabyte',
+  maximumFractionDigits: 1,
+}
+
+const photos = ref(48)
+
+const storage = computed<MeterGroupItem[]>(() => [
+  { label: 'Photos', value: photos.value, color: 'primary', icon: 'image' },
+  { label: 'Videos', value: 32, color: 'warning', icon: 'video' },
+  { label: 'Music', value: 14, color: 'success', icon: 'audio' },
+  { label: 'Documents', value: 6, color: 'info', icon: 'fileText' },
+])
+
+const budget: MeterGroupItem[] = [
+  { label: 'Rent', value: 40, color: 'primary' },
+  { label: 'Food', value: 20, color: 'success' },
+  { label: 'Transport', value: 10, color: 'warning' },
+  { label: 'Leisure', value: 8, color: 'error' },
 ]
 
-const folders: TabsItem[] = [
-  { value: 'inbox', label: 'Inbox', icon: 'folder', content: '3 new messages this morning.' },
-  { value: 'starred', label: 'Starred', icon: 'star', content: '12 starred conversations.' },
-  { value: 'archive', label: 'Archive', icon: 'fileArchive', content: 'Archived mail stays here.' },
+const tokens: MeterGroupItem[] = [
+  { label: 'System prompt', value: 12, color: '#6366f1' },
+  { label: 'Messages', value: 38, color: '#0ea5e9' },
+  { label: 'Tools', value: 9, color: '#f59e0b' },
 ]
 
-const counts: Record<string, number> = { inbox: 3, starred: 12, archive: 0 }
-
-const plans: TabsItem[] = [
-  { value: 'free', label: 'Free', slot: 'free' },
-  { value: 'pro', label: 'Pro', slot: 'pro' },
-  { value: 'team', label: 'Team', disabled: true, content: 'Coming soon.' },
+const uncolored: MeterGroupItem[] = [
+  { label: 'Done', value: 45 },
+  { label: 'Review', value: 20, color: 'warning' },
 ]
 
-const value = ref<string | null>('password')
-const tabs = ref<TabsExpose>()
-const lastChange = ref('')
+const overflow: MeterGroupItem[] = [
+  { label: 'Planned', value: 70 },
+  { label: 'Unplanned', value: 50, color: 'error' },
+]
+
+function usedOfTotal(value: number, { max }: { max: number }) {
+  return `${value} GB used of ${max} GB`
+}
 </script>
 
 <template>
@@ -45,125 +62,131 @@ const lastChange = ref('')
     </header>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">v-model and expose</h2>
-      <div class="flex flex-wrap items-center gap-2">
+      <h2 class="font-medium">Basic, max, format and getValueLabel</h2>
+      <div class="flex items-center gap-2">
         <Button
-          v-for="item in settings"
-          :key="item.value"
           variant="outline"
           size="sm"
-          :label="item.label"
-          @click="value = item.value"
+          label="-8 GB"
+          @click="photos = Math.max(0, photos - 8)"
         />
-        <Button variant="plain" size="sm" label="Focus" @click="tabs?.focus()" />
-        <span class="text-sm text-muted-foreground">value: {{ value }}</span>
+        <Button variant="outline" size="sm" label="+8 GB" @click="photos += 8" />
+        <span class="text-sm text-muted-foreground">photos: {{ photos }} GB</span>
       </div>
-      <Tabs
-        ref="tabs"
-        v-model="value"
-        :items="settings"
-        :ui="{ list: () => ({ 'aria-label': 'Settings' }) }"
-        @value-change="(next, details) => (lastChange = `${next} (${details.reason})`)"
+      <MeterGroup :items="budget" label="Monthly budget" show-value />
+      <MeterGroup
+        :items="storage"
+        :max="128"
+        :format="gigabytes"
+        :get-value-label="usedOfTotal"
+        locale="es-ES"
+        label="Storage (es-ES)"
+        show-value
       />
-      <span class="text-sm text-muted-foreground">last change: {{ lastChange || '—' }}</span>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Variants and colors</h2>
-      <div v-for="variant in tabsVariantNames" :key="variant" class="flex flex-col gap-3">
-        <div class="grid gap-4 sm:grid-cols-2">
-          <Tabs
-            v-for="color in [...themeColors, '#6366f1']"
-            :key="color"
-            :items="settings"
-            :variant="variant"
-            :color="color"
-            :content="false"
-            :ui="{ list: () => ({ 'aria-label': `${variant} ${color}` }) }"
-          />
-        </div>
-      </div>
+      <h2 class="font-medium">Legend</h2>
+      <MeterGroup
+        v-for="legend in meterGroupLegends"
+        :key="legend"
+        :items="budget"
+        :legend="legend"
+        :label="`legend: ${legend}`"
+        show-value
+      />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Sizes</h2>
-      <div v-for="variant in tabsVariantNames" :key="variant" class="flex flex-col gap-3">
-        <Tabs
-          v-for="size in tabsSizes"
-          :key="size"
-          :items="folders"
-          :variant="variant"
-          :size="size"
-          :content="false"
-          :ui="{ list: () => ({ 'aria-label': `${variant} ${size}` }) }"
-        />
-      </div>
+      <h2 class="font-medium">Separated</h2>
+      <MeterGroup
+        :items="storage"
+        :max="128"
+        :format="gigabytes"
+        size="lg"
+        separated
+        label="Storage"
+      />
+      <MeterGroup :items="budget" size="xl" separated legend="inline" aria-label="Budget" />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Vertical</h2>
-      <div class="grid gap-6 sm:grid-cols-2">
-        <Tabs
-          v-for="variant in tabsVariantNames"
-          :key="variant"
-          :items="folders"
-          :variant="variant"
+      <h2 class="font-medium">Color and custom colors</h2>
+      <MeterGroup
+        v-for="color in themeColors"
+        :key="color"
+        :items="uncolored"
+        :color="color"
+        :label="color"
+        legend="inline"
+        show-value
+      />
+      <MeterGroup :items="tokens" label="Context window" show-value />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Size</h2>
+      <MeterGroup
+        v-for="size in meterGroupSizes"
+        :key="size"
+        :items="storage"
+        :max="128"
+        :format="gigabytes"
+        :size="size"
+        :label="size"
+        legend="inline"
+        show-value
+      />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Orientation and overflow</h2>
+      <div class="flex h-56 gap-10">
+        <MeterGroup :items="budget" orientation="vertical" label="Budget" show-value />
+        <MeterGroup
+          :items="storage"
+          :max="128"
+          :format="gigabytes"
           orientation="vertical"
-          :ui="{ list: () => ({ 'aria-label': `Vertical ${variant}` }) }"
+          size="xl"
+          separated
+          label="Storage"
+          show-value
         />
       </div>
+      <MeterGroup :items="overflow" label="Capacity" show-value />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Trailing slot</h2>
-      <Tabs :items="folders" variant="link" :ui="{ list: () => ({ 'aria-label': 'Mail' }) }">
-        <template #trailing="{ item, selected }">
-          <Badge
-            v-if="counts[item.value]"
-            :label="String(counts[item.value])"
-            size="sm"
-            :variant="selected ? 'solid' : 'soft'"
-          />
-        </template>
-      </Tabs>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Item slots and disabled</h2>
-      <Tabs :items="plans" :ui="{ list: () => ({ 'aria-label': 'Plans' }) }">
-        <template #item-free>
-          <p class="text-sm">Up to 3 projects. <strong>0 € / month</strong></p>
-        </template>
-        <template #item-pro>
-          <div class="flex items-center gap-3 text-sm">
-            Unlimited projects. <strong>12 € / month</strong>
-            <Button size="sm" label="Upgrade" />
-          </div>
-        </template>
-      </Tabs>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Manual activation and keep mounted</h2>
-      <Tabs
-        :items="settings"
-        activation="manual"
-        keep-mounted
-        :ui="{ list: () => ({ 'aria-label': 'Manual' }) }"
-      />
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">ui</h2>
-      <Tabs
-        :items="folders"
-        variant="link"
+      <h2 class="font-medium">Slots and ui</h2>
+      <MeterGroup
+        :items="storage"
+        :max="128"
+        :format="gigabytes"
+        show-value
         :ui="{
-          list: () => ({ 'aria-label': 'Styled', class: 'w-full' }),
-          tab: ({ selected }) => ({ class: selected ? 'font-semibold' : 'opacity-70' }),
-          panel: () => ({ class: 'rounded-md border p-4' }),
+          root: () => ({ class: 'rounded-lg border p-4' }),
+          track: () => ({ class: 'h-3' }),
+          segment: ({ index }) => ({ title: `Segment ${index + 1}` }),
+          itemLabel: ({ percent }) => ({ class: percent > 30 ? 'font-semibold' : '' }),
         }"
-      />
+      >
+        <template #label="{ max }">
+          <span class="flex items-center gap-1.5">
+            <Icon name="folder" class="size-4" /> Drive of {{ max }} GB
+          </span>
+        </template>
+        <template #value="{ value, max }">{{ max - value }} GB free</template>
+        <template #item-leading="{ index }">
+          <span class="text-xs tabular-nums text-muted-foreground">{{ index + 1 }}.</span>
+        </template>
+        <template #item-label="{ item }">
+          <strong>{{ item.label }}</strong>
+        </template>
+        <template #item-value="{ text, percent }">
+          {{ text }} · {{ Math.round(percent) }}%
+        </template>
+      </MeterGroup>
     </section>
   </main>
 </template>
