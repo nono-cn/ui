@@ -350,7 +350,7 @@ const button: ComponentDocConfig = {
       {
         name: 'default',
         type: '-',
-        description: 'Main button content; overrides the label fallback.',
+        description: 'Content of the label node; replaces the label text.',
       },
       {
         name: 'leading',

@@ -323,7 +323,7 @@ const toggle: ComponentDocConfig = {
   pressed: boolean
 }`,
         typePre: true,
-        description: 'Main content; overrides the label fallback.',
+        description: 'Content of the label node; replaces the label text.',
       },
       {
         name: 'leading',

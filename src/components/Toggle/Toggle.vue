@@ -44,8 +44,9 @@ const controller = createToggleController()
 const size = computed(() => oneOf(props.size, toggleSizes, toggleDefaults.size))
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+const hasLabel = computed(() => Boolean(props.label || slots.default))
 const square = computed(
-  () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
+  () => props.square ?? (!hasLabel.value && (hasLeading.value || hasTrailing.value)),
 )
 
 const leadingProps = computed(() => ({ class: toggleSlotVariants({ size: size.value }) }))
@@ -53,7 +54,7 @@ const leadingProps = computed(() => ({ class: toggleSlotVariants({ size: size.va
 const trailingProps = computed(() => ({ class: toggleSlotVariants({ size: size.value }) }))
 
 const labelProps = computed(() =>
-  useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.(), exclude: toggleUiExclude.label }),
+  useUi({ base: {}, ui: props.ui?.label?.(), exclude: toggleUiExclude.label }),
 )
 
 const leadingIconProps = computed(() => ({
@@ -126,9 +127,9 @@ defineExpose<ToggleExpose>({
           <Icon v-if="icon" data-ui="toggle-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
-      <slot :pressed="state.pressed">
-        <span v-if="label" data-ui="toggle-label" v-bind="labelProps">{{ label }}</span>
-      </slot>
+      <span v-if="hasLabel" data-ui="toggle-label" v-bind="labelProps">
+        <slot :pressed="state.pressed">{{ label }}</slot>
+      </span>
       <span v-if="hasTrailing" data-ui="toggle-trailing" v-bind="trailingProps">
         <slot name="trailing" :pressed="state.pressed">
           <Icon v-if="trailingIcon" data-ui="toggle-trailing-icon" v-bind="trailingIconProps" />

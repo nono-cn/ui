@@ -65,8 +65,9 @@ const variant = computed(() =>
 const size = computed(() => oneOf(props.size, buttonSizes, linkDefaults.size))
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+const hasLabel = computed(() => Boolean(props.label || slots.default))
 const square = computed(
-  () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
+  () => props.square ?? (!hasLabel.value && (hasLeading.value || hasTrailing.value)),
 )
 
 const baseProps = computed(() =>
@@ -102,7 +103,7 @@ const trailingProps = computed(() => ({
 
 const labelProps = computed(() =>
   useUi({
-    base: { class: variant.value ? 'truncate' : undefined },
+    base: {},
     ui: props.ui?.label?.(),
     exclude: linkUiExclude.label,
   }),
@@ -162,9 +163,9 @@ function rootProps(link: RouterLinkScope) {
           <Icon v-if="icon" data-ui="link-leading-icon" v-bind="leadingIconProps" />
         </slot>
       </span>
-      <slot>
-        <span v-if="label" data-ui="link-label" v-bind="labelProps">{{ label }}</span>
-      </slot>
+      <span v-if="hasLabel" data-ui="link-label" v-bind="labelProps">
+        <slot>{{ label }}</slot>
+      </span>
       <span v-if="hasTrailing" data-ui="link-trailing" v-bind="trailingProps">
         <slot name="trailing">
           <Icon v-if="trailingIcon" data-ui="link-trailing-icon" v-bind="trailingIconProps" />

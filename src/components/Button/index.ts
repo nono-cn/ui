@@ -10,7 +10,6 @@ export type {
 } from '@/components/Button/types'
 export {
   buttonIconVariants,
-  buttonLabelVariants,
   buttonLeadingVariants,
   buttonTrailingVariants,
   buttonVariants,
