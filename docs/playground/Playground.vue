@@ -1,20 +1,48 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
   Button,
-  ButtonGroup,
-  buttonSizes,
-  buttonVariantNames,
+  Timeline,
   themeColors,
-  themeRadii,
+  timelineSizes,
+  type TimelineExpose,
+  type TimelineItem,
 } from '@nono/ui'
 import { dark } from '@docs/components/useDocsTheme'
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-const fail = () => wait(1500).then(() => Promise.reject(new Error('Failed')))
+const steps: TimelineItem[] = [
+  {
+    value: 'ordered',
+    date: '2026-03-02T09:00:00Z',
+    title: 'Order placed',
+    description: 'Paid by card.',
+  },
+  { value: 'packed', date: '2026-03-03T14:30:00Z', title: 'Packed' },
+  {
+    value: 'shipped',
+    date: '2026-03-04T08:15:00Z',
+    title: 'Shipped',
+    description: 'Handed to the carrier.',
+  },
+  { value: 'delivered', title: 'Delivered' },
+]
 
-const clicks = ref(0)
-const pendingDisabled = ref(false)
+const project: TimelineItem[] = [
+  { value: 'kickoff', title: 'Kickoff', description: 'Scope agreed.', icon: 'fileText' },
+  { value: 'design', title: 'Design', description: 'Mockups.', icon: 'image' },
+  { value: 'build', title: 'Build', description: 'Features and tests.', icon: 'folderOpen' },
+  { value: 'launch', title: 'Launch', description: 'Released.', icon: 'upload' },
+]
+
+const activity: TimelineItem[] = [
+  { date: 'Just now', title: 'Ana commented', avatar: { text: 'AR', color: 'info' } },
+  { date: '2 hours ago', title: 'Luis approved', avatar: { text: 'LG', color: 'success' } },
+  { date: 'Yesterday', title: 'Eva opened the request', avatar: { text: 'EM' } },
+]
+
+const current = ref(1)
+const value = computed(() => steps[current.value]?.value)
+const timeline = ref<TimelineExpose>()
 </script>
 
 <template>
@@ -25,209 +53,96 @@ const pendingDisabled = ref(false)
     </header>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Variant × color</h2>
-      <div v-for="variant in buttonVariantNames" :key="variant" class="flex flex-wrap gap-2">
+      <h2 class="font-medium">Value</h2>
+      <div class="flex flex-wrap items-center gap-2">
         <Button
-          v-for="color in themeColors"
-          :key="color"
-          :variant="variant"
-          :color="color"
-          :label="`${variant} ${color}`"
+          variant="outline"
+          size="sm"
+          label="Back"
+          :disabled="current === 0"
+          @click="current--"
         />
-        <Button :variant="variant" color="#6366f1" label="#6366f1" />
+        <Button
+          variant="outline"
+          size="sm"
+          label="Next"
+          :disabled="current === steps.length - 1"
+          @click="current++"
+        />
+        <Button variant="plain" size="sm" label="Focus current" @click="timeline?.focus(value)" />
+      </div>
+      <Timeline
+        ref="timeline"
+        :items="steps"
+        :value="value"
+        :date-options="{ dateStyle: 'medium', timeZone: 'UTC' }"
+        aria-label="Order"
+      />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Reverse</h2>
+      <Timeline :items="steps" value="packed" reverse aria-label="Order" />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Horizontal</h2>
+      <Timeline :items="steps" :value="value" orientation="horizontal" aria-label="Order" />
+      <Timeline :items="project" value="design" orientation="horizontal" aria-label="Project" />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Color</h2>
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
+        <Timeline
+          v-for="color in [...themeColors, '#6366f1']"
+          :key="color"
+          :items="project"
+          value="build"
+          :color="color"
+          :aria-label="color"
+        />
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">Size</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button v-for="size in buttonSizes" :key="size" :size="size" :label="size" icon="plus" />
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button
-          v-for="size in buttonSizes"
+      <div class="grid grid-cols-2 gap-6 sm:grid-cols-5">
+        <Timeline
+          v-for="size in timelineSizes"
           :key="size"
+          :items="project"
+          value="design"
           :size="size"
-          :label="size"
-          trailing-icon="chevronDown"
-        />
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button v-for="size in buttonSizes" :key="size" :size="size" :label="size" />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Radius</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button v-for="radius in themeRadii" :key="radius" :radius="radius" :label="radius" />
-        <Button :radius="12" label="12" />
-        <Button radius="0.25rem" label="0.25rem" />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Icons</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button icon="plus" label="Leading" />
-        <Button trailing-icon="chevronDown" label="Trailing" />
-        <Button icon="search" trailing-icon="chevronRight" label="Both" />
-        <Button variant="outline" icon="trash2" color="error" label="Delete" />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Icon only (square)</h2>
-      <div v-for="variant in buttonVariantNames" :key="variant" class="flex flex-wrap gap-2">
-        <Button
-          v-for="size in buttonSizes"
-          :key="size"
-          :variant="variant"
-          :size="size"
-          icon="heart"
-          :aria-label="`Like ${size}`"
-        />
-        <Button :variant="variant" trailing-icon="chevronDown" aria-label="Open" />
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button icon="plus" label="Square forced" square />
-        <Button icon="plus" :square="false" aria-label="Not square" />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Block and truncate</h2>
-      <Button block icon="save" label="Block" />
-      <div class="w-48">
-        <Button
-          block
-          icon="file"
-          trailing-icon="chevronDown"
-          label="A very long label that should be truncated"
+          :aria-label="size"
         />
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Pending · return a Promise from @click</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button label="Save" @click="() => wait(2000)" />
-        <Button icon="save" label="With icon" @click="() => wait(2000)" />
-        <Button
-          trailing-icon="chevronRight"
-          variant="outline"
-          label="Trailing"
-          @click="() => wait(2000)"
-        />
-        <Button icon="save" aria-label="Save" @click="() => wait(2000)" />
-        <Button label="Rejects" color="error" @click="fail" />
-        <Button
-          label="Announce Saving"
-          pending-announcement="Saving"
-          variant="soft"
-          @click="() => wait(3000)"
-        />
-      </div>
+      <h2 class="font-medium">Activity feed</h2>
+      <Timeline :items="activity" feed aria-label="Activity" />
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Disabled</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button
-          v-for="variant in buttonVariantNames"
-          :key="variant"
-          :variant="variant"
-          :label="variant"
-          disabled
-        />
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button label="Focusable when disabled" disabled focusable-when-disabled />
-        <Button
-          :label="pendingDisabled ? 'Disabled' : 'Enabled'"
-          :disabled="pendingDisabled"
-          @click="clicks++"
-        />
-        <Button
-          variant="outline"
-          label="Toggle disabled"
-          @click="pendingDisabled = !pendingDisabled"
-        />
-        <span class="text-sm text-muted-foreground tabular-nums">{{ clicks }} clicks</span>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Type in a form</h2>
-      <form class="flex flex-wrap items-center gap-2" @submit.prevent="clicks++">
-        <Button type="submit" label="Submit" />
-        <Button type="reset" variant="outline" label="Reset" />
-        <Button variant="plain" label="Button (no submit)" />
-      </form>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Slots</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button>Default slot</Button>
-        <Button label="Leading">
-          <template #leading>
-            <span class="size-2 rounded-full bg-current" />
-          </template>
-        </Button>
-        <Button label="Trailing" variant="outline">
-          <template #trailing>
-            <span class="rounded-sm bg-current/15 px-1 text-xs">⌘K</span>
-          </template>
-        </Button>
-        <Button icon="save" label="Custom loading" @click="() => wait(2000)">
-          <template #loading>
-            <span class="text-xs">…</span>
-          </template>
-        </Button>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">ui and class</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button
-          icon="star"
-          trailing-icon="chevronDown"
-          label="Every ui key"
-          :ui="{
-            root: () => ({ class: 'shadow-lg', label: 'xd', disabled: true }),
-            icon: () => ({ class: 'text-warning' }),
-            label: () => ({ class: 'uppercase tracking-wide' }),
-            trailingIcon: () => ({ class: 'rotate-180' }),
-            loadingIcon: () => ({ class: 'text-warning' }),
-          }"
-          @click="() => wait(2000)"
-        />
-        <Button class="rounded-none" label="class on the root" />
-        <Button
-          label="Hidden label on mobile"
-          icon="plus"
-          :ui="{ label: () => ({ class: 'sr-only sm:not-sr-only' }) }"
-        />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">ButtonGroup</h2>
-      <ButtonGroup>
-        <Button variant="outline" label="Left" />
-        <Button variant="outline" label="Center" />
-        <Button variant="outline" icon="chevronDown" aria-label="More" />
-      </ButtonGroup>
-      <ButtonGroup size="sm">
-        <Button label="Group sm" />
-        <Button icon="plus" aria-label="Add" />
-      </ButtonGroup>
-      <ButtonGroup orientation="vertical">
-        <Button variant="subtle" label="Top" />
-        <Button variant="subtle" label="Bottom" />
-      </ButtonGroup>
+      <h2 class="font-medium">Slots and ui</h2>
+      <Timeline
+        :items="project"
+        value="build"
+        aria-label="Project"
+        :ui="{
+          title: ({ status }) => ({ class: status === 'current' ? 'text-primary' : '' }),
+          connector: () => ({ class: 'bg-transparent border-s-2 border-dashed w-0' }),
+        }"
+      >
+        <template #marker="{ index }">
+          <span class="text-xs font-semibold">{{ index + 1 }}</span>
+        </template>
+        <template #description="{ item, status }">
+          {{ item.description }}
+          <span v-if="status === 'current'" class="text-xs text-primary">In progress</span>
+        </template>
+      </Timeline>
     </section>
   </main>
 </template>
