@@ -75,7 +75,7 @@ export interface TabsSlots {
   label?(props: TabsItemContext): unknown
   trailing?(props: TabsItemContext): unknown
   content?(props: TabsItemContext): unknown
-  [slot: `item-${string}`]: ((props: TabsItemContext) => unknown) | undefined
+  [slot: `${string}-content`]: ((props: TabsItemContext) => unknown) | undefined
 }
 
 export type TabsExpose = Pick<TabsController, 'getValue' | 'setValue' | 'select' | 'focus'>

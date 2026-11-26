@@ -142,7 +142,7 @@ function hasLabel({ item }: TabsItemContext) {
 }
 
 function panelSlot(item: TabsItem) {
-  const name = `item-${item.slot}` as const
+  const name = `${item.slot}-content` as const
   return item.slot && slots[name] ? name : 'content'
 }
 
