@@ -1,65 +1,50 @@
-import type { AriaAttributes, HTMLAttributes, StyleValue } from 'vue'
+import {
+  camelize,
+  type AriaAttributes,
+  type Component,
+  type HTMLAttributes,
+  type StyleValue,
+} from 'vue'
 import { cn, type ClassValue } from '@/composables/cn'
 
-interface NativeAttributes {
-  autofocus?: boolean
-  nonce?: string
-  popover?: 'auto' | 'manual' | 'hint' | ''
-}
+type WithoutEvents<T> = { [K in keyof T as K extends `on${string}` ? never : K]: T[K] }
 
-export const uiAttributeNames = [
-  'class',
-  'style',
-  'id',
-  'title',
-  'lang',
-  'dir',
-  'hidden',
-  'inert',
-  'translate',
-  'spellcheck',
-  'draggable',
-  'contenteditable',
-  'accesskey',
-  'autocapitalize',
-  'autocorrect',
-  'enterkeyhint',
-  'inputmode',
-  'tabindex',
-  'role',
-  'part',
-  'exportparts',
-  'itemprop',
-  'autofocus',
-  'nonce',
-  'popover',
-] as const satisfies readonly (keyof (HTMLAttributes & NativeAttributes))[]
-
-export type UiAttributeName = (typeof uiAttributeNames)[number]
-
-export type UiAttributes = Pick<HTMLAttributes & NativeAttributes, UiAttributeName> &
+export type UiAttributes = WithoutEvents<HTMLAttributes> &
   AriaAttributes & {
-    [key: `data-${string}`]: never
+    [key: `data-${string}`]: unknown
     [key: `on${string}`]: never
+    'data-ui'?: never
+    'data-slot'?: never
   }
 
 export type UiResolver<P = void> = (state: P) => UiAttributes
 
 type UiBase = Record<string, unknown>
 
-const allowed = new Set<string>(uiAttributeNames)
+const reserved = new Set(['data-ui', 'data-slot'])
 
-function isUiAttribute(key: string) {
-  return allowed.has(key) || key.startsWith('aria-')
+export function propsOf(component: Component): string[] {
+  const props = (component as { props?: string[] | Record<string, unknown> }).props ?? {}
+  return Array.isArray(props) ? props : Object.keys(props)
 }
 
-function pickUiAttributes(value: object | undefined): UiBase {
+function pickUiAttributes(value: object | undefined, exclude: readonly string[]): UiBase {
   if (!value) return {}
-  return Object.fromEntries(Object.entries(value).filter(([key]) => isUiAttribute(key)))
+  return Object.fromEntries(
+    Object.entries(value).filter(
+      ([key]) => !key.startsWith('on') && !reserved.has(key) && !exclude.includes(camelize(key)),
+    ),
+  )
 }
 
-export function useUi(base: UiBase | UiBase[], ui?: UiAttributes): Record<string, unknown> {
-  const layers: UiBase[] = [...(Array.isArray(base) ? base : [base]), pickUiAttributes(ui)]
+export interface UseUiOptions {
+  base: UiBase | UiBase[]
+  ui?: UiAttributes
+  exclude?: readonly string[]
+}
+
+export function useUi({ base, ui, exclude = [] }: UseUiOptions): Record<string, unknown> {
+  const layers: UiBase[] = [...(Array.isArray(base) ? base : [base]), pickUiAttributes(ui, exclude)]
 
   return {
     ...Object.assign({}, ...layers),

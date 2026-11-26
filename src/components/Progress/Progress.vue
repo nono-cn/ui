@@ -75,8 +75,8 @@ function toValueState(state: SdkValueState) {
 }
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         'data-orientation': orientation.value,
         class: progressVariants({ orientation: orientation.value }),
@@ -84,8 +84,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   value: props.value,
   min: props.min,
   max: props.max,
@@ -95,12 +95,15 @@ const rootProps = computed(() => ({
 }))
 
 function labelProps(state: ProgressState) {
-  return useUi({ class: progressLabelVariants({ size: size.value }) }, props.ui?.label?.(state))
+  return useUi({
+    base: { class: progressLabelVariants({ size: size.value }) },
+    ui: props.ui?.label?.(state),
+  })
 }
 
 function valueProps(partAttrs: Record<string, unknown>, state: ProgressValueState) {
-  return useUi(
-    [
+  return useUi({
+    base: [
       {
         class: progressValueVariants({
           size: size.value,
@@ -111,34 +114,34 @@ function valueProps(partAttrs: Record<string, unknown>, state: ProgressValueStat
       },
       partAttrs,
     ],
-    props.ui?.value?.(state),
-  )
+    ui: props.ui?.value?.(state),
+  })
 }
 
 function trackProps(state: ProgressState) {
-  return useUi(
-    {
+  return useUi({
+    base: {
       class: progressTrackVariants({
         size: size.value,
         orientation: orientation.value,
         inside: inside.value,
       }),
     },
-    props.ui?.track?.(state),
-  )
+    ui: props.ui?.track?.(state),
+  })
 }
 
 function indicatorProps(state: ProgressState) {
-  return useUi(
-    {
+  return useUi({
+    base: {
       class: progressIndicatorVariants({
         orientation: orientation.value,
         inverted: props.inverted,
         animation: oneOf(props.animation, progressAnimations, progressDefaults.animation),
       }),
     },
-    props.ui?.indicator?.(state),
-  )
+    ui: props.ui?.indicator?.(state),
+  })
 }
 </script>
 

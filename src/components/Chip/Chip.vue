@@ -21,8 +21,8 @@ defineSlots<ChipSlots>()
 const attrs = useAttrs()
 
 const indicatorProps = computed(() =>
-  useUi(
-    {
+  useUi({
+    base: {
       class: chipIndicatorVariants({
         size: oneOf(props.size, chipSizes, chipDefaults.size),
         position: props.standalone
@@ -32,21 +32,21 @@ const indicatorProps = computed(() =>
         standalone: props.standalone,
       }),
     },
-    props.ui?.indicator?.(),
-  ),
+    ui: props.ui?.indicator?.(),
+  }),
 )
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: chipVariants(),
         style: getColorVariables(props.color, 'chip', chipDefaults.color),
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

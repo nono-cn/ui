@@ -11,12 +11,10 @@ export type ButtonVariant = (typeof buttonVariantNames)[number]
 
 export interface ButtonUi {
   root?: UiResolver
-  leading?: UiResolver
-  leadingIcon?: UiResolver
-  spinner?: UiResolver
+  icon?: UiResolver
   label?: UiResolver
-  trailing?: UiResolver
   trailingIcon?: UiResolver
+  loadingIcon?: UiResolver
 }
 
 export interface ButtonProps {

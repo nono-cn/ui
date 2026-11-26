@@ -92,32 +92,34 @@ const baseProps = computed(() =>
 )
 
 const leadingProps = computed(() =>
-  useUi(
-    { class: variant.value ? buttonLeadingVariants({ size: size.value }) : linkIconSlotVariants() },
-    props.ui?.leading?.(),
-  ),
+  useUi({
+    base: {
+      class: variant.value ? buttonLeadingVariants({ size: size.value }) : linkIconSlotVariants(),
+    },
+    ui: props.ui?.leading?.(),
+  }),
 )
 
 const trailingProps = computed(() =>
-  useUi(
-    {
+  useUi({
+    base: {
       class: variant.value ? buttonTrailingVariants({ size: size.value }) : linkIconSlotVariants(),
     },
-    props.ui?.trailing?.(),
-  ),
+    ui: props.ui?.trailing?.(),
+  }),
 )
 
 const labelProps = computed(() =>
-  useUi({ class: variant.value ? 'truncate' : undefined }, props.ui?.label?.()),
+  useUi({ base: { class: variant.value ? 'truncate' : undefined }, ui: props.ui?.label?.() }),
 )
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ class: buttonIconVariants() }, props.ui?.leadingIcon?.()),
+  ...useUi({ base: { class: buttonIconVariants() }, ui: props.ui?.leadingIcon?.() }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ class: buttonIconVariants() }, props.ui?.trailingIcon?.()),
+  ...useUi({ base: { class: buttonIconVariants() }, ui: props.ui?.trailingIcon?.() }),
   name: props.trailingIcon!,
 }))
 
@@ -131,7 +133,7 @@ function rootProps(link: RouterLinkScope) {
     'data-disabled': props.disabled ? '' : undefined,
     'data-active': active ? '' : undefined,
   }
-  return mergeProps(useUi([base, attrs], props.ui?.root?.()), {
+  return mergeProps(useUi({ base: [base, attrs], ui: props.ui?.root?.() }), {
     onClick: (event: MouseEvent) => {
       if (props.disabled) event.preventDefault()
       else link.navigate?.(event)

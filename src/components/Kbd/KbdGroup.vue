@@ -10,7 +10,9 @@ const props = defineProps<KbdGroupProps>()
 defineSlots<KbdGroupSlots>()
 const attrs = useAttrs()
 
-const rootProps = computed(() => useUi([{ class: kbdGroupVariants() }, attrs], props.ui?.root?.()))
+const rootProps = computed(() =>
+  useUi({ base: [{ class: kbdGroupVariants() }, attrs], ui: props.ui?.root?.() }),
+)
 </script>
 
 <template>

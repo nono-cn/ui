@@ -71,16 +71,16 @@ function toValueState(state: SdkValueState) {
 }
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: progressCircularVariants(),
         style: getColorVariables(props.color, 'progress-circular', progressCircularDefaults.color),
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   value: props.value,
   min: props.min,
   max: props.max,
@@ -90,41 +90,41 @@ const rootProps = computed(() => ({
 }))
 
 function labelProps(state: ProgressState) {
-  return useUi(
-    { class: progressCircularLabelVariants({ size: size.value }) },
-    props.ui?.label?.(state),
-  )
+  return useUi({
+    base: { class: progressCircularLabelVariants({ size: size.value }) },
+    ui: props.ui?.label?.(state),
+  })
 }
 
 function valueProps(partAttrs: Record<string, unknown>, state: ProgressValueState) {
-  return useUi(
-    [{ class: progressCircularValueVariants({ size: size.value }) }, partAttrs],
-    props.ui?.value?.(state),
-  )
+  return useUi({
+    base: [{ class: progressCircularValueVariants({ size: size.value }) }, partAttrs],
+    ui: props.ui?.value?.(state),
+  })
 }
 
 function svgProps(state: ProgressState) {
-  return useUi(
-    {
+  return useUi({
+    base: {
       viewBox: '0 0 100 100',
       'aria-hidden': 'true',
       class: progressCircularSvgVariants({ size: size.value, inverted: props.inverted }),
     },
-    props.ui?.svg?.(state),
-  )
+    ui: props.ui?.svg?.(state),
+  })
 }
 
 function trackProps(partAttrs: Record<string, unknown>, state: ProgressState) {
-  return useUi(
-    [{ ...circle.value, class: progressCircularTrackVariants() }, partAttrs],
-    props.ui?.track?.(state),
-  )
+  return useUi({
+    base: [{ ...circle.value, class: progressCircularTrackVariants() }, partAttrs],
+    ui: props.ui?.track?.(state),
+  })
 }
 
 function indicatorProps(partAttrs: Record<string, unknown>, state: ProgressState) {
   const sdkAttrs = Object.fromEntries(Object.entries(partAttrs).filter(([key]) => key !== 'style'))
-  return useUi(
-    [
+  return useUi({
+    base: [
       {
         ...circle.value,
         pathLength: 100,
@@ -134,8 +134,8 @@ function indicatorProps(partAttrs: Record<string, unknown>, state: ProgressState
       },
       sdkAttrs,
     ],
-    props.ui?.indicator?.(state),
-  )
+    ui: props.ui?.indicator?.(state),
+  })
 }
 </script>
 

@@ -32,11 +32,13 @@ const orientation = computed(() =>
 )
 const hasLabel = computed(() => Boolean(props.label || slots.default))
 
-const labelProps = computed(() => useUi({ class: separatorLabelVariants() }, props.ui?.label?.()))
+const labelProps = computed(() =>
+  useUi({ base: { class: separatorLabelVariants() }, ui: props.ui?.label?.() }),
+)
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: separatorVariants({
           orientation: orientation.value,
@@ -52,8 +54,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   orientation: orientation.value,
   decorative: props.decorative,
 }))

@@ -35,32 +35,37 @@ const hasDescription = computed(() => Boolean(props.description || slots.descrip
 const hasHeader = computed(() => hasMedia.value || hasLabel.value || hasDescription.value)
 
 const headerProps = computed(() =>
-  useUi({ class: emptyHeaderVariants({ size: size.value }) }, props.ui?.header?.()),
+  useUi({ base: { class: emptyHeaderVariants({ size: size.value }) }, ui: props.ui?.header?.() }),
 )
 
 const mediaProps = computed(() =>
-  useUi({ class: emptyMediaVariants({ size: size.value }) }, props.ui?.media?.()),
+  useUi({ base: { class: emptyMediaVariants({ size: size.value }) }, ui: props.ui?.media?.() }),
 )
 
 const iconProps = computed(() => ({
-  ...useUi({}, props.ui?.icon?.()),
+  ...useUi({ base: {}, ui: props.ui?.icon?.() }),
   icon: props.icon,
   size: iconTileSizes[size.value],
 }))
 
 const labelProps = computed(() =>
-  useUi({ class: emptyLabelVariants({ size: size.value }) }, props.ui?.label?.()),
+  useUi({ base: { class: emptyLabelVariants({ size: size.value }) }, ui: props.ui?.label?.() }),
 )
 
 const descriptionProps = computed(() =>
-  useUi({ class: emptyDescriptionVariants({ size: size.value }) }, props.ui?.description?.()),
+  useUi({
+    base: { class: emptyDescriptionVariants({ size: size.value }) },
+    ui: props.ui?.description?.(),
+  }),
 )
 
-const contentProps = computed(() => useUi({ class: emptyContentVariants() }, props.ui?.content?.()))
+const contentProps = computed(() =>
+  useUi({ base: { class: emptyContentVariants() }, ui: props.ui?.content?.() }),
+)
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: emptyVariants({
           size: size.value,
@@ -70,8 +75,8 @@ const rootProps = computed(() =>
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

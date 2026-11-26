@@ -82,24 +82,24 @@ const positionProps = computed(() => ({
 }))
 
 function contentProps(attrs: Record<string, unknown>, state: TooltipContentState) {
-  return useUi(
-    [
+  return useUi({
+    base: [
       {
         class: tooltipContentVariants(),
         style: getRadiusVariables(props.radius, 'tooltip', tooltipDefaults.radius),
       },
       attrs,
     ],
-    props.ui?.content?.(state),
-  )
+    ui: props.ui?.content?.(state),
+  })
 }
 
 function shortcutProps(attrs: Record<string, unknown>, state: TooltipContentState) {
-  return useUi(attrs, props.ui?.shortcut?.(state))
+  return useUi({ base: attrs, ui: props.ui?.shortcut?.(state) })
 }
 
 function arrowProps(state: TooltipContentState) {
-  return useUi({ class: tooltipArrowVariants() }, props.ui?.arrow?.(state))
+  return useUi({ base: { class: tooltipArrowVariants() }, ui: props.ui?.arrow?.(state) })
 }
 
 defineExpose<TooltipExpose>({

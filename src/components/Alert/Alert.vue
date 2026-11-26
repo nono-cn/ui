@@ -36,20 +36,27 @@ const hasIcon = computed(() => Boolean(props.icon || slots.icon))
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const hasDescription = computed(() => Boolean(props.description || slots.description))
 
-const iconProps = computed(() => useUi({ class: alertIconVariants() }, props.ui?.icon?.()))
+const iconProps = computed(() =>
+  useUi({ base: { class: alertIconVariants() }, ui: props.ui?.icon?.() }),
+)
 
-const labelProps = computed(() => useUi({ class: alertLabelVariants() }, props.ui?.label?.()))
+const labelProps = computed(() =>
+  useUi({ base: { class: alertLabelVariants() }, ui: props.ui?.label?.() }),
+)
 
 const descriptionProps = computed(() =>
-  useUi({ class: alertDescriptionVariants() }, props.ui?.description?.()),
+  useUi({ base: { class: alertDescriptionVariants() }, ui: props.ui?.description?.() }),
 )
 
 const closeContainerProps = computed(() =>
-  useUi({ class: alertCloseContainerVariants() }, props.ui?.closeContainer?.()),
+  useUi({ base: { class: alertCloseContainerVariants() }, ui: props.ui?.closeContainer?.() }),
 )
 
 const closeButtonProps = computed(() => {
-  const ui = useUi({ 'aria-label': props.closeLabel || t('close') }, props.ui?.closeButton?.())
+  const ui = useUi({
+    base: { 'aria-label': props.closeLabel || t('close') },
+    ui: props.ui?.closeButton?.(),
+  })
 
   return {
     ...ui,
@@ -62,8 +69,8 @@ const closeButtonProps = computed(() => {
 })
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         role: props.decorative ? 'none' : 'alert',
         class: alertVariants({ variant: variant.value, icon: hasIcon.value }),
@@ -71,8 +78,8 @@ const rootProps = computed(() =>
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 
 function close() {

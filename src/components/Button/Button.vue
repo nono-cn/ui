@@ -5,10 +5,12 @@ import { cn } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { buttonDefaults, buttonSizes, buttonVariantNames } from '@/components/Button/constants'
+import { buttonUiExclude } from '@/components/Button/exclude'
 import { useButtonGroup } from '@/components/ButtonGroup/context'
 import type { ButtonInternalSlots, ButtonProps, ButtonSlots } from '@/components/Button/types'
 import {
   buttonIconVariants,
+  buttonLabelVariants,
   buttonLeadingVariants,
   buttonTrailingVariants,
   buttonVariants,
@@ -42,34 +44,48 @@ const square = computed(
   () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
 )
 
-const leadingProps = computed(() =>
-  useUi({ class: buttonLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
+const leadingProps = computed(() => ({ class: buttonLeadingVariants({ size: size.value }) }))
+
+const trailingProps = computed(() => ({ class: buttonTrailingVariants({ size: size.value }) }))
+
+const labelProps = computed(() =>
+  useUi({
+    base: { class: buttonLabelVariants() },
+    ui: props.ui?.label?.(),
+    exclude: buttonUiExclude.label,
+  }),
 )
 
-const trailingProps = computed(() =>
-  useUi({ class: buttonTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
-)
-
-const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.()))
-
-const spinnerProps = computed(() => ({
-  ...useUi({ class: cn(buttonIconVariants(), 'animate-spin') }, props.ui?.spinner?.()),
+const loadingIconProps = computed(() => ({
+  ...useUi({
+    base: { class: cn(buttonIconVariants(), 'animate-spin') },
+    ui: props.ui?.loadingIcon?.(),
+    exclude: buttonUiExclude.loadingIcon,
+  }),
   name: 'spinner' as const,
 }))
 
-const leadingIconProps = computed(() => ({
-  ...useUi({ class: buttonIconVariants() }, props.ui?.leadingIcon?.()),
+const iconProps = computed(() => ({
+  ...useUi({
+    base: { class: buttonIconVariants() },
+    ui: props.ui?.icon?.(),
+    exclude: buttonUiExclude.icon,
+  }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ class: buttonIconVariants() }, props.ui?.trailingIcon?.()),
+  ...useUi({
+    base: { class: buttonIconVariants() },
+    ui: props.ui?.trailingIcon?.(),
+    exclude: buttonUiExclude.trailingIcon,
+  }),
   name: props.trailingIcon!,
 }))
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: buttonVariants({
           size: size.value,
@@ -84,8 +100,9 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+    exclude: buttonUiExclude.root,
+  }),
   disabled: props.disabled,
   focusableWhenDisabled: props.focusableWhenDisabled,
   type: props.type,
@@ -99,10 +116,10 @@ const rootProps = computed(() => ({
     <template #default="{ state }">
       <span v-if="hasLeading || state.pending" data-ui="button-leading" v-bind="leadingProps">
         <slot v-if="state.pending" name="loading">
-          <Icon data-ui="button-spinner" v-bind="spinnerProps" />
+          <Icon data-ui="button-loading-icon" v-bind="loadingIconProps" />
         </slot>
         <slot v-else name="leading">
-          <Icon v-if="icon" data-ui="button-leading-icon" v-bind="leadingIconProps" />
+          <Icon v-if="icon" data-ui="button-icon" v-bind="iconProps" />
         </slot>
       </span>
       <slot>

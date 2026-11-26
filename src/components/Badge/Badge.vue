@@ -29,28 +29,31 @@ const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({ class: badgeLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
+  useUi({ base: { class: badgeLeadingVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
 )
 
 const trailingProps = computed(() =>
-  useUi({ class: badgeTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
+  useUi({
+    base: { class: badgeTrailingVariants({ size: size.value }) },
+    ui: props.ui?.trailing?.(),
+  }),
 )
 
-const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.()))
+const labelProps = computed(() => useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.() }))
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ class: badgeIconVariants() }, props.ui?.leadingIcon?.()),
+  ...useUi({ base: { class: badgeIconVariants() }, ui: props.ui?.leadingIcon?.() }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ class: badgeIconVariants() }, props.ui?.trailingIcon?.()),
+  ...useUi({ base: { class: badgeIconVariants() }, ui: props.ui?.trailingIcon?.() }),
   name: props.trailingIcon!,
 }))
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: badgeVariants({
           size: size.value,
@@ -63,8 +66,8 @@ const rootProps = computed(() =>
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

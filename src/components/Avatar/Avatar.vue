@@ -42,34 +42,34 @@ const initials = computed(() => {
 })
 
 const imageProps = computed(() => ({
-  ...useUi({ class: avatarImageVariants() }, props.ui?.image?.()),
+  ...useUi({ base: { class: avatarImageVariants() }, ui: props.ui?.image?.() }),
   src: props.src,
   alt: props.alt ?? '',
 }))
 
 const fallbackProps = computed(() => ({
-  ...useUi(
-    {
+  ...useUi({
+    base: {
       ...(props.alt ? { role: 'img', 'aria-label': props.alt } : {}),
       class: avatarFallbackVariants({
         variant: oneOf(props.variant, avatarVariantNames, avatarDefaults.variant),
       }),
     },
-    props.ui?.fallback?.(),
-  ),
+    ui: props.ui?.fallback?.(),
+  }),
   delay: props.delay,
 }))
 
-const textProps = computed(() => useUi({ 'aria-hidden': 'true' }, props.ui?.text?.()))
+const textProps = computed(() => useUi({ base: { 'aria-hidden': 'true' }, ui: props.ui?.text?.() }))
 
 const iconProps = computed(() => ({
-  ...useUi({ class: avatarIconVariants() }, props.ui?.icon?.()),
+  ...useUi({ base: { class: avatarIconVariants() }, ui: props.ui?.icon?.() }),
   name: props.icon,
 }))
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: avatarVariants({ size: oneOf(props.size, avatarSizes, avatarDefaults.size) }),
         style: [
@@ -79,8 +79,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   onLoadingStatusChange: props.onLoadingStatusChange,
 }))
 </script>
