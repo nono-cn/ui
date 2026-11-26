@@ -94,6 +94,4 @@ export const buttonTrailingVariants = cva('inline-flex shrink-0 items-center jus
   defaultVariants: { size: buttonDefaults.size },
 })
 
-export const buttonLabelVariants = cva('truncate')
-
 export const buttonIconVariants = cva('size-full')

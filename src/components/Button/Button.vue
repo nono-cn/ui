@@ -10,7 +10,6 @@ import { useButtonGroup } from '@/components/ButtonGroup/context'
 import type { ButtonInternalSlots, ButtonProps, ButtonSlots } from '@/components/Button/types'
 import {
   buttonIconVariants,
-  buttonLabelVariants,
   buttonLeadingVariants,
   buttonTrailingVariants,
   buttonVariants,
@@ -40,8 +39,9 @@ const size = computed(() =>
 )
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
+const hasLabel = computed(() => Boolean(props.label || slots.default))
 const square = computed(
-  () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
+  () => props.square ?? (!hasLabel.value && (hasLeading.value || hasTrailing.value)),
 )
 
 const leadingProps = computed(() => ({ class: buttonLeadingVariants({ size: size.value }) }))
@@ -50,7 +50,7 @@ const trailingProps = computed(() => ({ class: buttonTrailingVariants({ size: si
 
 const labelProps = computed(() =>
   useUi({
-    base: { class: buttonLabelVariants() },
+    base: {},
     ui: props.ui?.label?.(),
     exclude: buttonUiExclude.label,
   }),
@@ -122,9 +122,9 @@ const rootProps = computed(() => ({
           <Icon v-if="icon" data-ui="button-icon" v-bind="iconProps" />
         </slot>
       </span>
-      <slot>
-        <span v-if="label" data-ui="button-label" v-bind="labelProps">{{ label }}</span>
-      </slot>
+      <span v-if="hasLabel" data-ui="button-label" v-bind="labelProps">
+        <slot>{{ label }}</slot>
+      </span>
       <span v-if="hasTrailing" data-ui="button-trailing" v-bind="trailingProps">
         <slot name="trailing">
           <Icon v-if="trailingIcon" data-ui="button-trailing-icon" v-bind="trailingIconProps" />

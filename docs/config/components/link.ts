@@ -204,7 +204,11 @@ const link: ComponentDocConfig = {
       { node: 'trailingIcon', tag: 'svg' },
     ],
     slots: [
-      { name: 'default', type: '{}', description: 'Content of the link; overrides the label.' },
+      {
+        name: 'default',
+        type: '{}',
+        description: 'Content of the label node; replaces the label text.',
+      },
       { name: 'leading', type: '{}', description: 'Content before the label.' },
       { name: 'trailing', type: '{}', description: 'Content after the label.' },
     ],
