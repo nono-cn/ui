@@ -22,6 +22,7 @@ export interface UiTableRow {
   node: string
   tag: string
   state?: string
+  stateLink?: string
   kept?: string
 }
 

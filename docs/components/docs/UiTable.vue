@@ -64,8 +64,15 @@ function element(row: UiTableRow) {
               <code class="rounded bg-muted px-1.5 py-0.5 text-xs">{{ element(row) }}</code>
             </td>
             <td class="px-4 py-3 sm:px-5">
+              <a
+                v-if="row.state && row.stateLink"
+                :href="row.stateLink"
+                class="text-primary underline-offset-4 hover:underline"
+              >
+                <code class="rounded bg-muted px-1.5 py-0.5 text-xs">{{ row.state }}</code>
+              </a>
               <code
-                v-if="row.state"
+                v-else-if="row.state"
                 class="block w-max rounded bg-muted px-1.5 py-0.5 text-xs whitespace-pre"
                 >{{ row.state }}</code
               >

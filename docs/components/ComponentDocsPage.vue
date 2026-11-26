@@ -119,6 +119,13 @@ const sections = [
           :rows="component.api.slots"
           :show-default="false"
         />
+        <ApiTable
+          v-if="component.api.expose.length"
+          id="expose"
+          title="Expose"
+          :rows="component.api.expose"
+          :show-default="false"
+        />
         <template v-for="table in component.api.configs ?? []" :key="table.id">
           <p v-if="table.description" class="text-sm leading-6 text-muted-foreground">
             {{ table.description }}
@@ -131,13 +138,6 @@ const sections = [
             :show-default="table.showDefault"
           />
         </template>
-        <ApiTable
-          v-if="component.api.expose.length"
-          id="expose"
-          title="Expose"
-          :rows="component.api.expose"
-          :show-default="false"
-        />
         <UiTable v-if="component.api.ui?.length" :slug="component.slug" :rows="component.api.ui" />
       </div>
     </section>
