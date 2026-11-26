@@ -48,28 +48,28 @@ const square = computed(
 )
 
 const leadingProps = computed(() =>
-  useUi({ class: toggleSlotVariants({ size: size.value }) }, props.ui?.leading?.()),
+  useUi({ base: { class: toggleSlotVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
 )
 
 const trailingProps = computed(() =>
-  useUi({ class: toggleSlotVariants({ size: size.value }) }, props.ui?.trailing?.()),
+  useUi({ base: { class: toggleSlotVariants({ size: size.value }) }, ui: props.ui?.trailing?.() }),
 )
 
-const labelProps = computed(() => useUi({ class: 'truncate' }, props.ui?.label?.()))
+const labelProps = computed(() => useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.() }))
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ class: toggleIconVariants() }, props.ui?.leadingIcon?.()),
+  ...useUi({ base: { class: toggleIconVariants() }, ui: props.ui?.leadingIcon?.() }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ class: toggleIconVariants() }, props.ui?.trailingIcon?.()),
+  ...useUi({ base: { class: toggleIconVariants() }, ui: props.ui?.trailingIcon?.() }),
   name: props.trailingIcon!,
 }))
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: toggleVariants({
           size: size.value,
@@ -89,8 +89,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   pressed: props.modelValue,
   defaultPressed: props.defaultValue,
   value: props.value,

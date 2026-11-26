@@ -15,7 +15,10 @@ const { toDate, format } = useDates()
 const formatted = computed(() => format(props.datetime, props.options))
 
 const rootProps = computed(() =>
-  useUi([{ datetime: toDate(props.datetime)?.toISOString() }, attrs], props.ui?.root?.()),
+  useUi({
+    base: [{ datetime: toDate(props.datetime)?.toISOString() }, attrs],
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

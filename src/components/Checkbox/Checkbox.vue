@@ -48,8 +48,8 @@ const size = computed(() =>
 )
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: checkboxVariants({ size: size.value }),
         style: [
@@ -59,8 +59,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
   'onUpdate:checked': (value: CheckedState) => emit('update:modelValue', value),
@@ -80,12 +80,12 @@ function indicatorState(state: CheckboxIndicatorState): CheckboxIndicatorState {
 }
 
 function indicatorProps(state: CheckboxIndicatorState) {
-  return useUi({ class: checkboxIndicatorVariants() }, props.ui?.indicator?.(state))
+  return useUi({ base: { class: checkboxIndicatorVariants() }, ui: props.ui?.indicator?.(state) })
 }
 
 function iconProps(state: CheckboxIndicatorState) {
   return {
-    ...useUi({ class: checkboxIconVariants() }, props.ui?.icon?.(state)),
+    ...useUi({ base: { class: checkboxIconVariants() }, ui: props.ui?.icon?.(state) }),
     name: state.indeterminate ? props.indeterminateIcon : props.icon,
     stroke: 3,
   }

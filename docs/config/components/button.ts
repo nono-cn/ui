@@ -3,6 +3,7 @@ import {
   Button,
   buttonDefaults,
   buttonSizes,
+  buttonUiExclude,
   buttonVariantNames,
   iconNames,
   themeColors,
@@ -172,7 +173,7 @@ const button: ComponentDocConfig = {
     {
       title: 'Pending',
       description:
-        'Return a Promise from @click. The button shows a spinner, ignores presses and keeps focus until it settles.',
+        'Return a Promise from @click. The button shows a loading icon, ignores presses and keeps focus until it settles.',
       controls: [
         {
           key: 'icon',
@@ -254,7 +255,7 @@ const button: ComponentDocConfig = {
     {
       title: 'Pending buttons',
       description:
-        'After one second pending, the button announces pendingAnnouncement ("Loading" by default) through a polite live region. Keep the label while it waits: the spinner shows progress and the announcement tells assistive technology.',
+        'After one second pending, the button announces pendingAnnouncement ("Loading" by default) through a polite live region. Keep the label while it waits: the loading icon shows progress and the announcement tells assistive technology.',
     },
   ],
   api: {
@@ -340,13 +341,15 @@ const button: ComponentDocConfig = {
       },
     ],
     ui: [
-      { node: 'root', tag: 'button' },
-      { node: 'leading', tag: 'span' },
-      { node: 'leadingIcon', tag: 'svg' },
-      { node: 'spinner', tag: 'svg' },
+      {
+        node: 'root',
+        tag: 'button',
+        kept: buttonUiExclude.root.join(', '),
+      },
+      { node: 'icon', tag: 'svg', kept: buttonUiExclude.icon.join(', ') },
       { node: 'label', tag: 'span' },
-      { node: 'trailing', tag: 'span' },
-      { node: 'trailingIcon', tag: 'svg' },
+      { node: 'trailingIcon', tag: 'svg', kept: buttonUiExclude.trailingIcon.join(', ') },
+      { node: 'loadingIcon', tag: 'svg', kept: buttonUiExclude.loadingIcon.join(', ') },
     ],
     slots: [
       {
@@ -363,7 +366,7 @@ const button: ComponentDocConfig = {
         name: 'loading',
         type: '-',
         description:
-          'Content displayed before the label while pending, in place of the leading content; overrides the default spinner.',
+          'Content displayed before the label while pending, in place of the leading content; overrides the loading icon.',
       },
       {
         name: 'trailing',

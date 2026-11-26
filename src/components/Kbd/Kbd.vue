@@ -21,8 +21,8 @@ const attrs = useAttrs()
 const { text } = useShortcutHint(() => props.shortcut)
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: kbdVariants({
           size: oneOf(props.size, kbdSizes, kbdDefaults.size),
@@ -35,8 +35,8 @@ const rootProps = computed(() =>
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

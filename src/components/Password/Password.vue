@@ -59,8 +59,8 @@ const size = computed(() =>
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: inputRootVariants(),
         style: [
@@ -70,8 +70,8 @@ const rootProps = computed(() => ({
       },
       { class: attrs.class, style: attrs.style },
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: string) => emit('update:modelValue', value),
@@ -92,8 +92,8 @@ const inputProps = computed(() => {
   )
 
   return {
-    ...useUi(
-      [
+    ...useUi({
+      base: [
         {
           placeholder: props.placeholder,
           class: [
@@ -109,37 +109,40 @@ const inputProps = computed(() => {
         },
         rest,
       ],
-      props.ui?.input?.(),
-    ),
+      ui: props.ui?.input?.(),
+    }),
   }
 })
 
 const leadingProps = computed(() =>
-  useUi({ class: inputLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
+  useUi({ base: { class: inputLeadingVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
 )
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ class: inputIconVariants() }, props.ui?.leadingIcon?.()),
+  ...useUi({ base: { class: inputIconVariants() }, ui: props.ui?.leadingIcon?.() }),
   name: props.icon!,
 }))
 
 const trailingProps = computed(() =>
-  useUi({ class: inputTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
+  useUi({
+    base: { class: inputTrailingVariants({ size: size.value }) },
+    ui: props.ui?.trailing?.(),
+  }),
 )
 
 const toggleProps = computed(() =>
-  useUi(
-    {
+  useUi({
+    base: {
       'aria-label': props.toggleLabel || t('showPassword'),
       class: passwordToggleVariants({ size: size.value }),
     },
-    props.ui?.toggle?.(),
-  ),
+    ui: props.ui?.toggle?.(),
+  }),
 )
 
 function toggleIconProps(visible: boolean) {
   return {
-    ...useUi({ class: 'size-full' }, props.ui?.toggleIcon?.()),
+    ...useUi({ base: { class: 'size-full' }, ui: props.ui?.toggleIcon?.() }),
     name: visible ? ('eyeOff' as const) : ('eye' as const),
   }
 }

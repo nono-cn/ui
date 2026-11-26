@@ -26,13 +26,13 @@ const attrs = useAttrs()
 const size = computed(() => oneOf(props.size, iconTileSizes, iconTileDefaults.size))
 
 const iconProps = computed(() => ({
-  ...useUi({ class: iconTileIconVariants({ size: size.value }) }, props.ui?.icon?.()),
+  ...useUi({ base: { class: iconTileIconVariants({ size: size.value }) }, ui: props.ui?.icon?.() }),
   name: props.icon!,
 }))
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: iconTileVariants({
           size: size.value,
@@ -45,8 +45,8 @@ const rootProps = computed(() =>
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

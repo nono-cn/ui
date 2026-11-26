@@ -48,41 +48,44 @@ const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 
 const leadingProps = computed(() =>
-  useUi({ class: inputLeadingVariants({ size: size.value }) }, props.ui?.leading?.()),
+  useUi({ base: { class: inputLeadingVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
 )
 
 const trailingProps = computed(() =>
-  useUi({ class: inputTrailingVariants({ size: size.value }) }, props.ui?.trailing?.()),
+  useUi({
+    base: { class: inputTrailingVariants({ size: size.value }) },
+    ui: props.ui?.trailing?.(),
+  }),
 )
 
 const clearProps = computed(() =>
-  useUi(
-    {
+  useUi({
+    base: {
       'aria-label': props.clearLabel || t('clear'),
       class: inputClearVariants({ size: size.value }),
     },
-    props.ui?.clear?.(),
-  ),
+    ui: props.ui?.clear?.(),
+  }),
 )
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ class: inputIconVariants() }, props.ui?.leadingIcon?.()),
+  ...useUi({ base: { class: inputIconVariants() }, ui: props.ui?.leadingIcon?.() }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ class: inputIconVariants() }, props.ui?.trailingIcon?.()),
+  ...useUi({ base: { class: inputIconVariants() }, ui: props.ui?.trailingIcon?.() }),
   name: props.trailingIcon!,
 }))
 
 const clearIconProps = computed(() => ({
-  ...useUi({ class: 'size-full' }, props.ui?.clearIcon?.()),
+  ...useUi({ base: { class: 'size-full' }, ui: props.ui?.clearIcon?.() }),
   name: 'x' as const,
 }))
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: inputRootVariants(),
         style: [
@@ -92,8 +95,8 @@ const rootProps = computed(() =>
       },
       { class: attrs.class, style: attrs.style },
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 
 const inputProps = computed(() => {
@@ -102,8 +105,8 @@ const inputProps = computed(() => {
   )
 
   return {
-    ...useUi(
-      [
+    ...useUi({
+      base: [
         {
           class: inputVariants({
             size: size.value,
@@ -116,8 +119,8 @@ const inputProps = computed(() => {
         },
         rest,
       ],
-      props.ui?.input?.(),
-    ),
+      ui: props.ui?.input?.(),
+    }),
     type: props.type,
     modelValue: props.modelValue,
     defaultValue: props.defaultValue,

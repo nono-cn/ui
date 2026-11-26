@@ -64,7 +64,10 @@ const rootProps = computed(() => ({
 }))
 
 function triggerProps(attrs: Record<string, unknown>, state: HoverCardTriggerState) {
-  return useUi([{ class: hoverCardTriggerVariants() }, attrs], props.ui?.trigger?.(state))
+  return useUi({
+    base: [{ class: hoverCardTriggerVariants() }, attrs],
+    ui: props.ui?.trigger?.(state),
+  })
 }
 
 const positionProps = computed(() => ({
@@ -79,20 +82,20 @@ const positionProps = computed(() => ({
 }))
 
 function contentProps(attrs: Record<string, unknown>, state: HoverCardContentState) {
-  return useUi(
-    [
+  return useUi({
+    base: [
       {
         class: hoverCardContentVariants(),
         style: getRadiusVariables(props.radius, 'hover-card', hoverCardDefaults.radius),
       },
       attrs,
     ],
-    props.ui?.content?.(state),
-  )
+    ui: props.ui?.content?.(state),
+  })
 }
 
 function arrowProps(state: HoverCardContentState) {
-  return useUi({ class: hoverCardArrowVariants() }, props.ui?.arrow?.(state))
+  return useUi({ base: { class: hoverCardArrowVariants() }, ui: props.ui?.arrow?.(state) })
 }
 
 defineExpose<HoverCardExpose>({

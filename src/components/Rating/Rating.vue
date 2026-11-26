@@ -65,8 +65,8 @@ const valueLabel = computed(() => {
 })
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         'aria-orientation': props.readOnly ? undefined : orientation.value,
         'data-orientation': orientation.value,
@@ -75,8 +75,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: number | null) => emit('update:modelValue', value),
@@ -96,15 +96,15 @@ const rootProps = computed(() => ({
 }))
 
 function itemProps(itemAttrs: Record<string, unknown>, state: RatingItemState) {
-  return useUi(
-    [{ class: ratingItemVariants({ size: size.value }) }, itemAttrs],
-    props.ui?.item?.(state),
-  )
+  return useUi({
+    base: [{ class: ratingItemVariants({ size: size.value }) }, itemAttrs],
+    ui: props.ui?.item?.(state),
+  })
 }
 
 function emptyIconProps(state: RatingItemState) {
   return {
-    ...useUi({ class: ratingEmptyIconVariants() }, props.ui?.emptyIcon?.(state)),
+    ...useUi({ base: { class: ratingEmptyIconVariants() }, ui: props.ui?.emptyIcon?.(state) }),
     name: props.emptyIcon ?? props.icon,
     fill: 'currentColor',
   }
@@ -112,7 +112,7 @@ function emptyIconProps(state: RatingItemState) {
 
 function iconProps(state: RatingItemState) {
   return {
-    ...useUi({ class: ratingIconVariants() }, props.ui?.icon?.(state)),
+    ...useUi({ base: { class: ratingIconVariants() }, ui: props.ui?.icon?.(state) }),
     name: props.icon,
     fill: 'currentColor',
   }

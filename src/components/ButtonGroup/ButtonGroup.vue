@@ -30,16 +30,16 @@ provideButtonGroup({
 })
 
 const rootProps = computed(() =>
-  useUi(
-    [
+  useUi({
+    base: [
       {
         class: buttonGroupVariants({ orientation: orientation.value }),
         role: 'group',
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
 )
 </script>
 

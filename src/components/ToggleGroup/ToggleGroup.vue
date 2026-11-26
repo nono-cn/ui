@@ -40,13 +40,13 @@ const orientation = computed(() =>
 )
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       { class: toggleGroupVariants({ orientation: orientation.value, attached: props.attached }) },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   value: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:value': (value: string[]) => emit('update:modelValue', value),
@@ -73,7 +73,7 @@ function itemProps(itemState: ToggleGroupItemState) {
   const { item } = itemState
 
   return {
-    ...useUi({}, props.ui?.item?.(itemState)),
+    ...useUi({ base: {}, ui: props.ui?.item?.(itemState) }),
     value: item.value,
     label: item.label,
     icon: item.icon,

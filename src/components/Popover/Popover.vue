@@ -97,28 +97,31 @@ const contentPartProps = computed(() => ({
 }))
 
 function contentProps(attrs: Record<string, unknown>, state: PopoverContentState) {
-  return useUi(
-    [
+  return useUi({
+    base: [
       {
         class: popoverContentVariants(),
         style: getRadiusVariables(props.radius, 'popover', popoverDefaults.radius),
       },
       attrs,
     ],
-    props.ui?.content?.(state),
-  )
+    ui: props.ui?.content?.(state),
+  })
 }
 
 function labelProps(state: PopoverContentState) {
-  return useUi({ class: popoverLabelVariants() }, props.ui?.label?.(state))
+  return useUi({ base: { class: popoverLabelVariants() }, ui: props.ui?.label?.(state) })
 }
 
 function descriptionProps(state: PopoverContentState) {
-  return useUi({ class: popoverDescriptionVariants() }, props.ui?.description?.(state))
+  return useUi({
+    base: { class: popoverDescriptionVariants() },
+    ui: props.ui?.description?.(state),
+  })
 }
 
 function arrowProps(state: PopoverContentState) {
-  return useUi({ class: popoverArrowVariants() }, props.ui?.arrow?.(state))
+  return useUi({ base: { class: popoverArrowVariants() }, ui: props.ui?.arrow?.(state) })
 }
 
 function close() {

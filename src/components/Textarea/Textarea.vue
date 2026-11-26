@@ -37,8 +37,8 @@ const attrs = useAttrs()
 const formField = useFormField()
 
 const rootProps = computed(() => ({
-  ...useUi(
-    [
+  ...useUi({
+    base: [
       {
         class: textareaVariants({
           size: oneOf(props.size ?? formField?.size(), textareaSizes, textareaDefaults.size),
@@ -53,8 +53,8 @@ const rootProps = computed(() => ({
       },
       attrs,
     ],
-    props.ui?.root?.(),
-  ),
+    ui: props.ui?.root?.(),
+  }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
   'onUpdate:modelValue': (value: string) => emit('update:modelValue', value),
