@@ -24,6 +24,7 @@ import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
 import textarea from '@docs/config/components/textarea'
 import time from '@docs/config/components/time'
+import timeline from '@docs/config/components/timeline'
 import toggle from '@docs/config/components/toggle'
 import toggleGroup from '@docs/config/components/toggle-group'
 import tooltip from '@docs/config/components/tooltip'
@@ -54,6 +55,7 @@ export const docsComponents: ComponentDocConfig[] = [
   switchDocs,
   textarea,
   time,
+  timeline,
   toggle,
   toggleGroup,
   tooltip,
