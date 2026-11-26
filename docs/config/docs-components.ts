@@ -22,6 +22,7 @@ import progressCircular from '@docs/config/components/progress-circular'
 import rating from '@docs/config/components/rating'
 import separator from '@docs/config/components/separator'
 import switchDocs from '@docs/config/components/switch'
+import tabs from '@docs/config/components/tabs'
 import textarea from '@docs/config/components/textarea'
 import time from '@docs/config/components/time'
 import timeline from '@docs/config/components/timeline'
@@ -53,6 +54,7 @@ export const docsComponents: ComponentDocConfig[] = [
   rating,
   separator,
   switchDocs,
+  tabs,
   textarea,
   time,
   timeline,
