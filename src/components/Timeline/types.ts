@@ -1,10 +1,10 @@
 import type { TimelineController } from '@ui-sdk/core/timeline'
 import type {
+  timelineAligns,
   timelineOrientations,
   timelineSizes,
   timelineStatuses,
 } from '@/components/Timeline/constants'
-import type { AvatarProps } from '@/components/Avatar/types'
 import type { DateFormatOptions, DateInput } from '@/composables/useDates'
 import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
@@ -13,38 +13,39 @@ export type TimelineSize = (typeof timelineSizes)[number]
 
 export type TimelineOrientation = (typeof timelineOrientations)[number]
 
+export type TimelineAlign = (typeof timelineAligns)[number]
+
 export type TimelineStatus = (typeof timelineStatuses)[number]
 
 export interface TimelineItem {
   value?: string
   date?: DateInput
-  title?: string
+  label?: string
   description?: string
   icon?: IconName
-  avatar?: Omit<AvatarProps, 'size'>
   status?: TimelineStatus
 }
 
-export interface TimelineItemState {
+export interface TimelineItemContext {
   item: TimelineItem
   index: number
   status: TimelineStatus | undefined
+  last: boolean
 }
 
-export interface TimelineDateState extends TimelineItemState {
+export interface TimelineDateSlotProps extends TimelineItemContext {
   formatted: string
 }
 
 export interface TimelineUi {
   root?: UiResolver
-  item?: UiResolver<TimelineItemState>
-  marker?: UiResolver<TimelineItemState>
-  icon?: UiResolver<TimelineItemState>
-  avatar?: UiResolver<TimelineItemState>
-  connector?: UiResolver<TimelineItemState>
-  date?: UiResolver<TimelineDateState>
-  title?: UiResolver<TimelineItemState>
-  description?: UiResolver<TimelineItemState>
+  item?: UiResolver<TimelineItemContext>
+  marker?: UiResolver<TimelineItemContext>
+  icon?: UiResolver<TimelineItemContext>
+  connector?: UiResolver<TimelineItemContext>
+  date?: UiResolver<TimelineItemContext>
+  label?: UiResolver<TimelineItemContext>
+  description?: UiResolver<TimelineItemContext>
 }
 
 export interface TimelineProps {
@@ -53,6 +54,7 @@ export interface TimelineProps {
   reverse?: boolean
   dateOptions?: DateFormatOptions
   orientation?: TimelineOrientation
+  align?: TimelineAlign
   loop?: boolean
   feed?: boolean
   busy?: boolean
@@ -62,10 +64,12 @@ export interface TimelineProps {
 }
 
 export interface TimelineSlots {
-  marker?(props: TimelineItemState): unknown
-  date?(props: TimelineDateState): unknown
-  title?(props: TimelineItemState): unknown
-  description?(props: TimelineItemState): unknown
+  marker?(props: TimelineItemContext): unknown
+  date?(props: TimelineDateSlotProps): unknown
+  label?(props: TimelineItemContext): unknown
+  description?(props: TimelineItemContext): unknown
+  content?(props: TimelineItemContext): unknown
+  opposite?(props: TimelineItemContext): unknown
 }
 
 export type TimelineExpose = Pick<TimelineController, 'focus'>

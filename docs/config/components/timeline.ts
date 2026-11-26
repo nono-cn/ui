@@ -2,7 +2,8 @@ import type { ComponentDocConfig, ExampleValue } from '@docs/config/component-do
 import { withSource } from '@docs/config/component-docs'
 import {
   Timeline,
-  type TimelineItemState,
+  type TimelineItemContext,
+  timelineAligns,
   timelineDefaults,
   timelineOrientations,
   timelineSizes,
@@ -13,81 +14,61 @@ import {
 const booleans = ['false', 'true']
 const variants = (value: readonly string[]) => value.map((item) => `'${item}'`).join(' | ')
 
-const statusType = `${variants(timelineStatuses)} | undefined`
+const itemContext = { state: 'TimelineItemContext', stateLink: '#timeline-item-context' }
 
-const itemState = `{
-  item: TimelineItem
-  index: number
-  status: ${statusType}
-}`
-
-const dateState = `{
-  item: TimelineItem
-  index: number
-  status: ${statusType}
-  formatted: string
-}`
+const itemContextSlot = { type: 'TimelineItemContext', typeLink: '#timeline-item-context' }
 
 const order: ExampleValue = [
   {
     value: 'ordered',
     date: '2026-03-02T09:00:00Z',
-    title: 'Order placed',
+    label: 'Order placed',
     description: 'Paid by card.',
   },
-  { value: 'packed', date: '2026-03-03T14:30:00Z', title: 'Packed' },
+  { value: 'packed', date: '2026-03-03T14:30:00Z', label: 'Packed' },
   {
     value: 'shipped',
     date: '2026-03-04T08:15:00Z',
-    title: 'Shipped',
+    label: 'Shipped',
     description: 'Handed to the carrier.',
   },
-  { value: 'delivered', title: 'Delivered' },
+  { value: 'delivered', label: 'Delivered' },
 ]
 
 const project: ExampleValue = [
-  { value: 'kickoff', title: 'Kickoff', description: 'Scope and goals agreed.', icon: 'fileText' },
-  { value: 'design', title: 'Design', description: 'Wireframes and mockups.', icon: 'image' },
-  { value: 'build', title: 'Build', description: 'Features and tests.', icon: 'folderOpen' },
-  { value: 'launch', title: 'Launch', description: 'Released to everyone.', icon: 'upload' },
+  { value: 'kickoff', label: 'Kickoff', description: 'Scope and goals agreed.', icon: 'fileText' },
+  { value: 'design', label: 'Design', description: 'Wireframes and mockups.', icon: 'image' },
+  { value: 'build', label: 'Build', description: 'Features and tests.', icon: 'folderOpen' },
+  { value: 'launch', label: 'Launch', description: 'Released to everyone.', icon: 'upload' },
 ]
 
 const activity: ExampleValue = [
   {
     date: '2026-03-04T10:12:00Z',
-    title: 'Ana Ruiz commented',
+    label: 'Ana Ruiz commented',
     description: 'Looks good, just one question about the totals.',
-    avatar: { text: 'AR', color: 'info' },
   },
-  {
-    date: '2026-03-04T09:40:00Z',
-    title: 'Luis Gómez approved the changes',
-    avatar: { text: 'LG', color: 'success' },
-  },
-  {
-    date: '2026-03-03T17:05:00Z',
-    title: 'Eva Martín opened the request',
-    avatar: { text: 'EM' },
-  },
+  { date: '2026-03-04T09:40:00Z', label: 'Luis Gómez approved the changes' },
+  { date: '2026-03-03T17:05:00Z', label: 'Eva Martín opened the request' },
 ]
 
 const releases: ExampleValue = [
-  { value: 'v3', date: '2026-03-01', title: 'v3.0', description: 'New editor.' },
-  { value: 'v2', date: '2025-09-15', title: 'v2.0', description: 'Dark mode.' },
-  { value: 'v1', date: '2025-01-20', title: 'v1.0', description: 'First release.' },
+  { value: 'v3', date: '2026-03-01', label: 'v3.0', description: 'New editor.' },
+  { value: 'v2', date: '2025-09-15', label: 'v2.0', description: 'Dark mode.' },
+  { value: 'v1', date: '2025-01-20', label: 'v1.0', description: 'First release.' },
 ]
 
 const mixed: ExampleValue = [
-  { title: 'Submitted', status: 'complete' },
-  { title: 'In review', status: 'current' },
-  { title: 'Translated', status: 'complete' },
-  { title: 'Published', status: 'upcoming' },
+  { label: 'Submitted', status: 'complete' },
+  { label: 'In review', status: 'current' },
+  { label: 'Translated', status: 'complete' },
+  { label: 'Published', status: 'upcoming' },
 ]
 
 const emphasizeCurrent: ExampleValue = {
-  title: withSource(
+  label: withSource(
     "({ status }) => ({ class: status === 'current' ? 'text-primary' : '' })",
-    ({ status }: TimelineItemState) => ({ class: status === 'current' ? 'text-primary' : '' }),
+    ({ status }: TimelineItemContext) => ({ class: status === 'current' ? 'text-primary' : '' }),
   ),
 }
 
@@ -154,12 +135,13 @@ const timeline: ComponentDocConfig = {
       props: () => ({ items: mixed, 'aria-label': 'Review' }),
     },
     {
-      title: 'Avatar',
+      title: 'Feed',
       description:
-        'Mark each event with an avatar instead of a dot, such as who did it in an activity feed.',
+        'Make the events a feed of articles, such as an activity feed. Without value the events have no status.',
       controls: [],
       props: () => ({
         items: activity,
+        feed: true,
         dateOptions: { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' },
         'aria-label': 'Activity',
       }),
@@ -167,7 +149,7 @@ const timeline: ComponentDocConfig = {
     {
       title: 'Date',
       description:
-        'date takes a Date, a timestamp or an ISO string, formatted for the locale with dateOptions, like Time. A string that is not a date shows as it is.',
+        'date takes a Date, a timestamp or an ISO string and renders as a Time under the label, formatted for the locale with dateOptions. A string that is not a date shows as it is.',
       controls: [
         {
           key: 'dateStyle',
@@ -181,6 +163,34 @@ const timeline: ComponentDocConfig = {
         items: order,
         value: 'shipped',
         dateOptions: { dateStyle: state.dateStyle! },
+        'aria-label': 'Order history',
+      }),
+    },
+    {
+      title: 'Align',
+      description:
+        'Put the content after the line, before it, or alternate the sides from one event to the next. With alternate, or with the opposite slot, the line sits in the middle.',
+      controls: [
+        {
+          key: 'align',
+          label: 'Align',
+          type: 'select',
+          options: timelineAligns,
+          default: 'alternate',
+        },
+        {
+          key: 'orientation',
+          label: 'Orientation',
+          type: 'select',
+          options: timelineOrientations,
+          default: 'vertical',
+        },
+      ],
+      props: (state) => ({
+        items: order,
+        value: 'shipped',
+        align: state.align!,
+        orientation: state.orientation!,
         'aria-label': 'Order history',
       }),
     },
@@ -253,7 +263,7 @@ const timeline: ComponentDocConfig = {
     {
       title: 'UI',
       description:
-        'Every ui key but root receives the item state, so one function can style each event by its status.',
+        'Every ui key but root receives the item context, so one function can style each event by its status.',
       controls: [],
       props: () => ({
         items: project,
@@ -273,7 +283,7 @@ const timeline: ComponentDocConfig = {
         rows: [
           ['role="list"', 'Root', 'The events. role="feed" with feed.'],
           ['role="listitem"', 'Item', 'Each event. role="article" with feed.'],
-          ['aria-labelledby', 'Item', 'Points to the title, which names the event.'],
+          ['aria-labelledby', 'Item', 'Points to the label, which names the event.'],
           ['aria-describedby', 'Item', 'Points to the date and description.'],
           ['aria-current="step"', 'Item', 'Set on the current event.'],
           ['aria-hidden="true"', 'Marker, connector', 'Decorative.'],
@@ -289,7 +299,7 @@ const timeline: ComponentDocConfig = {
     {
       title: 'Labelling',
       description:
-        'Give the timeline an aria-label or aria-labelledby. Give each event a title, which names it.',
+        'Give the timeline an aria-label or aria-labelledby. Give each event a label, which names it.',
     },
   ],
   api: {
@@ -323,6 +333,13 @@ const timeline: ComponentDocConfig = {
         type: variants(timelineOrientations),
         default: `'${timelineDefaults.orientation}'`,
         description: 'Lays the events out in a column or a row, and picks the arrow keys.',
+      },
+      {
+        name: 'align',
+        type: variants(timelineAligns),
+        default: `'${timelineDefaults.align}'`,
+        description:
+          'Puts the content after the line, before it, or alternates the sides. The opposite slot fills the other side.',
       },
       {
         name: 'loop',
@@ -361,7 +378,7 @@ const timeline: ComponentDocConfig = {
         type: 'TimelineUi',
         typeLink: '#ui',
         description:
-          'HTML attributes for the root and each node of every event, which receive the item state. See UI.',
+          'HTML attributes for the root and each node of every event, which receive the item context. See UI.',
       },
     ],
     configs: [
@@ -377,16 +394,11 @@ const timeline: ComponentDocConfig = {
           {
             name: 'date',
             type: 'Date | number | string',
-            description: 'When it happened, formatted with dateOptions.',
+            description: 'When it happened, shown under the label as a Time with dateOptions.',
           },
-          { name: 'title', type: 'string', description: 'What happened. It names the event.' },
+          { name: 'label', type: 'string', description: 'What happened. It names the event.' },
           { name: 'description', type: 'string', description: 'More about the event.' },
           { name: 'icon', type: 'IconName', description: 'Icon in the marker.' },
-          {
-            name: 'avatar',
-            type: "Omit<AvatarProps, 'size'>",
-            description: 'Avatar as the marker. The icon wins when both are set.',
-          },
           {
             name: 'status',
             type: variants(timelineStatuses),
@@ -394,43 +406,75 @@ const timeline: ComponentDocConfig = {
           },
         ],
       },
+      {
+        id: 'timeline-item-context',
+        title: 'TimelineItemContext',
+        rows: [
+          {
+            name: 'item',
+            type: 'TimelineItem',
+            typeLink: '#timeline-item',
+            description: 'The event, as passed in items.',
+          },
+          { name: 'index', type: 'number', description: 'Position of the event in items.' },
+          {
+            name: 'status',
+            type: `${variants(timelineStatuses)} | undefined`,
+            description: 'The status of the item, or the one value gives. Undefined without both.',
+          },
+          { name: 'last', type: 'boolean', description: 'Whether it is the last event.' },
+          {
+            name: 'formatted',
+            type: 'string',
+            description: 'Only in the date slot: the date as Time formats it.',
+          },
+        ],
+      },
     ],
     emits: [],
     ui: [
       { node: 'root', tag: 'div', kept: 'role' },
-      { node: 'item', tag: 'div', state: itemState, kept: 'role, tabindex, aria-current' },
-      { node: 'marker', tag: 'div', state: itemState, kept: 'aria-hidden' },
-      { node: 'icon', tag: 'svg', state: itemState },
-      { node: 'avatar', tag: 'span', state: itemState },
-      { node: 'connector', tag: 'div', state: itemState, kept: 'aria-hidden' },
-      { node: 'date', tag: 'time', state: dateState },
-      { node: 'title', tag: 'div', state: itemState },
-      { node: 'description', tag: 'div', state: itemState },
+      { node: 'item', tag: 'div', ...itemContext, kept: 'role, tabindex, aria-current' },
+      { node: 'marker', tag: 'div', ...itemContext, kept: 'aria-hidden' },
+      { node: 'icon', tag: 'svg', ...itemContext },
+      { node: 'connector', tag: 'div', ...itemContext, kept: 'aria-hidden' },
+      { node: 'label', tag: 'div', ...itemContext },
+      { node: 'date', tag: 'time', ...itemContext },
+      { node: 'description', tag: 'div', ...itemContext },
     ],
     slots: [
       {
         name: 'marker',
-        type: itemState,
-        typePre: true,
-        description: 'Content of each marker; overrides the icon and avatar.',
+        ...itemContextSlot,
+        description:
+          'Content of each marker; overrides the icon. Use it for an avatar or a number.',
+      },
+      {
+        name: 'label',
+        ...itemContextSlot,
+        description: 'Content of each label; overrides item.label.',
       },
       {
         name: 'date',
-        type: dateState,
-        typePre: true,
-        description: 'Content of each date; the formatted date comes as formatted.',
-      },
-      {
-        name: 'title',
-        type: itemState,
-        typePre: true,
-        description: 'Content of each title; overrides item.title.',
+        type: 'TimelineItemContext & { formatted: string }',
+        typeLink: '#timeline-item-context',
+        description: 'Content of each date; Time gives the formatted date as formatted.',
       },
       {
         name: 'description',
-        type: itemState,
-        typePre: true,
+        ...itemContextSlot,
         description: 'Content of each description; overrides item.description.',
+      },
+      {
+        name: 'content',
+        ...itemContextSlot,
+        description: 'Extra content of each event after the description, such as links or buttons.',
+      },
+      {
+        name: 'opposite',
+        ...itemContextSlot,
+        description:
+          'Content on the other side of the line from each event, such as its date. Setting it centers the line.',
       },
     ],
     expose: [

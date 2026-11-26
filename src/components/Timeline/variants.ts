@@ -1,18 +1,20 @@
 import { cva } from 'class-variance-authority'
 import { timelineDefaults } from '@/components/Timeline/constants'
 import type { TimelineOrientation, TimelineSize } from '@/components/Timeline/types'
-import type { AvatarSize } from '@/components/Avatar/types'
 
 type MarkerStatus = 'complete' | 'current' | 'upcoming' | 'none'
 
-type MarkerKind = 'dot' | 'icon' | 'avatar'
+type MarkerKind = 'dot' | 'icon'
 
-export const timelineVariants = cva('flex', {
+type TimelineSide = 'start' | 'end'
+
+export const timelineVariants = cva('', {
   variants: {
     orientation: {
-      vertical: 'flex-col',
-      horizontal: 'w-full flex-row',
+      vertical: 'flex flex-col',
+      horizontal: 'w-full',
     } satisfies Record<TimelineOrientation, string>,
+    opposite: { true: '', false: '' },
     size: {
       xs: '[--timeline-box:--spacing(6)] [--timeline-dot:--spacing(2)]',
       sm: '[--timeline-box:--spacing(7)] [--timeline-dot:--spacing(2.5)]',
@@ -21,20 +23,30 @@ export const timelineVariants = cva('flex', {
       xl: '[--timeline-box:--spacing(12)] [--timeline-dot:--spacing(4)]',
     } satisfies Record<TimelineSize, string>,
   },
+  compoundVariants: [
+    { orientation: 'horizontal', opposite: false, class: 'flex flex-row' },
+    {
+      orientation: 'horizontal',
+      opposite: true,
+      class: 'grid auto-cols-fr grid-flow-col grid-rows-[auto_auto_auto]',
+    },
+  ],
   defaultVariants: {
     orientation: timelineDefaults.orientation,
     size: timelineDefaults.size,
+    opposite: false,
   },
 })
 
 export const timelineItemVariants = cva(
-  'flex min-w-0 rounded-md outline-none focus-visible:ring-[3px] focus-visible:ring-(--timeline-color)/30',
+  'min-w-0 rounded-md outline-none focus-visible:ring-[3px] focus-visible:ring-(--timeline-color)/30',
   {
     variants: {
       orientation: {
-        vertical: 'flex-row',
-        horizontal: 'flex-1 flex-col',
+        vertical: 'flex flex-row',
+        horizontal: '',
       } satisfies Record<TimelineOrientation, string>,
+      opposite: { true: '', false: '' },
       size: {
         xs: 'gap-2',
         sm: 'gap-2.5',
@@ -42,10 +54,22 @@ export const timelineItemVariants = cva(
         lg: 'gap-3.5',
         xl: 'gap-4',
       } satisfies Record<TimelineSize, string>,
+      side: {
+        start: '',
+        end: '',
+      } satisfies Record<TimelineSide, string>,
     },
+    compoundVariants: [
+      { orientation: 'vertical', side: 'end', class: 'flex-row-reverse' },
+      { orientation: 'horizontal', opposite: false, class: 'flex flex-1 flex-col' },
+      { orientation: 'horizontal', opposite: false, side: 'end', class: 'flex-col-reverse' },
+      { orientation: 'horizontal', opposite: true, class: 'row-span-3 grid grid-rows-subgrid' },
+    ],
     defaultVariants: {
       orientation: timelineDefaults.orientation,
       size: timelineDefaults.size,
+      opposite: false,
+      side: 'start',
     },
   },
 )
@@ -54,7 +78,7 @@ export const timelineRailVariants = cva('flex shrink-0 items-center', {
   variants: {
     orientation: {
       vertical: 'w-(--timeline-box) flex-col',
-      horizontal: 'h-(--timeline-box) flex-row',
+      horizontal: 'row-start-2 h-(--timeline-box) flex-row',
     } satisfies Record<TimelineOrientation, string>,
   },
   defaultVariants: { orientation: timelineDefaults.orientation },
@@ -67,7 +91,6 @@ export const timelineMarkerVariants = cva(
       kind: {
         dot: 'size-(--timeline-dot)',
         icon: 'size-(--timeline-box)',
-        avatar: 'size-(--timeline-box)',
       } satisfies Record<MarkerKind, string>,
       status: {
         complete: '',
@@ -100,12 +123,6 @@ export const timelineMarkerVariants = cva(
       },
       { kind: 'dot', status: 'none', class: 'bg-(--timeline-color)' },
       { kind: 'icon', status: 'none', class: 'bg-(--timeline-color)/10 text-(--timeline-color)' },
-      {
-        kind: 'avatar',
-        status: 'current',
-        class: 'ring-2 ring-(--timeline-color) ring-offset-2 ring-offset-background',
-      },
-      { kind: 'avatar', status: 'upcoming', class: 'opacity-50' },
     ],
     defaultVariants: {
       kind: 'dot',
@@ -116,14 +133,6 @@ export const timelineMarkerVariants = cva(
 )
 
 export const timelineIconVariants = cva('size-1/2')
-
-export const timelineAvatarSizes = {
-  xs: 'xs',
-  sm: 'xs',
-  md: 'sm',
-  lg: 'md',
-  xl: 'lg',
-} as const satisfies Record<TimelineSize, AvatarSize>
 
 export const timelineConnectorVariants = cva(
   'flex-1 rounded-full transition-colors motion-reduce:transition-none',
@@ -159,8 +168,15 @@ export const timelineContentVariants = cva('flex min-w-0 flex-1 flex-col gap-0.5
       xl: 'text-base',
     } satisfies Record<TimelineSize, string>,
     last: { true: '', false: '' },
+    side: {
+      start: '',
+      end: '',
+    } satisfies Record<TimelineSide, string>,
   },
   compoundVariants: [
+    { orientation: 'vertical', side: 'end', class: 'items-end text-end' },
+    { orientation: 'horizontal', side: 'start', class: 'row-start-3' },
+    { orientation: 'horizontal', side: 'end', class: 'row-start-1 justify-end' },
     { orientation: 'vertical', last: false, size: 'xs', class: 'pb-4' },
     { orientation: 'vertical', last: false, size: 'sm', class: 'pb-5' },
     { orientation: 'vertical', last: false, size: 'md', class: 'pb-6' },
@@ -172,6 +188,7 @@ export const timelineContentVariants = cva('flex min-w-0 flex-1 flex-col gap-0.5
     orientation: timelineDefaults.orientation,
     size: timelineDefaults.size,
     last: false,
+    side: 'start',
   },
 })
 
@@ -188,7 +205,7 @@ export const timelineDateVariants = cva('text-muted-foreground tabular-nums', {
   defaultVariants: { size: timelineDefaults.size },
 })
 
-export const timelineTitleVariants = cva('font-medium text-foreground')
+export const timelineLabelVariants = cva('font-medium text-foreground')
 
 export const timelineDescriptionVariants = cva('text-muted-foreground', {
   variants: {

@@ -1,5 +1,6 @@
 export { default as Timeline } from '@/components/Timeline/Timeline.vue'
 export {
+  timelineAligns,
   timelineDefaults,
   timelineOrientations,
   timelineSizes,
@@ -7,10 +8,11 @@ export {
 } from '@/components/Timeline/constants'
 export { timelineUiExclude } from '@/components/Timeline/exclude'
 export type {
-  TimelineDateState,
+  TimelineAlign,
+  TimelineDateSlotProps,
   TimelineExpose,
   TimelineItem,
-  TimelineItemState,
+  TimelineItemContext,
   TimelineOrientation,
   TimelineProps,
   TimelineSize,
@@ -19,15 +21,14 @@ export type {
   TimelineUi,
 } from '@/components/Timeline/types'
 export {
-  timelineAvatarSizes,
   timelineConnectorVariants,
   timelineContentVariants,
   timelineDateVariants,
   timelineDescriptionVariants,
   timelineIconVariants,
   timelineItemVariants,
+  timelineLabelVariants,
   timelineMarkerVariants,
   timelineRailVariants,
-  timelineTitleVariants,
   timelineVariants,
 } from '@/components/Timeline/variants'

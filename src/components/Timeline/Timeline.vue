@@ -10,10 +10,10 @@ import {
   TimelineTitle,
 } from '@ui-sdk/vue/timeline'
 import { computed, useAttrs } from 'vue'
-import { useDates } from '@/composables/useDates'
 import { getColorVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import {
+  timelineAligns,
   timelineDefaults,
   timelineOrientations,
   timelineSizes,
@@ -21,29 +21,27 @@ import {
 } from '@/components/Timeline/constants'
 import { timelineUiExclude } from '@/components/Timeline/exclude'
 import type {
-  TimelineDateState,
   TimelineExpose,
   TimelineItem,
-  TimelineItemState,
+  TimelineItemContext,
   TimelineProps,
   TimelineSlots,
   TimelineStatus,
 } from '@/components/Timeline/types'
 import {
-  timelineAvatarSizes,
   timelineConnectorVariants,
   timelineContentVariants,
   timelineDateVariants,
   timelineDescriptionVariants,
   timelineIconVariants,
   timelineItemVariants,
+  timelineLabelVariants,
   timelineMarkerVariants,
   timelineRailVariants,
-  timelineTitleVariants,
   timelineVariants,
 } from '@/components/Timeline/variants'
-import Avatar from '@/components/Avatar/Avatar.vue'
 import Icon from '@/components/Icon/Icon.vue'
+import Time from '@/components/Time/Time.vue'
 
 defineOptions({ inheritAttrs: false })
 
@@ -53,6 +51,7 @@ const props = withDefaults(defineProps<TimelineProps>(), {
   reverse: timelineDefaults.reverse,
   dateOptions: undefined,
   orientation: timelineDefaults.orientation,
+  align: timelineDefaults.align,
   loop: undefined,
   feed: undefined,
   busy: undefined,
@@ -63,12 +62,19 @@ const props = withDefaults(defineProps<TimelineProps>(), {
 const slots = defineSlots<TimelineSlots>()
 const attrs = useAttrs()
 const controller = createTimelineController()
-const { toDate, format } = useDates()
 
 const size = computed(() => oneOf(props.size, timelineSizes, timelineDefaults.size))
 const orientation = computed(() =>
   oneOf(props.orientation, timelineOrientations, timelineDefaults.orientation),
 )
+const align = computed(() => oneOf(props.align, timelineAligns, timelineDefaults.align))
+const hasOpposite = computed(() => Boolean(slots.opposite) || align.value === 'alternate')
+
+function sideOf({ index }: TimelineItemContext) {
+  if (align.value === 'alternate') return index % 2 === 0 ? 'start' : 'end'
+  return align.value === 'end' ? 'end' : 'start'
+}
+
 const currentIndex = computed(() =>
   props.value === undefined ? -1 : props.items.findIndex((item) => item.value === props.value),
 )
@@ -80,37 +86,24 @@ function statusOf(item: TimelineItem, index: number): TimelineStatus | undefined
   return index < currentIndex.value !== props.reverse ? 'complete' : 'upcoming'
 }
 
-const itemStates = computed<TimelineItemState[]>(() =>
-  props.items.map((item, index) => ({ item, index, status: statusOf(item, index) })),
+const itemContexts = computed<TimelineItemContext[]>(() =>
+  props.items.map((item, index) => ({
+    item,
+    index,
+    status: statusOf(item, index),
+    last: index === props.items.length - 1,
+  })),
 )
-
-function isLast({ index }: TimelineItemState) {
-  return index === props.items.length - 1
-}
-
-function dateStateOf(itemState: TimelineItemState): TimelineDateState {
-  const { date } = itemState.item
-  const formatted = date === undefined ? '' : format(date, props.dateOptions) || String(date)
-  return { ...itemState, formatted }
-}
-
-function hasDate(itemState: TimelineItemState) {
-  return itemState.item.date !== undefined || Boolean(slots.date)
-}
-
-function hasTitle(itemState: TimelineItemState) {
-  return Boolean(itemState.item.title || slots.title)
-}
-
-function hasDescription(itemState: TimelineItemState) {
-  return Boolean(itemState.item.description || slots.description)
-}
 
 const rootProps = computed(() => ({
   ...useUi({
     base: [
       {
-        class: timelineVariants({ orientation: orientation.value, size: size.value }),
+        class: timelineVariants({
+          orientation: orientation.value,
+          size: size.value,
+          opposite: hasOpposite.value,
+        }),
         style: getColorVariables(props.color, 'timeline', timelineDefaults.color),
       },
       attrs,
@@ -125,17 +118,22 @@ const rootProps = computed(() => ({
   controller,
 }))
 
-function itemProps(itemState: TimelineItemState) {
+function itemProps(context: TimelineItemContext) {
   return {
     ...useUi({
       base: {
-        class: timelineItemVariants({ orientation: orientation.value, size: size.value }),
+        class: timelineItemVariants({
+          orientation: orientation.value,
+          size: size.value,
+          opposite: hasOpposite.value,
+          side: sideOf(context),
+        }),
       },
-      ui: props.ui?.item?.(itemState),
+      ui: props.ui?.item?.(context),
       exclude: timelineUiExclude.item,
     }),
-    value: itemState.item.value,
-    status: itemState.status,
+    value: context.item.value,
+    status: context.status,
   }
 }
 
@@ -143,91 +141,87 @@ function railProps() {
   return { class: timelineRailVariants({ orientation: orientation.value }) }
 }
 
-function markerKind(itemState: TimelineItemState) {
-  if (slots.marker || itemState.item.icon) return 'icon'
-  return itemState.item.avatar ? 'avatar' : 'dot'
-}
-
-function markerProps(itemState: TimelineItemState) {
+function markerProps(context: TimelineItemContext) {
   return useUi({
     base: {
       class: timelineMarkerVariants({
-        kind: markerKind(itemState),
-        status: itemState.status ?? 'none',
+        kind: slots.marker || context.item.icon ? 'icon' : 'dot',
+        status: context.status ?? 'none',
         orientation: orientation.value,
       }),
     },
-    ui: props.ui?.marker?.(itemState),
+    ui: props.ui?.marker?.(context),
     exclude: timelineUiExclude.marker,
   })
 }
 
-function iconProps(itemState: TimelineItemState) {
+function iconProps(context: TimelineItemContext) {
   return {
     ...useUi({
       base: { class: timelineIconVariants() },
-      ui: props.ui?.icon?.(itemState),
+      ui: props.ui?.icon?.(context),
       exclude: timelineUiExclude.icon,
     }),
-    name: itemState.item.icon!,
+    name: context.item.icon!,
   }
 }
 
-function avatarProps(itemState: TimelineItemState) {
-  return {
-    ...itemState.item.avatar,
-    ...useUi({
-      base: { class: 'size-full' },
-      ui: props.ui?.avatar?.(itemState),
-      exclude: timelineUiExclude.avatar,
-    }),
-    size: timelineAvatarSizes[size.value],
-  }
-}
-
-function connectorProps(itemState: TimelineItemState) {
-  const filled =
-    itemState.status === 'complete' || (props.reverse && itemState.status === 'current')
+function connectorProps(context: TimelineItemContext) {
+  const filled = context.status === 'complete' || (props.reverse && context.status === 'current')
 
   return useUi({
     base: { class: timelineConnectorVariants({ orientation: orientation.value, filled }) },
-    ui: props.ui?.connector?.(itemState),
+    ui: props.ui?.connector?.(context),
     exclude: timelineUiExclude.connector,
   })
 }
 
-function contentProps(itemState: TimelineItemState) {
+function contentProps(context: TimelineItemContext) {
   return {
     class: timelineContentVariants({
       orientation: orientation.value,
       size: size.value,
-      last: isLast(itemState),
+      last: context.last,
+      side: sideOf(context),
     }),
   }
 }
 
-function dateProps(dateState: TimelineDateState) {
-  const date = dateState.item.date === undefined ? undefined : toDate(dateState.item.date)
+function oppositeProps(context: TimelineItemContext) {
+  return {
+    class: timelineContentVariants({
+      orientation: orientation.value,
+      size: size.value,
+      last: context.last,
+      side: sideOf(context) === 'start' ? 'end' : 'start',
+    }),
+  }
+}
 
+function dateProps(attrs: Record<string, unknown>, context: TimelineItemContext) {
+  return {
+    ...useUi({
+      base: [{ class: timelineDateVariants({ size: size.value }) }, attrs],
+      ui: props.ui?.date?.(context),
+      exclude: timelineUiExclude.date,
+    }),
+    datetime: context.item.date!,
+    options: props.dateOptions,
+  }
+}
+
+function labelProps(context: TimelineItemContext) {
   return useUi({
-    base: { class: timelineDateVariants({ size: size.value }), datetime: date?.toISOString() },
-    ui: props.ui?.date?.(dateState),
-    exclude: timelineUiExclude.date,
+    base: { class: timelineLabelVariants() },
+    ui: props.ui?.label?.(context),
+    exclude: timelineUiExclude.label,
   })
 }
 
-function titleProps(itemState: TimelineItemState) {
-  return useUi({
-    base: { class: timelineTitleVariants() },
-    ui: props.ui?.title?.(itemState),
-    exclude: timelineUiExclude.title,
-  })
-}
-
-function descriptionProps(itemState: TimelineItemState) {
+function descriptionProps(context: TimelineItemContext) {
   return useUi({
     base: { class: timelineDescriptionVariants({ size: size.value }) },
-    ui: props.ui?.description?.(itemState),
+    ui: props.ui?.description?.(context),
     exclude: timelineUiExclude.description,
   })
 }
@@ -240,56 +234,58 @@ defineExpose<TimelineExpose>({
 <template>
   <TimelineRoot data-ui="timeline-root" v-bind="rootProps">
     <TimelineItemPart
-      v-for="itemState in itemStates"
-      :key="itemState.item.value ?? itemState.index"
+      v-for="context in itemContexts"
+      :key="context.item.value ?? context.index"
       data-ui="timeline-item"
-      v-bind="itemProps(itemState)"
+      v-bind="itemProps(context)"
     >
+      <div v-if="hasOpposite" data-ui="timeline-opposite" v-bind="oppositeProps(context)">
+        <slot name="opposite" v-bind="context" />
+      </div>
       <div data-ui="timeline-rail" v-bind="railProps()">
-        <TimelineMarker data-ui="timeline-marker" v-bind="markerProps(itemState)">
-          <slot name="marker" v-bind="itemState">
-            <Icon
-              v-if="itemState.item.icon"
-              data-ui="timeline-icon"
-              v-bind="iconProps(itemState)"
-            />
-            <Avatar
-              v-else-if="itemState.item.avatar"
-              data-ui="timeline-avatar"
-              v-bind="avatarProps(itemState)"
-            />
+        <TimelineMarker data-ui="timeline-marker" v-bind="markerProps(context)">
+          <slot name="marker" v-bind="context">
+            <Icon v-if="context.item.icon" data-ui="timeline-icon" v-bind="iconProps(context)" />
           </slot>
         </TimelineMarker>
+
         <TimelineConnector
-          v-if="!isLast(itemState)"
+          v-if="!context.last"
           data-ui="timeline-connector"
-          v-bind="connectorProps(itemState)"
+          v-bind="connectorProps(context)"
         />
       </div>
-      <div data-ui="timeline-content" v-bind="contentProps(itemState)">
-        <TimelineTime
-          v-if="hasDate(itemState)"
-          data-ui="timeline-date"
-          v-bind="dateProps(dateStateOf(itemState))"
-        >
-          <slot name="date" v-bind="dateStateOf(itemState)">
-            {{ dateStateOf(itemState).formatted }}
-          </slot>
-        </TimelineTime>
+
+      <div data-ui="timeline-content" v-bind="contentProps(context)">
         <TimelineTitle
-          v-if="hasTitle(itemState)"
-          data-ui="timeline-title"
-          v-bind="titleProps(itemState)"
+          v-if="context.item.label || slots.label"
+          data-ui="timeline-label"
+          v-bind="labelProps(context)"
         >
-          <slot name="title" v-bind="itemState">{{ itemState.item.title }}</slot>
+          <slot name="label" v-bind="context">{{ context.item.label }}</slot>
         </TimelineTitle>
+
+        <TimelineTime v-if="context.item.date !== undefined">
+          <template #render="{ props: timeProps }">
+            <Time data-ui="timeline-date" v-bind="dateProps(timeProps, context)">
+              <template #default="{ formatted }">
+                <slot name="date" v-bind="context" :formatted="formatted">
+                  {{ formatted || context.item.date }}
+                </slot>
+              </template>
+            </Time>
+          </template>
+        </TimelineTime>
+
         <TimelineDescription
-          v-if="hasDescription(itemState)"
+          v-if="context.item.description || slots.description"
           data-ui="timeline-description"
-          v-bind="descriptionProps(itemState)"
+          v-bind="descriptionProps(context)"
         >
-          <slot name="description" v-bind="itemState">{{ itemState.item.description }}</slot>
+          <slot name="description" v-bind="context">{{ context.item.description }}</slot>
         </TimelineDescription>
+
+        <slot name="content" v-bind="context" />
       </div>
     </TimelineItemPart>
   </TimelineRoot>

@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import {
+  Avatar,
   Button,
   Timeline,
   themeColors,
+  timelineAligns,
   timelineSizes,
+  type TimelineAlign,
+  type AvatarProps,
   type TimelineExpose,
   type TimelineItem,
 } from '@nono/ui'
@@ -14,31 +18,40 @@ const steps: TimelineItem[] = [
   {
     value: 'ordered',
     date: '2026-03-02T09:00:00Z',
-    title: 'Order placed',
+    label: 'Order placed',
     description: 'Paid by card.',
   },
-  { value: 'packed', date: '2026-03-03T14:30:00Z', title: 'Packed' },
+  { value: 'packed', date: '2026-03-03T14:30:00Z', label: 'Packed' },
   {
     value: 'shipped',
     date: '2026-03-04T08:15:00Z',
-    title: 'Shipped',
+    label: 'Shipped',
     description: 'Handed to the carrier.',
   },
-  { value: 'delivered', title: 'Delivered' },
+  { value: 'delivered', label: 'Delivered' },
 ]
 
 const project: TimelineItem[] = [
-  { value: 'kickoff', title: 'Kickoff', description: 'Scope agreed.', icon: 'fileText' },
-  { value: 'design', title: 'Design', description: 'Mockups.', icon: 'image' },
-  { value: 'build', title: 'Build', description: 'Features and tests.', icon: 'folderOpen' },
-  { value: 'launch', title: 'Launch', description: 'Released.', icon: 'upload' },
+  { value: 'kickoff', label: 'Kickoff', description: 'Scope agreed.', icon: 'fileText' },
+  { value: 'design', label: 'Design', description: 'Mockups.', icon: 'image' },
+  { value: 'build', label: 'Build', description: 'Features and tests.', icon: 'folderOpen' },
+  { value: 'launch', label: 'Launch', description: 'Released.', icon: 'upload' },
 ]
 
 const activity: TimelineItem[] = [
-  { date: 'Just now', title: 'Ana commented', avatar: { text: 'AR', color: 'info' } },
-  { date: '2 hours ago', title: 'Luis approved', avatar: { text: 'LG', color: 'success' } },
-  { date: 'Yesterday', title: 'Eva opened the request', avatar: { text: 'EM' } },
+  { date: 'Just now', label: 'Ana commented' },
+  { date: '2 hours ago', label: 'Luis approved' },
+  { date: 'Yesterday', label: 'Eva opened the request' },
 ]
+
+const avatars: AvatarProps[] = [
+  { text: 'AR', color: 'info' },
+  { text: 'LG', color: 'success' },
+  { text: 'EM' },
+]
+
+const weeks = ['Week 1', 'Week 2-3', 'Week 4-7', 'Week 8']
+const align = ref<TimelineAlign>('alternate')
 
 const current = ref(1)
 const value = computed(() => steps[current.value]?.value)
@@ -121,7 +134,63 @@ const timeline = ref<TimelineExpose>()
 
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">Activity feed</h2>
-      <Timeline :items="activity" feed aria-label="Activity" />
+      <Timeline :items="activity" feed aria-label="Activity">
+        <template #marker="{ index }">
+          <Avatar v-bind="avatars[index]" size="sm" />
+        </template>
+      </Timeline>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Align</h2>
+      <div class="flex flex-wrap gap-2">
+        <Button
+          v-for="option in timelineAligns"
+          :key="option"
+          :variant="align === option ? 'solid' : 'outline'"
+          size="sm"
+          :label="option"
+          @click="align = option"
+        />
+      </div>
+      <Timeline :items="steps" :value="value" :align="align" aria-label="Order" />
+      <Timeline :items="project" value="build" :align="align" aria-label="Project">
+        <template #opposite="{ index }">
+          <span class="text-muted-foreground">{{ weeks[index] }}</span>
+        </template>
+      </Timeline>
+      <Timeline
+        :items="steps"
+        :value="value"
+        :align="align"
+        orientation="horizontal"
+        aria-label="Order"
+      />
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Content</h2>
+      <Timeline
+        :loop="true"
+        :items="steps"
+        :value="value"
+        :date-options="{ dateStyle: 'medium', timeZone: 'UTC' }"
+        aria-label="Order"
+      >
+        <template #content="{ item, status }">
+          <div v-if="status === 'current'" class="mt-2 flex gap-2">
+            <Button size="sm" label="Track package" />
+            <Button variant="outline" size="sm" label="Contact carrier" />
+          </div>
+          <Button
+            v-else-if="status === 'complete' && item.value === 'ordered'"
+            class="mt-2 self-start"
+            variant="plain"
+            size="sm"
+            label="Download invoice"
+          />
+        </template>
+      </Timeline>
     </section>
 
     <section class="flex flex-col gap-3">
@@ -131,7 +200,7 @@ const timeline = ref<TimelineExpose>()
         value="build"
         aria-label="Project"
         :ui="{
-          title: ({ status }) => ({ class: status === 'current' ? 'text-primary' : '' }),
+          label: ({ status }) => ({ class: status === 'current' ? 'text-primary' : '' }),
           connector: () => ({ class: 'bg-transparent border-s-2 border-dashed w-0' }),
         }"
       >
