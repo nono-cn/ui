@@ -268,8 +268,6 @@ const progressCircular: ComponentDocConfig = {
     emits: [],
     ui: [
       { node: 'root', tag: 'div', kept: 'role' },
-      { node: 'svg', tag: 'svg', state },
-      { node: 'track', tag: 'circle', state },
       { node: 'indicator', tag: 'circle', state },
       { node: 'value', tag: 'span', state: valueState },
       { node: 'label', tag: 'span', state, kept: 'id' },

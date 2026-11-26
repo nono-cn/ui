@@ -122,7 +122,7 @@ const empty: ComponentDocConfig = {
           slot: 'media',
           name: 'Avatar',
           component: Avatar,
-          props: { alt: 'Ada Lovelace', size: 'xl' },
+          props: { 'aria-label': 'Ada Lovelace', text: 'AL', size: 'xl' },
         },
         { name: 'Button', component: Button, props: { label: 'Leave a message' } },
       ],
@@ -215,7 +215,6 @@ const empty: ComponentDocConfig = {
     emits: [],
     ui: [
       { node: 'root', tag: 'div' },
-      { node: 'header', tag: 'div' },
       { node: 'media', tag: 'div' },
       { node: 'icon', tag: 'span' },
       { node: 'label', tag: 'div' },

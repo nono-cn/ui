@@ -7,10 +7,8 @@ export type LinkTo = string | Record<string, unknown>
 
 export interface LinkUi {
   root?: UiResolver
-  leading?: UiResolver
   leadingIcon?: UiResolver
   label?: UiResolver
-  trailing?: UiResolver
   trailingIcon?: UiResolver
 }
 

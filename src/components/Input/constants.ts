@@ -7,5 +7,4 @@ export const inputDefaults = {
   color: 'primary',
   size: 'md',
   radius: 'md',
-  type: 'text',
 } as const

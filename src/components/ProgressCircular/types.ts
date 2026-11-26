@@ -9,8 +9,6 @@ export interface ProgressCircularUi {
   root?: UiResolver
   label?: UiResolver<ProgressState>
   value?: UiResolver<ProgressValueState>
-  svg?: UiResolver<ProgressState>
-  track?: UiResolver<ProgressState>
   indicator?: UiResolver<ProgressState>
 }
 

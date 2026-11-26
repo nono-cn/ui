@@ -10,6 +10,7 @@ import {
   formFieldVariantNames,
 } from '@/components/FormField/constants'
 import { provideFormField } from '@/components/FormField/context'
+import { formFieldUiExclude } from '@/components/FormField/exclude'
 import type { FormFieldProps, FormFieldSlots } from '@/components/FormField/types'
 import {
   formFieldContainerVariants,
@@ -60,6 +61,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: formFieldUiExclude.root,
   }),
   name: props.name,
   disabled: props.disabled,
@@ -68,22 +70,24 @@ const rootProps = computed(() => ({
   'data-variant': variant.value,
 }))
 
-const headerProps = computed(() =>
-  useUi({
-    base: { class: formFieldHeaderVariants({ orientation: orientation.value }) },
-    ui: props.ui?.header?.(),
-  }),
-)
+const headerProps = computed(() => ({
+  class: formFieldHeaderVariants({ orientation: orientation.value }),
+}))
 
 const labelProps = computed(() =>
   useUi({
     base: { class: formFieldLabelVariants({ size: size.value, variant: variant.value }) },
     ui: props.ui?.label?.(),
+    exclude: formFieldUiExclude.label,
   }),
 )
 
 const hintProps = computed(() =>
-  useUi({ base: { class: formFieldHintVariants({ size: size.value }) }, ui: props.ui?.hint?.() }),
+  useUi({
+    base: { class: formFieldHintVariants({ size: size.value }) },
+    ui: props.ui?.hint?.(),
+    exclude: formFieldUiExclude.hint,
+  }),
 )
 
 const descriptionProps = computed(() =>
@@ -92,6 +96,7 @@ const descriptionProps = computed(() =>
       class: formFieldDescriptionVariants({ size: size.value, orientation: orientation.value }),
     },
     ui: props.ui?.description?.(),
+    exclude: formFieldUiExclude.description,
   }),
 )
 
@@ -99,6 +104,7 @@ const containerProps = computed(() =>
   useUi({
     base: { class: formFieldContainerVariants({ orientation: orientation.value }) },
     ui: props.ui?.container?.(),
+    exclude: formFieldUiExclude.container,
   }),
 )
 
@@ -106,6 +112,7 @@ const errorProps = computed(() =>
   useUi({
     base: { class: formFieldErrorVariants({ size: size.value, orientation: orientation.value }) },
     ui: props.ui?.error?.(),
+    exclude: formFieldUiExclude.error,
   }),
 )
 </script>

@@ -1,5 +1,6 @@
 export { default as Switch } from '@/components/Switch/Switch.vue'
 export { switchDefaults, switchSizes } from '@/components/Switch/constants'
+export { switchUiExclude } from '@/components/Switch/exclude'
 export type {
   SwitchChangeDetails,
   SwitchEmits,

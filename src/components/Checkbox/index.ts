@@ -1,5 +1,6 @@
 export { default as Checkbox } from '@/components/Checkbox/Checkbox.vue'
 export { checkboxDefaults, checkboxSizes } from '@/components/Checkbox/constants'
+export { checkboxUiExclude } from '@/components/Checkbox/exclude'
 export type {
   CheckboxChangeDetails,
   CheckboxEmits,

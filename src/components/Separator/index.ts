@@ -6,6 +6,7 @@ export {
   separatorSizes,
   separatorTypes,
 } from '@/components/Separator/constants'
+export { separatorUiExclude } from '@/components/Separator/exclude'
 export type {
   SeparatorOrientation,
   SeparatorPosition,

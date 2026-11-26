@@ -1,5 +1,6 @@
 export { default as Avatar } from '@/components/Avatar/Avatar.vue'
 export { avatarDefaults, avatarSizes, avatarVariantNames } from '@/components/Avatar/constants'
+export { avatarUiExclude } from '@/components/Avatar/exclude'
 export type {
   AvatarLoadingStatus,
   AvatarLoadingStatusChangeReason,

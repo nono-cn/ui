@@ -25,7 +25,7 @@ export const alertVariants = cva(
   },
 )
 
-export const alertIconVariants = cva(
+export const alertLeadingVariants = cva(
   'flex size-4 translate-y-0.5 items-center justify-center [&>svg]:size-full',
 )
 

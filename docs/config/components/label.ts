@@ -47,11 +47,6 @@ const label: ComponentDocConfig = {
         description: 'Text of the label. The default slot replaces it.',
       },
       {
-        name: 'for',
-        type: 'string',
-        description: 'Id of the control the label names.',
-      },
-      {
         name: 'ui',
         type: 'LabelUi',
         typeLink: '#ui',

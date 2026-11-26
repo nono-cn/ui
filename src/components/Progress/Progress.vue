@@ -22,6 +22,7 @@ import {
   progressSizes,
   progressValuePositions,
 } from '@/components/Progress/constants'
+import { progressUiExclude } from '@/components/Progress/exclude'
 import type {
   ProgressProps,
   ProgressSlots,
@@ -85,6 +86,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: progressUiExclude.root,
   }),
   value: props.value,
   min: props.min,
@@ -98,6 +100,7 @@ function labelProps(state: ProgressState) {
   return useUi({
     base: { class: progressLabelVariants({ size: size.value }) },
     ui: props.ui?.label?.(state),
+    exclude: progressUiExclude.label,
   })
 }
 
@@ -115,6 +118,7 @@ function valueProps(partAttrs: Record<string, unknown>, state: ProgressValueStat
       partAttrs,
     ],
     ui: props.ui?.value?.(state),
+    exclude: progressUiExclude.value,
   })
 }
 
@@ -128,6 +132,7 @@ function trackProps(state: ProgressState) {
       }),
     },
     ui: props.ui?.track?.(state),
+    exclude: progressUiExclude.track,
   })
 }
 
@@ -141,6 +146,7 @@ function indicatorProps(state: ProgressState) {
       }),
     },
     ui: props.ui?.indicator?.(state),
+    exclude: progressUiExclude.indicator,
   })
 }
 </script>

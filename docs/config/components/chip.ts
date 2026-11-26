@@ -8,7 +8,11 @@ const chip: ComponentDocConfig = {
   title: 'Chip',
   description: 'Compact indicator that can appear over an element or on its own.',
   component: Chip,
-  slot: { name: 'Avatar', component: Avatar, props: { alt: 'Ada Lovelace', size: 'lg' } },
+  slot: {
+    name: 'Avatar',
+    component: Avatar,
+    props: { 'aria-label': 'Ada Lovelace', text: 'AL', size: 'lg' },
+  },
   usage: [
     {
       title: 'Basic usage',

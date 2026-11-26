@@ -7,6 +7,7 @@ export {
   progressStatuses,
   progressValuePositions,
 } from '@/components/Progress/constants'
+export { progressUiExclude } from '@/components/Progress/exclude'
 export type {
   ProgressAnimation,
   ProgressOrientation,

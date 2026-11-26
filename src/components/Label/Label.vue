@@ -2,6 +2,7 @@
 import { Label as LabelRoot } from '@ui-sdk/vue/label'
 import { computed, useAttrs } from 'vue'
 import { useUi } from '@/composables/useUi'
+import { labelUiExclude } from '@/components/Label/exclude'
 import type { LabelProps, LabelSlots } from '@/components/Label/types'
 import { labelVariants } from '@/components/Label/variants'
 
@@ -12,10 +13,13 @@ const props = defineProps<LabelProps>()
 defineSlots<LabelSlots>()
 const attrs = useAttrs()
 
-const rootProps = computed(() => ({
-  ...useUi({ base: [{ class: labelVariants() }, attrs], ui: props.ui?.root?.() }),
-  for: props.for,
-}))
+const rootProps = computed(() =>
+  useUi({
+    base: [{ class: labelVariants() }, attrs],
+    ui: props.ui?.root?.(),
+    exclude: labelUiExclude.root,
+  }),
+)
 </script>
 
 <template>

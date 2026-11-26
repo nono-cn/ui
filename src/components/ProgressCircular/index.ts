@@ -4,6 +4,7 @@ export {
   progressCircularSizes,
   progressCircularThickness,
 } from '@/components/ProgressCircular/constants'
+export { progressCircularUiExclude } from '@/components/ProgressCircular/exclude'
 export type {
   ProgressCircularProps,
   ProgressCircularSize,

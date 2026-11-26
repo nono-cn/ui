@@ -3,7 +3,6 @@ import {
   Button,
   buttonDefaults,
   buttonSizes,
-  buttonUiExclude,
   buttonVariantNames,
   iconNames,
   themeColors,
@@ -341,15 +340,11 @@ const button: ComponentDocConfig = {
       },
     ],
     ui: [
-      {
-        node: 'root',
-        tag: 'button',
-        kept: buttonUiExclude.root.join(', '),
-      },
-      { node: 'icon', tag: 'svg', kept: buttonUiExclude.icon.join(', ') },
+      { node: 'root', tag: 'button' },
+      { node: 'icon', tag: 'svg' },
       { node: 'label', tag: 'span' },
-      { node: 'trailingIcon', tag: 'svg', kept: buttonUiExclude.trailingIcon.join(', ') },
-      { node: 'loadingIcon', tag: 'svg', kept: buttonUiExclude.loadingIcon.join(', ') },
+      { node: 'trailingIcon', tag: 'svg' },
+      { node: 'loadingIcon', tag: 'svg' },
     ],
     slots: [
       {

@@ -13,8 +13,8 @@ import {
 const sources = ['image', 'broken', 'none']
 
 function source(state: ExampleState): ExampleProps {
-  if (state.source === 'image') return { src: avatarImage }
-  if (state.source === 'broken') return { src: '/missing-avatar.png' }
+  if (state.source === 'image') return { image: avatarImage }
+  if (state.source === 'broken') return { image: '/missing-avatar.png' }
   return {}
 }
 
@@ -27,15 +27,15 @@ const avatar: ComponentDocConfig = {
     {
       title: 'Basic usage',
       description:
-        'Pass the image with the src prop and describe it with alt. Without an image, the initials of alt are shown.',
-      props: () => ({ src: avatarImage, alt: 'Ada Lovelace' }),
+        'Pass the image URL with the image prop and name the avatar with aria-label. Without an image, the text prop is shown.',
+      props: () => ({ image: avatarImage, 'aria-label': 'Ada Lovelace', text: 'AL' }),
     },
   ],
   examples: [
     {
       title: 'Fallback',
       description:
-        'When there is no image or it fails to load, the avatar shows the text prop, the initials of alt, or the icon, in that order.',
+        'When there is no image or it fails to load, the avatar shows the text prop, or the icon without it.',
       controls: [
         {
           key: 'source',
@@ -45,11 +45,11 @@ const avatar: ComponentDocConfig = {
           default: 'broken',
         },
         {
-          key: 'alt',
-          label: 'Alt',
+          key: 'text',
+          label: 'Text',
           type: 'select',
-          options: ['Ada Lovelace', 'none'],
-          default: 'Ada Lovelace',
+          options: ['AL', 'none'],
+          default: 'AL',
         },
         {
           key: 'icon',
@@ -61,7 +61,8 @@ const avatar: ComponentDocConfig = {
       ],
       props: (state) => ({
         ...source(state),
-        ...(state.alt === 'none' ? {} : { alt: state.alt! }),
+        'aria-label': 'Ada Lovelace',
+        ...(state.text === 'none' ? {} : { text: state.text! }),
         icon: state.icon!,
       }),
     },
@@ -77,7 +78,7 @@ const avatar: ComponentDocConfig = {
           default: avatarDefaults.variant,
         },
       ],
-      props: (state) => ({ alt: 'Ada Lovelace', variant: state.variant! }),
+      props: (state) => ({ 'aria-label': 'Ada Lovelace', text: 'AL', variant: state.variant! }),
     },
     {
       title: 'Color',
@@ -106,7 +107,8 @@ const avatar: ComponentDocConfig = {
         },
       ],
       props: (state) => ({
-        alt: 'Ada Lovelace',
+        'aria-label': 'Ada Lovelace',
+        text: 'AL',
         color: state.color === 'custom' ? state.custom! : state.color!,
         variant: state.variant!,
       }),
@@ -130,7 +132,12 @@ const avatar: ComponentDocConfig = {
           default: 'image',
         },
       ],
-      props: (state) => ({ ...source(state), alt: 'Ada Lovelace', size: state.size! }),
+      props: (state) => ({
+        ...source(state),
+        'aria-label': 'Ada Lovelace',
+        text: 'AL',
+        size: state.size!,
+      }),
     },
     {
       title: 'Radius',
@@ -144,7 +151,12 @@ const avatar: ComponentDocConfig = {
           default: avatarDefaults.radius,
         },
       ],
-      props: (state) => ({ src: avatarImage, alt: 'Ada Lovelace', radius: state.radius! }),
+      props: (state) => ({
+        image: avatarImage,
+        'aria-label': 'Ada Lovelace',
+        text: 'AL',
+        radius: state.radius!,
+      }),
     },
   ],
   accessibility: [
@@ -155,41 +167,39 @@ const avatar: ComponentDocConfig = {
       table: {
         columns: ['Attribute', 'Element', 'Value'],
         rows: [
-          ['alt', 'Image', 'The alt prop, or an empty string when it is missing.'],
           [
-            'role="img" aria-label',
-            'Fallback',
-            'Set from alt, so the fallback is announced like the image it replaces.',
+            'role="img"',
+            'Root',
+            'The avatar is announced as one image, named by aria-label. Pass role="none" for a decorative avatar.',
           ],
-          ['aria-hidden="true"', 'Initials and icon', 'The fallback label carries the meaning.'],
+          ['alt=""', 'Image', 'The name is on the root.'],
+          ['aria-hidden="true"', 'Text and icon', 'The root label carries the meaning.'],
         ],
       },
     },
     {
       title: 'Alternative text',
       description:
-        'Pass alt with the name of the person. Leave it out only when the name is already next to the avatar, so the avatar is treated as decorative.',
+        'Pass aria-label with the name of the person. Leave it out only when the name is already next to the avatar, and pass role="none" so the avatar is treated as decorative.',
     },
   ],
   api: {
     props: [
-      { name: 'src', type: 'string', description: 'URL of the image.' },
       {
-        name: 'alt',
+        name: 'image',
         type: 'string',
-        description:
-          'Alternative text of the image and label of the fallback. Its initials are the default fallback text.',
+        description: 'URL of the image, rendered as the src of the img.',
       },
       {
         name: 'text',
         type: 'string',
-        description: 'Fallback text; replaces the initials of alt.',
+        description: 'Fallback text, such as initials.',
       },
       {
         name: 'icon',
         type: 'IconName',
         default: `'${avatarDefaults.icon}'`,
-        description: 'Fallback icon, shown when there is no text or alt.',
+        description: 'Fallback icon, shown when there is no text.',
       },
       {
         name: 'variant',
@@ -240,7 +250,7 @@ const avatar: ComponentDocConfig = {
     ],
     ui: [
       { node: 'root', tag: 'span' },
-      { node: 'image', tag: 'img', kept: 'aria-hidden' },
+      { node: 'image', tag: 'img', kept: 'src, aria-hidden' },
       { node: 'fallback', tag: 'span' },
       { node: 'text', tag: 'span' },
       { node: 'icon', tag: 'svg' },

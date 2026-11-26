@@ -5,6 +5,7 @@ import { computed, useAttrs } from 'vue'
 import { oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { toggleGroupDefaults, toggleGroupOrientations } from '@/components/ToggleGroup/constants'
+import { toggleGroupUiExclude } from '@/components/ToggleGroup/exclude'
 import type {
   ToggleGroupEmits,
   ToggleGroupExpose,
@@ -46,6 +47,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: toggleGroupUiExclude.root,
   }),
   value: props.modelValue,
   defaultValue: props.defaultValue,
@@ -73,7 +75,7 @@ function itemProps(itemState: ToggleGroupItemState) {
   const { item } = itemState
 
   return {
-    ...useUi({ base: {}, ui: props.ui?.item?.(itemState) }),
+    ...useUi({ base: {}, ui: props.ui?.item?.(itemState), exclude: toggleGroupUiExclude.item }),
     value: item.value,
     label: item.label,
     icon: item.icon,

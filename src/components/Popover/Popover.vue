@@ -14,6 +14,7 @@ import { getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useShortcutHint } from '@/composables/useShortcut'
 import { useUi } from '@/composables/useUi'
 import { popoverAligns, popoverDefaults, popoverSides } from '@/components/Popover/constants'
+import { popoverUiExclude } from '@/components/Popover/exclude'
 import type {
   PopoverContentState,
   PopoverDismissAttemptDetails,
@@ -106,22 +107,32 @@ function contentProps(attrs: Record<string, unknown>, state: PopoverContentState
       attrs,
     ],
     ui: props.ui?.content?.(state),
+    exclude: popoverUiExclude.content,
   })
 }
 
 function labelProps(state: PopoverContentState) {
-  return useUi({ base: { class: popoverLabelVariants() }, ui: props.ui?.label?.(state) })
+  return useUi({
+    base: { class: popoverLabelVariants() },
+    ui: props.ui?.label?.(state),
+    exclude: popoverUiExclude.label,
+  })
 }
 
 function descriptionProps(state: PopoverContentState) {
   return useUi({
     base: { class: popoverDescriptionVariants() },
     ui: props.ui?.description?.(state),
+    exclude: popoverUiExclude.description,
   })
 }
 
 function arrowProps(state: PopoverContentState) {
-  return useUi({ base: { class: popoverArrowVariants() }, ui: props.ui?.arrow?.(state) })
+  return useUi({
+    base: { class: popoverArrowVariants() },
+    ui: props.ui?.arrow?.(state),
+    exclude: popoverUiExclude.arrow,
+  })
 }
 
 function close() {

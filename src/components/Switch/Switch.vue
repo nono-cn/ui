@@ -6,6 +6,7 @@ import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useT
 import { useUi } from '@/composables/useUi'
 import { useFormField } from '@/components/FormField/context'
 import { switchDefaults, switchSizes } from '@/components/Switch/constants'
+import { switchUiExclude } from '@/components/Switch/exclude'
 import type {
   SwitchChangeDetails,
   SwitchEmits,
@@ -68,6 +69,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: switchUiExclude.root,
   }),
   checked: props.modelValue,
   defaultChecked: props.defaultValue,
@@ -91,6 +93,7 @@ function thumbProps(state: SwitchThumbState) {
   return useUi({
     base: { class: switchThumbVariants({ size: size.value }) },
     ui: props.ui?.thumb?.(state),
+    exclude: switchUiExclude.thumb,
   })
 }
 
@@ -104,6 +107,7 @@ function iconProps(state: SwitchThumbState) {
     ...useUi({
       base: { class: switchIconVariants({ loading: state.loading }) },
       ui: props.ui?.icon?.(state),
+      exclude: switchUiExclude.icon,
     }),
     name: thumbIcon(state)!,
   }

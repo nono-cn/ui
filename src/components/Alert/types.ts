@@ -1,16 +1,17 @@
 import type { alertVariantNames } from '@/components/Alert/constants'
+import type { ButtonProps } from '@/components/Button/types'
 import type { UiResolver } from '@/composables/useUi'
 import type { IconName } from '@/icons'
 
 export type AlertVariant = (typeof alertVariantNames)[number]
+
+export type AlertCloseButtonProps = Omit<ButtonProps, 'onClick'>
 
 export interface AlertUi {
   root?: UiResolver
   icon?: UiResolver
   label?: UiResolver
   description?: UiResolver
-  closeContainer?: UiResolver
-  closeButton?: UiResolver
 }
 
 export interface AlertProps {
@@ -20,7 +21,7 @@ export interface AlertProps {
   variant?: AlertVariant
   color?: string
   closable?: boolean
-  closeLabel?: string
+  closeButton?: AlertCloseButtonProps
   decorative?: boolean
   ui?: AlertUi
 }

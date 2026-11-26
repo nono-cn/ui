@@ -106,7 +106,7 @@ const alert: ComponentDocConfig = {
           [
             'aria-label',
             'Close button',
-            'The closeLabel prop, or "Close" in the locale from provideLocale.',
+            '"Close" in the locale from provideLocale; closeButton.ui.root overrides it. Left out when closeButton has a label.',
           ],
           ['aria-hidden="true"', 'Icon', 'The icon is decorative.'],
         ],
@@ -158,10 +158,11 @@ const alert: ComponentDocConfig = {
         description: 'Shows the close button, or the close slot.',
       },
       {
-        name: 'closeLabel',
-        type: 'string',
+        name: 'closeButton',
+        type: 'ButtonProps',
+        typeLink: '/components/button#props',
         description:
-          'Accessible name of the close button. Without it, "Close" is translated to the locale from provideLocale.',
+          'Props of the close Button, over the defaults (xs, full radius, the alert variant and color, x icon). Its accessible name is "Close" in the locale from provideLocale, unless it has a label or closeButton.ui.root returns an aria-label; the rest of closeButton.ui is kept. onClick is left out: the button always closes the alert.',
       },
       {
         name: 'decorative',
@@ -186,11 +187,9 @@ const alert: ComponentDocConfig = {
     ],
     ui: [
       { node: 'root', tag: 'div' },
-      { node: 'icon', tag: 'span' },
+      { node: 'icon', tag: 'svg' },
       { node: 'label', tag: 'div' },
       { node: 'description', tag: 'div' },
-      { node: 'closeContainer', tag: 'div' },
-      { node: 'closeButton', tag: 'button' },
     ],
     slots: [
       {

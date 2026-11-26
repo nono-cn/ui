@@ -196,10 +196,8 @@ const badge: ComponentDocConfig = {
     emits: [],
     ui: [
       { node: 'root', tag: 'span' },
-      { node: 'leading', tag: 'span' },
       { node: 'leadingIcon', tag: 'svg' },
       { node: 'label', tag: 'span' },
-      { node: 'trailing', tag: 'span' },
       { node: 'trailingIcon', tag: 'svg' },
     ],
     slots: [

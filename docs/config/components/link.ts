@@ -198,11 +198,9 @@ const link: ComponentDocConfig = {
     ],
     emits: [],
     ui: [
-      { node: 'root', tag: 'a' },
-      { node: 'leading', tag: 'span' },
+      { node: 'root', tag: 'a', kept: 'href' },
       { node: 'leadingIcon', tag: 'svg' },
       { node: 'label', tag: 'span' },
-      { node: 'trailing', tag: 'span' },
       { node: 'trailingIcon', tag: 'svg' },
     ],
     slots: [

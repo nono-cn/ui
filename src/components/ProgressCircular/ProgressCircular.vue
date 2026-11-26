@@ -17,6 +17,7 @@ import {
   progressCircularSizes,
   progressCircularThickness,
 } from '@/components/ProgressCircular/constants'
+import { progressCircularUiExclude } from '@/components/ProgressCircular/exclude'
 import type {
   ProgressCircularProps,
   ProgressCircularSlots,
@@ -80,6 +81,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: progressCircularUiExclude.root,
   }),
   value: props.value,
   min: props.min,
@@ -93,6 +95,7 @@ function labelProps(state: ProgressState) {
   return useUi({
     base: { class: progressCircularLabelVariants({ size: size.value }) },
     ui: props.ui?.label?.(state),
+    exclude: progressCircularUiExclude.label,
   })
 }
 
@@ -100,24 +103,19 @@ function valueProps(partAttrs: Record<string, unknown>, state: ProgressValueStat
   return useUi({
     base: [{ class: progressCircularValueVariants({ size: size.value }) }, partAttrs],
     ui: props.ui?.value?.(state),
+    exclude: progressCircularUiExclude.value,
   })
 }
 
-function svgProps(state: ProgressState) {
-  return useUi({
-    base: {
-      viewBox: '0 0 100 100',
-      'aria-hidden': 'true',
-      class: progressCircularSvgVariants({ size: size.value, inverted: props.inverted }),
-    },
-    ui: props.ui?.svg?.(state),
-  })
-}
+const svgProps = computed(() => ({
+  viewBox: '0 0 100 100',
+  'aria-hidden': 'true' as const,
+  class: progressCircularSvgVariants({ size: size.value, inverted: props.inverted }),
+}))
 
-function trackProps(partAttrs: Record<string, unknown>, state: ProgressState) {
+function trackProps(partAttrs: Record<string, unknown>) {
   return useUi({
     base: [{ ...circle.value, class: progressCircularTrackVariants() }, partAttrs],
-    ui: props.ui?.track?.(state),
   })
 }
 
@@ -135,6 +133,7 @@ function indicatorProps(partAttrs: Record<string, unknown>, state: ProgressState
       sdkAttrs,
     ],
     ui: props.ui?.indicator?.(state),
+    exclude: progressCircularUiExclude.indicator,
   })
 }
 </script>
@@ -142,13 +141,10 @@ function indicatorProps(partAttrs: Record<string, unknown>, state: ProgressState
 <template>
   <ProgressRoot data-ui="progress-circular-root" v-bind="rootProps">
     <template #default="{ state: sdkState }">
-      <svg data-ui="progress-circular-svg" v-bind="svgProps(toState(sdkState))">
+      <svg data-ui="progress-circular-svg" v-bind="svgProps">
         <ProgressTrack>
-          <template #render="{ props: partAttrs, state: trackState }">
-            <circle
-              data-ui="progress-circular-track"
-              v-bind="trackProps(partAttrs, toState(trackState))"
-            />
+          <template #render="{ props: partAttrs }">
+            <circle data-ui="progress-circular-track" v-bind="trackProps(partAttrs)" />
           </template>
         </ProgressTrack>
         <ProgressIndicator>

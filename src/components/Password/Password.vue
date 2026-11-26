@@ -17,6 +17,7 @@ import {
   inputVariants,
 } from '@/components/Input/variants'
 import { passwordDefaults } from '@/components/Password/constants'
+import { passwordUiExclude } from '@/components/Password/exclude'
 import type { PasswordEmits, PasswordProps, PasswordSlots } from '@/components/Password/types'
 import {
   passwordToggleVariants,
@@ -35,12 +36,10 @@ const props = withDefaults(defineProps<PasswordProps>(), {
   autoComplete: passwordDefaults.autoComplete,
   name: undefined,
   form: undefined,
-  placeholder: undefined,
   variant: passwordDefaults.variant,
   color: passwordDefaults.color,
   size: undefined,
   radius: passwordDefaults.radius,
-  toggleLabel: undefined,
   highlight: false,
   disabled: undefined,
   readOnly: undefined,
@@ -71,6 +70,7 @@ const rootProps = computed(() => ({
       { class: attrs.class, style: attrs.style },
     ],
     ui: props.ui?.root?.(),
+    exclude: passwordUiExclude.root,
   }),
   modelValue: props.modelValue,
   defaultValue: props.defaultValue,
@@ -95,7 +95,6 @@ const inputProps = computed(() => {
     ...useUi({
       base: [
         {
-          placeholder: props.placeholder,
           class: [
             inputVariants({
               size: size.value,
@@ -110,39 +109,42 @@ const inputProps = computed(() => {
         rest,
       ],
       ui: props.ui?.input?.(),
+      exclude: passwordUiExclude.input,
     }),
   }
 })
 
-const leadingProps = computed(() =>
-  useUi({ base: { class: inputLeadingVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
-)
+const leadingProps = computed(() => ({ class: inputLeadingVariants({ size: size.value }) }))
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: inputIconVariants() }, ui: props.ui?.leadingIcon?.() }),
+  ...useUi({
+    base: { class: inputIconVariants() },
+    ui: props.ui?.leadingIcon?.(),
+    exclude: passwordUiExclude.leadingIcon,
+  }),
   name: props.icon!,
 }))
 
-const trailingProps = computed(() =>
-  useUi({
-    base: { class: inputTrailingVariants({ size: size.value }) },
-    ui: props.ui?.trailing?.(),
-  }),
-)
+const trailingProps = computed(() => ({ class: inputTrailingVariants({ size: size.value }) }))
 
 const toggleProps = computed(() =>
   useUi({
     base: {
-      'aria-label': props.toggleLabel || t('showPassword'),
+      'aria-label': t('showPassword'),
       class: passwordToggleVariants({ size: size.value }),
     },
     ui: props.ui?.toggle?.(),
+    exclude: passwordUiExclude.toggle,
   }),
 )
 
 function toggleIconProps(visible: boolean) {
   return {
-    ...useUi({ base: { class: 'size-full' }, ui: props.ui?.toggleIcon?.() }),
+    ...useUi({
+      base: { class: 'size-full' },
+      ui: props.ui?.toggleIcon?.(),
+      exclude: passwordUiExclude.toggleIcon,
+    }),
     name: visible ? ('eyeOff' as const) : ('eye' as const),
   }
 }

@@ -180,7 +180,7 @@ const input: ComponentDocConfig = {
           [
             'button',
             'Clear',
-            'Native button, named by clearLabel ("Clear" by default). Present while the input has text and is editable.',
+            'Native button, named "Clear" in the locale from provideLocale; ui.clear overrides it. Present while the input has text and is editable.',
           ],
         ],
       },
@@ -204,13 +204,6 @@ const input: ComponentDocConfig = {
         type: 'string',
         description: 'Initial text when the input is uncontrolled.',
       },
-      {
-        name: 'type',
-        type: 'string',
-        default: `'${inputDefaults.type}'`,
-        description: 'Native input type, such as email, password, search or url.',
-      },
-      { name: 'placeholder', type: 'string', description: 'Hint shown while it is empty.' },
       {
         name: 'variant',
         type: inputVariantNames.map((variant) => `'${variant}'`).join(' | '),
@@ -248,12 +241,6 @@ const input: ComponentDocConfig = {
           'Shows a button that empties the input and returns focus to it, while it has text and is editable.',
       },
       {
-        name: 'clearLabel',
-        type: 'string',
-        default: "'Clear'",
-        description: 'Accessible name of the clear button. Translated by the locale.',
-      },
-      {
         name: 'highlight',
         type: 'boolean',
         default: 'false',
@@ -289,9 +276,7 @@ const input: ComponentDocConfig = {
     ui: [
       { node: 'root', tag: 'div' },
       { node: 'input', tag: 'input' },
-      { node: 'leading', tag: 'span' },
       { node: 'leadingIcon', tag: 'svg' },
-      { node: 'trailing', tag: 'span' },
       { node: 'trailingIcon', tag: 'svg' },
       { node: 'clear', tag: 'button' },
       { node: 'clearIcon', tag: 'svg' },

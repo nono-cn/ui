@@ -14,6 +14,7 @@ import {
   hoverCardDefaults,
   hoverCardSides,
 } from '@/components/HoverCard/constants'
+import { hoverCardUiExclude } from '@/components/HoverCard/exclude'
 import type {
   HoverCardContentState,
   HoverCardEmits,
@@ -67,6 +68,7 @@ function triggerProps(attrs: Record<string, unknown>, state: HoverCardTriggerSta
   return useUi({
     base: [{ class: hoverCardTriggerVariants() }, attrs],
     ui: props.ui?.trigger?.(state),
+    exclude: hoverCardUiExclude.trigger,
   })
 }
 
@@ -91,11 +93,16 @@ function contentProps(attrs: Record<string, unknown>, state: HoverCardContentSta
       attrs,
     ],
     ui: props.ui?.content?.(state),
+    exclude: hoverCardUiExclude.content,
   })
 }
 
 function arrowProps(state: HoverCardContentState) {
-  return useUi({ base: { class: hoverCardArrowVariants() }, ui: props.ui?.arrow?.(state) })
+  return useUi({
+    base: { class: hoverCardArrowVariants() },
+    ui: props.ui?.arrow?.(state),
+    exclude: hoverCardUiExclude.arrow,
+  })
 }
 
 defineExpose<HoverCardExpose>({

@@ -6,7 +6,6 @@ export interface LabelUi {
 
 export interface LabelProps {
   label?: string
-  for?: string
   ui?: LabelUi
 }
 

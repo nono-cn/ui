@@ -1,5 +1,6 @@
 export { default as Empty } from '@/components/Empty/Empty.vue'
 export { emptyDefaults, emptySizes, emptyVariantNames } from '@/components/Empty/constants'
+export { emptyUiExclude } from '@/components/Empty/exclude'
 export type {
   EmptyProps,
   EmptySize,

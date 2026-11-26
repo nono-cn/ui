@@ -1,5 +1,6 @@
 export { default as ToggleGroup } from '@/components/ToggleGroup/ToggleGroup.vue'
 export { toggleGroupDefaults, toggleGroupOrientations } from '@/components/ToggleGroup/constants'
+export { toggleGroupUiExclude } from '@/components/ToggleGroup/exclude'
 export type {
   ToggleGroupEmits,
   ToggleGroupExpose,

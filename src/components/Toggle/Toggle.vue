@@ -4,6 +4,7 @@ import { computed, useAttrs } from 'vue'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import { toggleDefaults, toggleSizes, toggleVariantNames } from '@/components/Toggle/constants'
+import { toggleUiExclude } from '@/components/Toggle/exclude'
 import type {
   ToggleEmits,
   ToggleExpose,
@@ -47,23 +48,29 @@ const square = computed(
   () => props.square ?? (!props.label && !slots.default && (hasLeading.value || hasTrailing.value)),
 )
 
-const leadingProps = computed(() =>
-  useUi({ base: { class: toggleSlotVariants({ size: size.value }) }, ui: props.ui?.leading?.() }),
-)
+const leadingProps = computed(() => ({ class: toggleSlotVariants({ size: size.value }) }))
 
-const trailingProps = computed(() =>
-  useUi({ base: { class: toggleSlotVariants({ size: size.value }) }, ui: props.ui?.trailing?.() }),
-)
+const trailingProps = computed(() => ({ class: toggleSlotVariants({ size: size.value }) }))
 
-const labelProps = computed(() => useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.() }))
+const labelProps = computed(() =>
+  useUi({ base: { class: 'truncate' }, ui: props.ui?.label?.(), exclude: toggleUiExclude.label }),
+)
 
 const leadingIconProps = computed(() => ({
-  ...useUi({ base: { class: toggleIconVariants() }, ui: props.ui?.leadingIcon?.() }),
+  ...useUi({
+    base: { class: toggleIconVariants() },
+    ui: props.ui?.leadingIcon?.(),
+    exclude: toggleUiExclude.leadingIcon,
+  }),
   name: props.icon!,
 }))
 
 const trailingIconProps = computed(() => ({
-  ...useUi({ base: { class: toggleIconVariants() }, ui: props.ui?.trailingIcon?.() }),
+  ...useUi({
+    base: { class: toggleIconVariants() },
+    ui: props.ui?.trailingIcon?.(),
+    exclude: toggleUiExclude.trailingIcon,
+  }),
   name: props.trailingIcon!,
 }))
 
@@ -90,6 +97,7 @@ const rootProps = computed(() => ({
       attrs,
     ],
     ui: props.ui?.root?.(),
+    exclude: toggleUiExclude.root,
   }),
   pressed: props.modelValue,
   defaultPressed: props.defaultValue,

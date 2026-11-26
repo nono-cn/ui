@@ -8,9 +8,7 @@ export type PasswordAutoComplete = 'current-password' | 'new-password' | 'off' |
 export interface PasswordUi {
   root?: UiResolver
   input?: UiResolver
-  leading?: UiResolver
   leadingIcon?: UiResolver
-  trailing?: UiResolver
   toggle?: UiResolver
   toggleIcon?: UiResolver
 }
@@ -23,13 +21,11 @@ export interface PasswordProps {
   autoComplete?: PasswordAutoComplete
   name?: string
   form?: string
-  placeholder?: string
   variant?: InputVariant
   color?: string
   size?: InputSize
   radius?: Radius
   icon?: IconName
-  toggleLabel?: string
   highlight?: boolean
   disabled?: boolean
   readOnly?: boolean
