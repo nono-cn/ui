@@ -3,13 +3,10 @@ import { ref } from 'vue'
 import {
   Accordion,
   accordionIndicatorPositions,
-  accordionIndicators,
-  accordionSizes,
   accordionVariantNames,
   Badge,
   Button,
   Icon,
-  themeColors,
   type AccordionExpose,
   type AccordionItem,
 } from '@nono/ui'
@@ -108,7 +105,7 @@ const draft = ref('')
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">Indicators</h2>
       <div class="grid gap-6 sm:grid-cols-2">
-        <template v-for="indicator in accordionIndicators" :key="indicator">
+        <template v-for="indicator in ['chevron', 'plus']" :key="indicator">
           <div
             v-for="position in accordionIndicatorPositions"
             :key="position"
@@ -118,7 +115,8 @@ const draft = ref('')
             <Accordion
               :items="faq"
               variant="outline"
-              :indicator="indicator"
+              :indicator-icon="indicator === 'plus' ? 'plus' : undefined"
+              :open-indicator-icon="indicator === 'plus' ? 'minus' : undefined"
               :indicator-position="position"
               :default-value="['shipping']"
             />
@@ -128,34 +126,6 @@ const draft = ref('')
           <span class="text-sm text-muted-foreground">rtl chevron / start</span>
           <Accordion :items="faq" variant="outline" indicator-position="start" />
         </div>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Sizes</h2>
-      <div class="flex flex-col gap-4">
-        <Accordion
-          v-for="size in accordionSizes"
-          :key="size"
-          :items="settings"
-          variant="separated"
-          :size="size"
-          :default-value="['profile']"
-        />
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Colors and radius (focus ring)</h2>
-      <div class="grid gap-4 sm:grid-cols-2">
-        <Accordion
-          v-for="color in [...themeColors, '#6366f1']"
-          :key="color"
-          :items="faq.slice(0, 2)"
-          variant="separated"
-          :color="color"
-          :radius="color === 'primary' ? 'none' : color === 'secondary' ? 'xl' : 8"
-        />
       </div>
     </section>
 
@@ -194,18 +164,18 @@ const draft = ref('')
 
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">Item slots and content slot</h2>
-      <Accordion :items="plans" variant="separated" :default-value="['pro']">
-        <template #item-free>
+      <Accordion :items="plans" variant="frame" :default-value="['pro']">
+        <template #free-content>
           <p>Up to 3 projects. <strong>0 € / month</strong></p>
         </template>
-        <template #item-pro>
+        <template #pro-content>
           <div class="flex items-center gap-3">
             Unlimited projects. <strong>12 € / month</strong>
             <Button size="sm" label="Upgrade" />
           </div>
         </template>
       </Accordion>
-      <Accordion :items="faq" variant="soft">
+      <Accordion :items="faq" variant="frame">
         <template #content="{ item, index }">
           <p>
             <strong>#{{ index }}</strong> {{ item.content }}
@@ -225,7 +195,7 @@ const draft = ref('')
         :items="faq.slice(0, 1).concat({ value: 'draft', label: 'Draft', slot: 'draft' })"
         keep-mounted
       >
-        <template #item-draft>
+        <template #draft-content>
           <input
             v-model="draft"
             class="rounded border px-2 py-1"
@@ -240,7 +210,7 @@ const draft = ref('')
       <h2 class="font-medium">ui</h2>
       <Accordion
         :items="faq"
-        variant="separated"
+        variant="frame"
         :ui="{
           root: () => ({ class: 'gap-4' }),
           item: ({ open }) => ({ class: open ? 'border-primary' : '' }),

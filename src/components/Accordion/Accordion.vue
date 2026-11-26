@@ -9,13 +9,11 @@ import {
   createAccordionController,
 } from '@ui-sdk/vue/accordion'
 import { computed, useAttrs } from 'vue'
-import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
+import { oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
 import {
   accordionDefaults,
   accordionIndicatorPositions,
-  accordionIndicators,
-  accordionSizes,
   accordionVariantNames,
 } from '@/components/Accordion/constants'
 import { accordionUiExclude } from '@/components/Accordion/exclude'
@@ -54,11 +52,9 @@ const props = withDefaults(defineProps<AccordionProps>(), {
   keepMounted: accordionDefaults.keepMounted,
   hiddenUntilFound: undefined,
   variant: accordionDefaults.variant,
-  indicator: accordionDefaults.indicator,
+  indicatorIcon: undefined,
+  openIndicatorIcon: undefined,
   indicatorPosition: accordionDefaults.indicatorPosition,
-  color: accordionDefaults.color,
-  size: accordionDefaults.size,
-  radius: accordionDefaults.radius,
 })
 
 const emit = defineEmits<AccordionEmits>()
@@ -69,26 +65,13 @@ const controller = createAccordionController()
 const variant = computed(() =>
   oneOf(props.variant, accordionVariantNames, accordionDefaults.variant),
 )
-const size = computed(() => oneOf(props.size, accordionSizes, accordionDefaults.size))
-const indicator = computed(() =>
-  oneOf(props.indicator, accordionIndicators, accordionDefaults.indicator),
-)
 const indicatorPosition = computed(() =>
   oneOf(props.indicatorPosition, accordionIndicatorPositions, accordionDefaults.indicatorPosition),
 )
 
 const rootProps = computed(() => ({
   ...useUi({
-    base: [
-      {
-        class: accordionVariants({ variant: variant.value }),
-        style: [
-          getColorVariables(props.color, 'accordion', accordionDefaults.color),
-          getRadiusVariables(props.radius, 'accordion', accordionDefaults.radius),
-        ],
-      },
-      attrs,
-    ],
+    base: [{ class: accordionVariants({ variant: variant.value }) }, attrs],
     ui: props.ui?.root?.(),
     exclude: accordionUiExclude.root,
   }),
@@ -135,7 +118,7 @@ function hasTrailing({ item }: AccordionItemContext) {
 }
 
 function contentSlot(item: AccordionItem) {
-  const name = `item-${item.slot}` as const
+  const name = `${item.slot}-content` as const
   return item.slot && slots[name] ? name : 'content'
 }
 
@@ -161,23 +144,18 @@ function headerProps(context: AccordionItemContext) {
 
 function triggerProps(context: AccordionItemContext) {
   return useUi({
-    base: { class: accordionTriggerVariants({ variant: variant.value, size: size.value }) },
+    base: { class: accordionTriggerVariants({ variant: variant.value }) },
     ui: props.ui?.trigger?.(context),
     exclude: accordionUiExclude.trigger,
   })
 }
 
-const leadingProps = computed(() => ({ class: accordionSlotVariants({ size: size.value }) }))
+const leadingProps = { class: accordionSlotVariants() }
 
-const trailingProps = computed(() => ({
-  class: accordionSlotVariants({ size: size.value, end: true }),
-}))
+const trailingProps = { class: accordionSlotVariants({ end: true }) }
 
 const indicatorProps = computed(() => ({
-  class: accordionSlotVariants({
-    size: size.value,
-    end: indicatorPosition.value === 'end',
-  }),
+  class: accordionSlotVariants({ end: indicatorPosition.value === 'end' }),
 }))
 
 function iconProps(
@@ -196,8 +174,14 @@ function iconProps(
 }
 
 function indicatorName({ open }: AccordionItemContext): IconName {
-  if (indicator.value === 'plus') return open ? 'minus' : 'plus'
-  return indicatorPosition.value === 'start' ? 'chevronRight' : 'chevronDown'
+  if (open && props.openIndicatorIcon) return props.openIndicatorIcon
+  if (props.indicatorIcon) return props.indicatorIcon
+  return accordionDefaults.indicatorIcon[indicatorPosition.value]
+}
+
+function indicatorRotation() {
+  if (props.openIndicatorIcon) return 0
+  return !props.indicatorIcon && indicatorPosition.value === 'start' ? 90 : 180
 }
 
 function indicatorIconProps(context: AccordionItemContext) {
@@ -205,8 +189,7 @@ function indicatorIconProps(context: AccordionItemContext) {
     ...useUi({
       base: {
         class: accordionIndicatorIconVariants({
-          indicator: indicator.value,
-          position: indicatorPosition.value,
+          rotation: indicatorRotation(),
           open: context.open,
         }),
       },
@@ -235,7 +218,7 @@ function panelProps(context: AccordionItemContext) {
 
 function bodyProps(context: AccordionItemContext) {
   return useUi({
-    base: { class: accordionBodyVariants({ variant: variant.value, size: size.value }) },
+    base: { class: accordionBodyVariants({ variant: variant.value }) },
     ui: props.ui?.body?.(context),
     exclude: accordionUiExclude.body,
   })

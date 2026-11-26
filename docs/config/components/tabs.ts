@@ -364,7 +364,7 @@ const tabs: ComponentDocConfig = {
             name: 'slot',
             type: 'string',
             description:
-              'Renders this panel with the item-{slot} slot instead of the content slot.',
+              'Renders this panel with the {slot}-content slot instead of the content slot.',
           },
           {
             name: 'disabled',
@@ -445,7 +445,7 @@ const tabs: ComponentDocConfig = {
         description: 'Content of each panel; replaces the item content.',
       },
       {
-        name: 'item-{slot}',
+        name: '{slot}-content',
         ...itemContextSlot,
         description:
           'Content of the panel of the item whose slot is {slot}; wins over the content slot.',

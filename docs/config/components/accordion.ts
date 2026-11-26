@@ -3,14 +3,11 @@ import {
   Accordion,
   accordionDefaults,
   accordionIndicatorPositions,
-  accordionIndicators,
-  accordionSizes,
   accordionVariantNames,
-  themeColors,
-  themeRadii,
 } from '@nono/ui'
 
 const booleans = ['false', 'true']
+const indicators = ['chevron', 'plus']
 const variants = (value: readonly string[]) => value.map((item) => `'${item}'`).join(' | ')
 const width = 'w-full max-w-lg'
 
@@ -94,7 +91,7 @@ const accordion: ComponentDocConfig = {
     {
       title: 'Variant',
       description:
-        'plain separates the items with lines; outline frames them in one box and tints the open one; separated gives each item its own bordered card; soft its own muted card.',
+        'plain separates the items with lines; outline frames them in one box and tints the open one; separated gives each item its own bordered card; frame sets each card inside a muted box.',
       controls: [
         {
           key: 'variant',
@@ -114,13 +111,13 @@ const accordion: ComponentDocConfig = {
     {
       title: 'Indicator',
       description:
-        'chevron turns as the item opens; plus switches to a minus. indicatorPosition puts it before the label, where the chevron points to the label and turns down.',
+        'indicatorIcon replaces the chevron and turns as the item opens; with openIndicatorIcon it switches icon instead, like plus to minus. indicatorPosition puts it before the label, where the default chevron points to the label and turns down.',
       controls: [
         {
           key: 'indicator',
           label: 'Indicator',
           type: 'select',
-          options: accordionIndicators,
+          options: indicators,
           default: 'plus',
         },
         {
@@ -133,7 +130,7 @@ const accordion: ComponentDocConfig = {
       ],
       props: (state) => ({
         items: faq,
-        indicator: state.indicator!,
+        ...(state.indicator === 'plus' && { indicatorIcon: 'plus', openIndicatorIcon: 'minus' }),
         indicatorPosition: state.indicatorPosition!,
         class: width,
       }),
@@ -163,42 +160,6 @@ const accordion: ComponentDocConfig = {
         defaultValue: ['shipping'],
         multiple: state.multiple === 'true',
         collapsible: state.collapsible === 'true',
-        class: width,
-      }),
-    },
-    {
-      title: 'Size, radius and color',
-      description:
-        'size sets the text, spacing and icons of every item; radius rounds the cards and the focus ring; color is a palette token or a hexadecimal color for the focus ring.',
-      controls: [
-        {
-          key: 'size',
-          label: 'Size',
-          type: 'select',
-          options: accordionSizes,
-          default: accordionDefaults.size,
-        },
-        {
-          key: 'radius',
-          label: 'Radius',
-          type: 'select',
-          options: themeRadii,
-          default: accordionDefaults.radius,
-        },
-        {
-          key: 'color',
-          label: 'Color',
-          type: 'select',
-          options: themeColors,
-          default: accordionDefaults.color,
-        },
-      ],
-      props: (state) => ({
-        items: faq,
-        variant: 'separated',
-        size: state.size!,
-        radius: state.radius!,
-        color: state.color!,
         class: width,
       }),
     },
@@ -327,39 +288,24 @@ const accordion: ComponentDocConfig = {
         type: variants(accordionVariantNames),
         default: `'${accordionDefaults.variant}'`,
         description:
-          'plain divides the items with lines; outline frames them in one box; separated and soft make each item a card.',
+          'plain divides the items with lines; outline frames them in one box; separated makes each item a bordered card; frame sets each card inside a muted box.',
       },
       {
-        name: 'indicator',
-        type: variants(accordionIndicators),
-        default: `'${accordionDefaults.indicator}'`,
-        description: 'A chevron that turns as the item opens, or a plus that becomes a minus.',
+        name: 'indicatorIcon',
+        type: 'IconName',
+        default: `'${accordionDefaults.indicatorIcon.end}'`,
+        description: `Icon of the indicator, which turns as the item opens. '${accordionDefaults.indicatorIcon.start}' at the start, pointing to the label.`,
+      },
+      {
+        name: 'openIndicatorIcon',
+        type: 'IconName',
+        description: 'Icon of the indicator while the item is open. Replaces the turn.',
       },
       {
         name: 'indicatorPosition',
         type: variants(accordionIndicatorPositions),
         default: `'${accordionDefaults.indicatorPosition}'`,
         description: 'Puts the indicator before the label or at the end of the trigger.',
-      },
-      {
-        name: 'color',
-        type: 'string',
-        default: `'${accordionDefaults.color}'`,
-        description:
-          'A palette token such as primary or error, or a hexadecimal color, for the focus ring.',
-      },
-      {
-        name: 'size',
-        type: variants(accordionSizes),
-        default: `'${accordionDefaults.size}'`,
-        description: 'Text, spacing and icon size of every item.',
-      },
-      {
-        name: 'radius',
-        type: 'string | number',
-        default: `'${accordionDefaults.radius}'`,
-        description:
-          'Radius of the box, the cards and the focus ring. A theme radius, a number of pixels or a CSS length.',
       },
       {
         name: 'ui',
@@ -391,7 +337,7 @@ const accordion: ComponentDocConfig = {
             name: 'slot',
             type: 'string',
             description:
-              'Renders this panel with the item-{slot} slot instead of the content slot.',
+              'Renders this panel with the {slot}-content slot instead of the content slot.',
           },
           {
             name: 'disabled',
@@ -480,7 +426,7 @@ const accordion: ComponentDocConfig = {
       {
         name: 'indicator',
         ...itemContextSlot,
-        description: 'Content of the indicator of each trigger; replaces the chevron or plus.',
+        description: 'Content of the indicator of each trigger; replaces the indicator icon.',
       },
       {
         name: 'content',
@@ -488,7 +434,7 @@ const accordion: ComponentDocConfig = {
         description: 'Content of each panel; replaces the item content.',
       },
       {
-        name: 'item-{slot}',
+        name: '{slot}-content',
         ...itemContextSlot,
         description:
           'Content of the panel of the item whose slot is {slot}; wins over the content slot.',
