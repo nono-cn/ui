@@ -30,7 +30,7 @@ export interface TabsItem {
   disabled?: boolean
 }
 
-export interface TabsItemState {
+export interface TabsItemContext {
   item: TabsItem
   index: number
   selected: boolean
@@ -41,11 +41,11 @@ export interface TabsUi {
   root?: UiResolver
   list?: UiResolver
   indicator?: UiResolver
-  tab?: UiResolver<TabsItemState>
-  leadingIcon?: UiResolver<TabsItemState>
-  label?: UiResolver<TabsItemState>
-  trailingIcon?: UiResolver<TabsItemState>
-  panel?: UiResolver<TabsItemState>
+  tab?: UiResolver<TabsItemContext>
+  leadingIcon?: UiResolver<TabsItemContext>
+  label?: UiResolver<TabsItemContext>
+  trailingIcon?: UiResolver<TabsItemContext>
+  panel?: UiResolver<TabsItemContext>
 }
 
 export interface TabsProps {
@@ -71,11 +71,11 @@ export interface TabsEmits {
 }
 
 export interface TabsSlots {
-  leading?(props: TabsItemState): unknown
-  label?(props: TabsItemState): unknown
-  trailing?(props: TabsItemState): unknown
-  content?(props: TabsItemState): unknown
-  [slot: string]: ((props: TabsItemState) => unknown) | undefined
+  leading?(props: TabsItemContext): unknown
+  label?(props: TabsItemContext): unknown
+  trailing?(props: TabsItemContext): unknown
+  content?(props: TabsItemContext): unknown
+  [slot: `item-${string}`]: ((props: TabsItemContext) => unknown) | undefined
 }
 
 export type TabsExpose = Pick<TabsController, 'getValue' | 'setValue' | 'select' | 'focus'>

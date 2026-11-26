@@ -117,22 +117,25 @@ export const tabsTabVariants = cva(
   },
 )
 
-export const tabsSlotVariants = cva('inline-flex shrink-0 items-center justify-center', {
-  variants: {
-    size: {
-      xs: 'size-3',
-      sm: 'size-4',
-      md: 'size-5',
-      lg: 'size-6',
-      xl: 'size-7',
-    } satisfies Record<TabsSize, string>,
-  },
+const slotSizes = {
+  xs: 'size-3',
+  sm: 'size-4',
+  md: 'size-5',
+  lg: 'size-6',
+  xl: 'size-7',
+} satisfies Record<TabsSize, string>
+
+export const tabsLeadingVariants = cva('inline-flex shrink-0 items-center justify-center', {
+  variants: { size: slotSizes },
+  defaultVariants: { size: tabsDefaults.size },
+})
+
+export const tabsTrailingVariants = cva('inline-flex shrink-0 items-center justify-center', {
+  variants: { size: slotSizes },
   defaultVariants: { size: tabsDefaults.size },
 })
 
 export const tabsIconVariants = cva('size-full')
-
-export const tabsLabelVariants = cva('truncate')
 
 export const tabsPanelVariants = cva(
   'rounded-(--tabs-radius) outline-none focus-visible:ring-[3px] focus-visible:ring-(--tabs-color)/30',

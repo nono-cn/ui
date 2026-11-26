@@ -2,7 +2,7 @@ import type { ComponentDocConfig, ExampleValue } from '@docs/config/component-do
 import { withSource } from '@docs/config/component-docs'
 import {
   Tabs,
-  type TabsItemState,
+  type TabsItemContext,
   tabsActivations,
   tabsDefaults,
   tabsOrientations,
@@ -16,12 +16,9 @@ const booleans = ['false', 'true']
 const variants = (value: readonly string[]) => value.map((item) => `'${item}'`).join(' | ')
 const width = 'w-full max-w-md'
 
-const itemState = `{
-  item: TabsItem
-  index: number
-  selected: boolean
-  disabled: boolean
-}`
+const itemContext = { state: 'TabsItemContext', stateLink: '#tabs-item-context' }
+
+const itemContextSlot = { type: 'TabsItemContext', typeLink: '#tabs-item-context' }
 
 const settings: ExampleValue = [
   { value: 'account', label: 'Account', content: 'Update your name, photo and email address.' },
@@ -54,7 +51,7 @@ const iconOnly: ExampleValue = [
 
 const labelFromValue = withSource(
   "({ item }) => ({ 'aria-label': item.value })",
-  ({ item }: TabsItemState) => ({ 'aria-label': item.value }),
+  ({ item }: TabsItemContext) => ({ 'aria-label': item.value }),
 )
 
 function listLabel(label: string): ExampleValue {
@@ -252,7 +249,7 @@ const tabs: ComponentDocConfig = {
     {
       title: 'Labelling',
       description:
-        'Name the tab list with an aria-label or aria-labelledby through ui.list. Icon-only tabs need an aria-label, set through ui.tab. Icons sit in the tab icon part, so screen readers skip them.',
+        'Name the tab list with an aria-label or aria-labelledby through ui.list. Icon-only tabs need an aria-label, set through ui.tab. Icons are hidden from screen readers.',
     },
   ],
   api: {
@@ -345,14 +342,13 @@ const tabs: ComponentDocConfig = {
         type: 'TabsUi',
         typeLink: '#ui',
         description:
-          'HTML attributes for every node. The item keys receive each item state. See UI.',
+          'HTML attributes for every node. The item keys receive each item context. See UI.',
       },
     ],
     configs: [
       {
         id: 'tabs-item',
         title: 'TabsItem',
-        description: 'Each item renders a tab and, unless content is false, its panel.',
         rows: [
           {
             name: 'value',
@@ -367,13 +363,29 @@ const tabs: ComponentDocConfig = {
           {
             name: 'slot',
             type: 'string',
-            description: 'Name of the slot that renders this panel instead of the content slot.',
+            description:
+              'Renders this panel with the item-{slot} slot instead of the content slot.',
           },
           {
             name: 'disabled',
             type: 'boolean',
             description: 'Keeps the tab focusable but stops it from being selected.',
           },
+        ],
+      },
+      {
+        id: 'tabs-item-context',
+        title: 'TabsItemContext',
+        rows: [
+          {
+            name: 'item',
+            type: 'TabsItem',
+            typeLink: '#tabs-item',
+            description: 'The tab, as passed in items.',
+          },
+          { name: 'index', type: 'number', description: 'Position of the tab in items.' },
+          { name: 'selected', type: 'boolean', description: 'Whether the tab is selected.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the tab is disabled.' },
         ],
       },
     ],
@@ -397,50 +409,46 @@ const tabs: ComponentDocConfig = {
       {
         node: 'tab',
         tag: 'button',
-        state: itemState,
+        ...itemContext,
         kept: 'role, tabindex, aria-selected, aria-controls',
       },
-      { node: 'leadingIcon', tag: 'svg', state: itemState },
-      { node: 'label', tag: 'span', state: itemState },
-      { node: 'trailingIcon', tag: 'svg', state: itemState },
+      { node: 'leadingIcon', tag: 'svg', ...itemContext },
+      { node: 'label', tag: 'span', ...itemContext },
+      { node: 'trailingIcon', tag: 'svg', ...itemContext },
       {
         node: 'panel',
         tag: 'div',
-        state: itemState,
+        ...itemContext,
         kept: 'role',
       },
     ],
     slots: [
       {
         name: 'leading',
-        type: itemState,
-        typePre: true,
+        ...itemContextSlot,
         description: 'Content before the label of each tab; replaces the item icon.',
       },
       {
         name: 'label',
-        type: itemState,
-        typePre: true,
-        description: 'Label of each tab; replaces the item label.',
+        ...itemContextSlot,
+        description: 'Content of the label node of each tab; replaces item.label.',
       },
       {
         name: 'trailing',
-        type: itemState,
-        typePre: true,
+        ...itemContextSlot,
         description:
           'Content after the label of each tab, such as a count; replaces the trailing icon.',
       },
       {
         name: 'content',
-        type: itemState,
-        typePre: true,
+        ...itemContextSlot,
         description: 'Content of each panel; replaces the item content.',
       },
       {
-        name: '[item.slot]',
-        type: itemState,
-        typePre: true,
-        description: 'Content of the panel of the item with that slot; wins over the content slot.',
+        name: 'item-{slot}',
+        ...itemContextSlot,
+        description:
+          'Content of the panel of the item whose slot is {slot}; wins over the content slot.',
       },
     ],
     expose: [

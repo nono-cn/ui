@@ -7,7 +7,6 @@ import {
   TabsList,
   TabsPanel,
   TabsTab,
-  TabsTabIcon,
 } from '@ui-sdk/vue/tabs'
 import { computed, useAttrs } from 'vue'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
@@ -24,7 +23,7 @@ import type {
   TabsEmits,
   TabsExpose,
   TabsItem,
-  TabsItemState,
+  TabsItemContext,
   TabsProps,
   TabsSlots,
   TabsValueChangeDetails,
@@ -32,10 +31,10 @@ import type {
 import {
   tabsIconVariants,
   tabsIndicatorVariants,
-  tabsLabelVariants,
   tabsListVariants,
   tabsPanelVariants,
-  tabsSlotVariants,
+  tabsLeadingVariants,
+  tabsTrailingVariants,
   tabsTabVariants,
   tabsVariants,
 } from '@/components/Tabs/variants'
@@ -117,9 +116,11 @@ const indicatorProps = computed(() =>
   }),
 )
 
-const slotProps = computed(() => ({ class: tabsSlotVariants({ size: size.value }) }))
+const leadingProps = computed(() => ({ class: tabsLeadingVariants({ size: size.value }) }))
 
-function itemStates(state: TabsState): TabsItemState[] {
+const trailingProps = computed(() => ({ class: tabsTrailingVariants({ size: size.value }) }))
+
+function itemContexts(state: TabsState): TabsItemContext[] {
   return props.items.map((item, index) => ({
     item,
     index,
@@ -128,19 +129,24 @@ function itemStates(state: TabsState): TabsItemState[] {
   }))
 }
 
-function hasLeading({ item }: TabsItemState) {
+function hasLeading({ item }: TabsItemContext) {
   return Boolean(item.icon || slots.leading)
 }
 
-function hasTrailing({ item }: TabsItemState) {
+function hasTrailing({ item }: TabsItemContext) {
   return Boolean(item.trailingIcon || slots.trailing)
 }
 
-function panelSlot(item: TabsItem) {
-  return item.slot && slots[item.slot] ? item.slot : 'content'
+function hasLabel({ item }: TabsItemContext) {
+  return Boolean(item.label || slots.label)
 }
 
-function tabProps(itemState: TabsItemState) {
+function panelSlot(item: TabsItem) {
+  const name = `item-${item.slot}` as const
+  return item.slot && slots[name] ? name : 'content'
+}
+
+function tabProps(context: TabsItemContext) {
   return {
     ...useUi({
       base: {
@@ -150,52 +156,52 @@ function tabProps(itemState: TabsItemState) {
           size: size.value,
         }),
       },
-      ui: props.ui?.tab?.(itemState),
+      ui: props.ui?.tab?.(context),
       exclude: tabsUiExclude.tab,
     }),
-    value: itemState.item.value,
-    disabled: itemState.item.disabled,
+    value: context.item.value,
+    disabled: context.item.disabled,
   }
 }
 
-function leadingIconProps(itemState: TabsItemState) {
+function leadingIconProps(context: TabsItemContext) {
   return {
     ...useUi({
       base: { class: tabsIconVariants() },
-      ui: props.ui?.leadingIcon?.(itemState),
+      ui: props.ui?.leadingIcon?.(context),
       exclude: tabsUiExclude.leadingIcon,
     }),
-    name: itemState.item.icon!,
+    name: context.item.icon!,
   }
 }
 
-function labelProps(itemState: TabsItemState) {
+function labelProps(context: TabsItemContext) {
   return useUi({
-    base: { class: tabsLabelVariants() },
-    ui: props.ui?.label?.(itemState),
+    base: {},
+    ui: props.ui?.label?.(context),
     exclude: tabsUiExclude.label,
   })
 }
 
-function trailingIconProps(itemState: TabsItemState) {
+function trailingIconProps(context: TabsItemContext) {
   return {
     ...useUi({
       base: { class: tabsIconVariants() },
-      ui: props.ui?.trailingIcon?.(itemState),
+      ui: props.ui?.trailingIcon?.(context),
       exclude: tabsUiExclude.trailingIcon,
     }),
-    name: itemState.item.trailingIcon!,
+    name: context.item.trailingIcon!,
   }
 }
 
-function panelProps(itemState: TabsItemState) {
+function panelProps(context: TabsItemContext) {
   return {
     ...useUi({
       base: { class: tabsPanelVariants({ orientation: orientation.value }) },
-      ui: props.ui?.panel?.(itemState),
+      ui: props.ui?.panel?.(context),
       exclude: tabsUiExclude.panel,
     }),
-    value: itemState.item.value,
+    value: context.item.value,
     keepMounted: props.keepMounted,
   }
 }
@@ -213,31 +219,29 @@ defineExpose<TabsExpose>({
     <template #default="{ state }">
       <TabsList data-ui="tabs-list" v-bind="listProps">
         <TabsTab
-          v-for="itemState in itemStates(state)"
-          :key="itemState.item.value"
+          v-for="context in itemContexts(state)"
+          :key="context.item.value"
           data-ui="tabs-tab"
-          v-bind="tabProps(itemState)"
+          v-bind="tabProps(context)"
         >
-          <TabsTabIcon v-if="hasLeading(itemState)" data-ui="tabs-leading" v-bind="slotProps">
-            <slot name="leading" v-bind="itemState">
+          <span v-if="hasLeading(context)" data-ui="tabs-leading" v-bind="leadingProps">
+            <slot name="leading" v-bind="context">
               <Icon
-                v-if="itemState.item.icon"
+                v-if="context.item.icon"
                 data-ui="tabs-leading-icon"
-                v-bind="leadingIconProps(itemState)"
+                v-bind="leadingIconProps(context)"
               />
             </slot>
-          </TabsTabIcon>
-          <slot name="label" v-bind="itemState">
-            <span v-if="itemState.item.label" data-ui="tabs-label" v-bind="labelProps(itemState)">
-              {{ itemState.item.label }}
-            </span>
-          </slot>
-          <span v-if="hasTrailing(itemState)" data-ui="tabs-trailing" v-bind="slotProps">
-            <slot name="trailing" v-bind="itemState">
+          </span>
+          <span v-if="hasLabel(context)" data-ui="tabs-label" v-bind="labelProps(context)">
+            <slot name="label" v-bind="context">{{ context.item.label }}</slot>
+          </span>
+          <span v-if="hasTrailing(context)" data-ui="tabs-trailing" v-bind="trailingProps">
+            <slot name="trailing" v-bind="context">
               <Icon
-                v-if="itemState.item.trailingIcon"
+                v-if="context.item.trailingIcon"
                 data-ui="tabs-trailing-icon"
-                v-bind="trailingIconProps(itemState)"
+                v-bind="trailingIconProps(context)"
               />
             </slot>
           </span>
@@ -246,13 +250,13 @@ defineExpose<TabsExpose>({
       </TabsList>
       <template v-if="content">
         <TabsPanel
-          v-for="itemState in itemStates(state)"
-          :key="itemState.item.value"
+          v-for="context in itemContexts(state)"
+          :key="context.item.value"
           data-ui="tabs-panel"
-          v-bind="panelProps(itemState)"
+          v-bind="panelProps(context)"
         >
-          <slot :name="panelSlot(itemState.item)" v-bind="itemState">
-            {{ itemState.item.content }}
+          <slot :name="panelSlot(context.item)" v-bind="context">
+            {{ context.item.content }}
           </slot>
         </TabsPanel>
       </template>

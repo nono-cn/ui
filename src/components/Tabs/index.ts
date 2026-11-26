@@ -12,7 +12,7 @@ export type {
   TabsEmits,
   TabsExpose,
   TabsItem,
-  TabsItemState,
+  TabsItemContext,
   TabsOrientation,
   TabsProps,
   TabsSize,
@@ -24,10 +24,10 @@ export type {
 export {
   tabsIconVariants,
   tabsIndicatorVariants,
-  tabsLabelVariants,
   tabsListVariants,
   tabsPanelVariants,
-  tabsSlotVariants,
+  tabsLeadingVariants,
+  tabsTrailingVariants,
   tabsTabVariants,
   tabsVariants,
 } from '@/components/Tabs/variants'
