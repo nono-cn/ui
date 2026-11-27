@@ -105,7 +105,7 @@ interface ExampleSlotTarget {
 
 export interface ExampleComponentSlot extends ExampleSlotTarget {
   name: string
-  component: Component
+  component: Component | string
   props: ExampleProps
 }
 
