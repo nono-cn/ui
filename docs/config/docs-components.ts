@@ -16,6 +16,7 @@ import input from '@docs/config/components/input'
 import kbd from '@docs/config/components/kbd'
 import label from '@docs/config/components/label'
 import link from '@docs/config/components/link'
+import marker from '@docs/config/components/marker'
 import password from '@docs/config/components/password'
 import popover from '@docs/config/components/popover'
 import progress from '@docs/config/components/progress'
@@ -49,6 +50,7 @@ export const docsComponents: ComponentDocConfig[] = [
   kbd,
   label,
   link,
+  marker,
   password,
   popover,
   progress,

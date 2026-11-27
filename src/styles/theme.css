@@ -161,3 +161,16 @@
     }
   }
 }
+
+@theme static {
+  --animate-marker-shimmer: marker-shimmer 2s linear infinite;
+
+  @keyframes marker-shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: -100% 0;
+    }
+  }
+}
