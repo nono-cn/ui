@@ -37,6 +37,23 @@ function pickUiAttributes(value: object | undefined, exclude: readonly string[])
   )
 }
 
+export function mergeUiAttributes(base: UiAttributes, own: UiAttributes): UiAttributes {
+  return {
+    ...base,
+    ...own,
+    class: cn(base.class as ClassValue, own.class as ClassValue),
+    style: [base.style, own.style] as StyleValue,
+  }
+}
+
+export function mergeUiResolvers<P>(
+  base: UiResolver<P> | undefined,
+  own: UiResolver<P> | undefined,
+): UiResolver<P> | undefined {
+  if (!base || !own) return own ?? base
+  return (state) => mergeUiAttributes(base(state) ?? {}, own(state) ?? {})
+}
+
 export interface UseUiOptions {
   base: UiBase | UiBase[]
   ui?: UiAttributes

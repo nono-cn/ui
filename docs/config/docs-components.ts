@@ -1,6 +1,7 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
 import accordion from '@docs/config/components/accordion'
 import alert from '@docs/config/components/alert'
+import app from '@docs/config/components/app'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
 import button from '@docs/config/components/button'
@@ -34,6 +35,7 @@ import tooltip from '@docs/config/components/tooltip'
 export const docsComponents: ComponentDocConfig[] = [
   accordion,
   alert,
+  app,
   avatar,
   badge,
   button,

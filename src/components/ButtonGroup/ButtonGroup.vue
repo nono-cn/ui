@@ -7,7 +7,7 @@ import {
   buttonGroupOrientations,
   buttonGroupSizes,
 } from '@/components/ButtonGroup/constants'
-import { provideButtonGroup } from '@/components/ButtonGroup/context'
+import { provideAppDefaults } from '@/components/App/context'
 import type { ButtonGroupProps, ButtonGroupSlots } from '@/components/ButtonGroup/types'
 import { buttonGroupVariants } from '@/components/ButtonGroup/variants'
 
@@ -25,9 +25,9 @@ const orientation = computed(() =>
   oneOf(props.orientation, buttonGroupOrientations, buttonGroupDefaults.orientation),
 )
 
-provideButtonGroup({
-  size: () => buttonGroupSizes.find((size) => size === props.size),
-})
+provideAppDefaults(() => ({
+  button: { size: buttonGroupSizes.find((size) => size === props.size) },
+}))
 
 const rootProps = computed(() =>
   useUi({

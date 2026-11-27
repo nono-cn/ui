@@ -1,225 +1,197 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { createLocalStorage, createPreference } from '@ui-sdk/core'
+import { usePreference } from '@ui-sdk/vue/preferences'
+import { computed, reactive, ref } from 'vue'
 import {
-  Accordion,
-  accordionIndicatorPositions,
-  accordionVariantNames,
-  Badge,
+  Alert,
+  App,
   Button,
-  Icon,
-  type AccordionExpose,
-  type AccordionItem,
+  ButtonGroup,
+  buttonSizes,
+  buttonVariantNames,
+  type AppDefaults,
+  type ButtonSize,
+  type ButtonVariant,
 } from '@nono/ui'
 import { dark } from '@docs/components/useDocsTheme'
 
-const faq: AccordionItem[] = [
-  {
-    value: 'shipping',
-    label: 'What are your shipping options?',
-    content: 'Standard shipping takes 5 to 7 days and express 2 to 3. Orders over 50 € ship free.',
+const colors = ['primary', 'secondary', 'neutral', 'success', 'warning', 'error', 'info', '#6366f1']
+const radii = ['none', 'sm', 'md', 'lg', 'full']
+
+const button = reactive({
+  variant: 'soft' as ButtonVariant,
+  color: 'primary',
+  size: 'md' as ButtonSize,
+  radius: 'full',
+  block: false,
+  withUi: true,
+})
+
+const defaults = computed<AppDefaults>(() => ({
+  button: {
+    variant: button.variant,
+    color: button.color,
+    size: button.size,
+    radius: button.radius,
+    block: button.block,
+    ui: button.withUi ? { root: () => ({ class: 'shadow-md px-8' }) } : undefined,
   },
-  {
-    value: 'returns',
-    label: 'What is your return policy?',
-    content: 'Return any unused item in its original packaging within 30 days.',
-  },
-  {
-    value: 'support',
-    label: 'How can I reach support?',
-    content: 'Write to us by email or chat. We answer within 24 hours on business days.',
-  },
-]
+}))
 
-const settings: AccordionItem[] = [
-  { value: 'profile', label: 'Profile', icon: 'user', content: 'Name, photo and email.' },
-  {
-    value: 'favorites',
-    label: 'Favorites',
-    icon: 'star',
-    trailingIcon: 'warning',
-    content: 'Two of your saved searches no longer return results.',
-  },
-  { value: 'security', label: 'Security', icon: 'lock', content: 'Password and two-factor.' },
-]
+const density = createPreference({
+  values: ['comfortable', 'compact'],
+  defaultValue: 'comfortable',
+  attribute: 'data-density',
+  storage: createLocalStorage('playground-density'),
+})
+const densityState = usePreference(density)
 
-const counts: Record<string, number> = { profile: 0, favorites: 2, security: 1 }
-
-const plans: AccordionItem[] = [
-  { value: 'free', label: 'Free', slot: 'free' },
-  { value: 'pro', label: 'Pro', slot: 'pro' },
-  { value: 'team', label: 'Team (coming soon)', disabled: true, content: 'Coming soon.' },
-]
-
-const unnamed: AccordionItem[] = [
-  { label: 'First, without value', content: 'Identified by its index: 0.' },
-  { label: 'Second, without value', content: 'Identified by its index: 1.' },
-]
-
-const value = ref<string[]>(['returns'])
-const accordion = ref<AccordionExpose>()
-const lastChange = ref('')
-const draft = ref('')
+const clicks = ref(0)
 </script>
 
 <template>
-  <main class="mx-auto flex max-w-4xl flex-col gap-8 p-8 text-foreground">
-    <header class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">Playground</h1>
-      <Button variant="outline" size="sm" :label="dark ? 'Light' : 'Dark'" @click="dark = !dark" />
-    </header>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">v-model, multiple and expose</h2>
-      <div class="flex flex-wrap items-center gap-2">
-        <Button variant="outline" size="sm" label="Open all" @click="accordion?.openAll()" />
-        <Button variant="outline" size="sm" label="Close all" @click="accordion?.closeAll()" />
+  <App :defaults="defaults" :preferences="[density]">
+    <main class="mx-auto flex max-w-4xl flex-col gap-8 p-8 text-foreground">
+      <header class="flex items-center justify-between">
+        <h1 class="text-2xl font-semibold">Playground: App</h1>
         <Button
           variant="outline"
+          color="neutral"
           size="sm"
-          label="Toggle support"
-          @click="accordion?.toggle('support')"
+          radius="md"
+          :label="dark ? 'Light' : 'Dark'"
+          @click="dark = !dark"
         />
-        <Button variant="plain" size="sm" label="Focus" @click="accordion?.focus()" />
-        <span class="text-sm text-muted-foreground">value: {{ value }}</span>
-      </div>
-      <Accordion
-        ref="accordion"
-        v-model="value"
-        multiple
-        :items="faq"
-        @value-change="(next, details) => (lastChange = `${next} (${details.reason})`)"
-      />
-      <span class="text-sm text-muted-foreground">last change: {{ lastChange || '-' }}</span>
-    </section>
+      </header>
 
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Variants</h2>
-      <div class="grid gap-6 sm:grid-cols-2">
-        <div v-for="variant in accordionVariantNames" :key="variant" class="flex flex-col gap-2">
-          <span class="text-sm text-muted-foreground">{{ variant }}</span>
-          <Accordion :items="faq" :variant="variant" :default-value="['shipping']" />
+      <section class="flex flex-col gap-3 rounded-lg border p-4">
+        <h2 class="font-medium">Button defaults</h2>
+        <div class="flex flex-wrap items-center gap-4 text-sm">
+          <label class="flex items-center gap-2">
+            variant
+            <select v-model="button.variant" class="rounded border bg-background px-2 py-1">
+              <option v-for="variant in buttonVariantNames" :key="variant">{{ variant }}</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2">
+            color
+            <select v-model="button.color" class="rounded border bg-background px-2 py-1">
+              <option v-for="color in colors" :key="color">{{ color }}</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2">
+            size
+            <select v-model="button.size" class="rounded border bg-background px-2 py-1">
+              <option v-for="size in buttonSizes" :key="size">{{ size }}</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2">
+            radius
+            <select v-model="button.radius" class="rounded border bg-background px-2 py-1">
+              <option v-for="radius in radii" :key="radius">{{ radius }}</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2">
+            <input v-model="button.block" type="checkbox" /> block
+          </label>
+          <label class="flex items-center gap-2">
+            <input v-model="button.withUi" type="checkbox" /> ui (shadow-md px-8)
+          </label>
         </div>
-      </div>
-    </section>
+        <pre class="overflow-auto rounded bg-muted p-3 text-xs">{{ defaults }}</pre>
+      </section>
 
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Indicators</h2>
-      <div class="grid gap-6 sm:grid-cols-2">
-        <template v-for="indicator in ['chevron', 'plus']" :key="indicator">
-          <div
-            v-for="position in accordionIndicatorPositions"
-            :key="position"
-            class="flex flex-col gap-2"
-          >
-            <span class="text-sm text-muted-foreground">{{ indicator }} / {{ position }}</span>
-            <Accordion
-              :items="faq"
-              variant="outline"
-              :indicator-icon="indicator === 'plus' ? 'plus' : undefined"
-              :open-indicator-icon="indicator === 'plus' ? 'minus' : undefined"
-              :indicator-position="position"
-              :default-value="['shipping']"
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">From App only</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <Button label="Save" @click="clicks++" />
+          <Button label="With icon" icon="plus" />
+          <Button icon="star" aria-label="Favorite" />
+          <span class="text-sm text-muted-foreground">clicks: {{ clicks }}</span>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">Own props win</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <Button label="variant=outline" variant="outline" />
+          <Button label="color=error" color="error" />
+          <Button label="size=xs" size="xs" />
+          <Button label="radius=none" radius="none" />
+          <Button label=":block=false" :block="false" />
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">ui composition</h2>
+        <p class="text-sm text-muted-foreground">
+          App ui adds shadow-md px-8; this Button adds italic px-2. Expected: shadow, italic, px-2.
+        </p>
+        <div class="flex flex-wrap items-center gap-2">
+          <Button label="Composed ui" :ui="{ root: () => ({ class: 'italic px-2' }) }" />
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">ButtonGroup size wins over App</h2>
+        <ButtonGroup>
+          <Button label="Copy" />
+          <Button label="Paste" />
+          <Button label="Cut (size=lg)"  />
+        </ButtonGroup>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">Nested App</h2>
+        <p class="text-sm text-muted-foreground">
+          Inner App sets variant=outline and color=neutral; the rest comes from the outer App.
+        </p>
+        <App :defaults="{ button: { variant: 'outline', color: 'neutral' } }">
+          <div class="flex flex-wrap items-center gap-2">
+            <Button label="Nested" />
+            <Button label="Nested with icon" trailing-icon="chevronRight" />
+          </div>
+        </App>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">Alert close button</h2>
+        <p class="text-sm text-muted-foreground">
+          Alert passes size, radius and variant explicitly, so only the App ui reaches it.
+        </p>
+        <Alert label="Heads up" description="The close button keeps its own props." closable />
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <h2 class="font-medium">Preference (data-density, localStorage)</h2>
+        <div class="flex flex-wrap items-center gap-2">
+          <ButtonGroup>
+            <Button
+              v-for="value in ['comfortable', 'compact']"
+              :key="value"
+              :label="value"
+              :variant="densityState.value === value ? 'solid' : 'outline'"
+              @click="density.set(value)"
             />
-          </div>
-        </template>
-        <div class="flex flex-col gap-2" dir="rtl">
-          <span class="text-sm text-muted-foreground">rtl chevron / start</span>
-          <Accordion :items="faq" variant="outline" indicator-position="start" />
+          </ButtonGroup>
+          <span class="text-sm text-muted-foreground">
+            value: {{ densityState.value }} (reload to see it restored)
+          </span>
         </div>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Single, not collapsible</h2>
-      <Accordion :items="faq" :collapsible="false" :default-value="['shipping']" />
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Disabled</h2>
-      <Accordion :items="plans" variant="outline" disabled />
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Leading, label, trailing and indicator slots</h2>
-      <Accordion :items="settings" variant="outline">
-        <template #leading="{ item, open }">
-          <Icon :name="item.icon!" :class="open ? 'text-primary' : 'text-muted-foreground'" />
-        </template>
-        <template #label="{ item, index }">
-          <strong>{{ index + 1 }}.</strong> {{ item.label }}
-        </template>
-        <template #trailing="{ value: key, open }">
-          <Badge
-            v-if="counts[key]"
-            :label="String(counts[key])"
-            size="sm"
-            :variant="open ? 'solid' : 'soft'"
-          />
-        </template>
-        <template #indicator="{ open }">
-          <span class="text-xs text-muted-foreground">{{ open ? 'Hide' : 'Show' }}</span>
-        </template>
-      </Accordion>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Item slots and content slot</h2>
-      <Accordion :items="plans" variant="frame" :default-value="['pro']">
-        <template #free-content>
-          <p>Up to 3 projects. <strong>0 € / month</strong></p>
-        </template>
-        <template #pro-content>
-          <div class="flex items-center gap-3">
-            Unlimited projects. <strong>12 € / month</strong>
-            <Button size="sm" label="Upgrade" />
-          </div>
-        </template>
-      </Accordion>
-      <Accordion :items="faq" variant="frame">
-        <template #content="{ item, index }">
-          <p>
-            <strong>#{{ index }}</strong> {{ item.content }}
-          </p>
-        </template>
-      </Accordion>
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Items without value</h2>
-      <Accordion :items="unnamed" :default-value="['1']" />
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Keep mounted and hidden until found</h2>
-      <Accordion
-        :items="faq.slice(0, 1).concat({ value: 'draft', label: 'Draft', slot: 'draft' })"
-        keep-mounted
-      >
-        <template #draft-content>
-          <input
-            v-model="draft"
-            class="rounded border px-2 py-1"
-            placeholder="Close me and reopen"
-          />
-        </template>
-      </Accordion>
-      <Accordion :items="faq" hidden-until-found variant="outline" />
-    </section>
-
-    <section class="flex flex-col gap-3">
-      <h2 class="font-medium">ui</h2>
-      <Accordion
-        :items="faq"
-        variant="frame"
-        :ui="{
-          root: () => ({ class: 'gap-4' }),
-          item: ({ open }) => ({ class: open ? 'border-primary' : '' }),
-          trigger: ({ open }) => ({ class: open ? 'text-primary' : '' }),
-          label: () => ({ class: 'uppercase tracking-wide' }),
-          indicatorIcon: ({ open }) => ({ class: open ? 'text-primary' : '' }),
-          body: () => ({ class: 'text-foreground' }),
-        }"
-      />
-    </section>
-  </main>
+        <div class="density-demo flex flex-col rounded-lg border">
+          <div v-for="row in 3" :key="row" class="border-b last:border-b-0">Row {{ row }}</div>
+        </div>
+      </section>
+    </main>
+  </App>
 </template>
+
+<style scoped>
+.density-demo > div {
+  padding: 1rem;
+}
+
+[data-density='compact'] .density-demo > div {
+  padding: 0.25rem 1rem;
+}
+</style>

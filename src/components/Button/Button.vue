@@ -4,9 +4,9 @@ import { computed, useAttrs } from 'vue'
 import { cn } from '@/composables/cn'
 import { getColorVariables, getRadiusVariables, oneOf } from '@/composables/useTheme'
 import { useUi } from '@/composables/useUi'
+import { useAppProps } from '@/components/App/context'
 import { buttonDefaults, buttonSizes, buttonVariantNames } from '@/components/Button/constants'
 import { buttonUiExclude } from '@/components/Button/exclude'
-import { useButtonGroup } from '@/components/ButtonGroup/context'
 import type { ButtonInternalSlots, ButtonProps, ButtonSlots } from '@/components/Button/types'
 import {
   buttonIconVariants,
@@ -18,25 +18,17 @@ import Icon from '@/components/Icon/Icon.vue'
 
 defineOptions({ inheritAttrs: false })
 
-const props = withDefaults(defineProps<ButtonProps>(), {
-  variant: buttonDefaults.variant,
-  color: buttonDefaults.color,
-  size: undefined,
-  radius: buttonDefaults.radius,
+const ownProps = withDefaults(defineProps<ButtonProps>(), {
+  block: undefined,
   square: undefined,
-  type: undefined,
-  pendingAnnouncement: undefined,
-  onClick: undefined,
+  focusableWhenDisabled: undefined,
 })
+const props = useAppProps('button', ownProps)
 
 const slots = defineSlots<ButtonSlots & ButtonInternalSlots>()
 const attrs = useAttrs()
 
-const buttonGroup = useButtonGroup()
-
-const size = computed(() =>
-  oneOf(props.size ?? buttonGroup?.size(), buttonSizes, buttonDefaults.size),
-)
+const size = computed(() => oneOf(props.size, buttonSizes, buttonDefaults.size))
 const hasLeading = computed(() => Boolean(props.icon || slots.leading))
 const hasTrailing = computed(() => Boolean(props.trailingIcon || slots.trailing))
 const hasLabel = computed(() => Boolean(props.label || slots.default))
@@ -119,15 +111,19 @@ const rootProps = computed(() => ({
           <Icon data-ui="button-loading-icon" v-bind="loadingIconProps" />
         </slot>
         <slot v-else name="leading">
-          <Icon v-if="icon" data-ui="button-icon" v-bind="iconProps" />
+          <Icon v-if="props.icon" data-ui="button-icon" v-bind="iconProps" />
         </slot>
       </span>
       <span v-if="hasLabel" data-ui="button-label" v-bind="labelProps">
-        <slot>{{ label }}</slot>
+        <slot>{{ props.label }}</slot>
       </span>
       <span v-if="hasTrailing" data-ui="button-trailing" v-bind="trailingProps">
         <slot name="trailing">
-          <Icon v-if="trailingIcon" data-ui="button-trailing-icon" v-bind="trailingIconProps" />
+          <Icon
+            v-if="props.trailingIcon"
+            data-ui="button-trailing-icon"
+            v-bind="trailingIconProps"
+          />
         </slot>
       </span>
     </template>
