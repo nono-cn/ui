@@ -101,7 +101,9 @@ const code = computed(() => {
     .map(({ event, name: handler }) => ` @${event}="${handler}"`)
     .join('')
   const sources = handlers.value.map(({ source }) => `\n${source}\n`).join('')
-  const names = slots.value.flatMap((content) => ('name' in content ? [content.name] : []))
+  const names = slots.value.flatMap((content) =>
+    'name' in content && typeof content.component !== 'string' ? [content.name] : [],
+  )
   const imports = [...new Set([name, ...names])].sort().join(', ')
   const children = slots.value.map((content) => {
     const markup =

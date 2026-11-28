@@ -1,5 +1,5 @@
 export { render } from 'vitest-browser-vue'
-export { avatarImage, page, userEvent } from '@test/shared'
+export { avatarImage, landscapeImage, page, userEvent } from '@test/shared'
 export { attrsTests } from '@test/vue/attrsTests'
 export { invalidValueTests } from '@test/vue/invalidValueTests'
 export { Part } from '@test/vue/Part'

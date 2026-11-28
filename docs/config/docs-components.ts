@@ -1,8 +1,10 @@
 import type { ComponentDocConfig } from '@docs/config/component-docs'
 import accordion from '@docs/config/components/accordion'
 import alert from '@docs/config/components/alert'
+import aspectRatio from '@docs/config/components/aspect-ratio'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
+import bubble from '@docs/config/components/bubble'
 import button from '@docs/config/components/button'
 import buttonGroup from '@docs/config/components/button-group'
 import checkbox from '@docs/config/components/checkbox'
@@ -35,8 +37,10 @@ import tooltip from '@docs/config/components/tooltip'
 export const docsComponents: ComponentDocConfig[] = [
   accordion,
   alert,
+  aspectRatio,
   avatar,
   badge,
+  bubble,
   button,
   buttonGroup,
   checkbox,
