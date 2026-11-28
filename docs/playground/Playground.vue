@@ -54,7 +54,6 @@ const ratio = ref(16 / 9)
           <figcaption class="text-sm text-muted-foreground">{{ option.label }}</figcaption>
         </figure>
       </div>
-    </section>
 
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">Rounded and clipped</h2>
