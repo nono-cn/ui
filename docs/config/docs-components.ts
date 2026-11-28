@@ -4,7 +4,6 @@ import alert from '@docs/config/components/alert'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
 import bubble from '@docs/config/components/bubble'
-import bubbleGroup from '@docs/config/components/bubble-group'
 import button from '@docs/config/components/button'
 import buttonGroup from '@docs/config/components/button-group'
 import checkbox from '@docs/config/components/checkbox'
@@ -39,7 +38,6 @@ export const docsComponents: ComponentDocConfig[] = [
   avatar,
   badge,
   bubble,
-  bubbleGroup,
   button,
   buttonGroup,
   checkbox,

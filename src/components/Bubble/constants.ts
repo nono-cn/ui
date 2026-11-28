@@ -1,4 +1,4 @@
-export const bubbleVariantNames = ['solid', 'outline', 'plain', 'subtle', 'soft'] as const
+export const bubbleVariantNames = ['solid', 'outline', 'subtle', 'soft'] as const
 
 export const bubbleAligns = ['start', 'end'] as const
 

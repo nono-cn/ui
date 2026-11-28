@@ -7,16 +7,12 @@ import type {
   BubbleVariant,
 } from '@/components/Bubble/types'
 
-export const bubbleVariants = cva('relative flex w-fit min-w-0 flex-col', {
+export const bubbleVariants = cva('relative flex w-fit max-w-[80%] min-w-0 flex-col', {
   variants: {
     align: {
       start: 'me-auto',
       end: 'ms-auto',
     } satisfies Record<BubbleAlign, string>,
-    fill: {
-      true: 'max-w-full',
-      false: 'max-w-[80%]',
-    },
     reactions: {
       none: '',
       top: 'pt-4',
@@ -25,7 +21,6 @@ export const bubbleVariants = cva('relative flex w-fit min-w-0 flex-col', {
   },
   defaultVariants: {
     align: bubbleDefaults.align,
-    fill: false,
     reactions: 'none',
   },
 })
@@ -37,7 +32,6 @@ export const bubbleContentVariants = cva(
       variant: {
         solid: 'border-transparent bg-(--bubble-color) text-(--bubble-color-foreground)',
         outline: 'border-(--bubble-color)/40 bg-transparent text-(--bubble-color)',
-        plain: 'border-transparent bg-transparent px-0 py-0 text-(--bubble-color)',
         subtle: 'border-(--bubble-color)/20 bg-(--bubble-color)/10 text-(--bubble-color)',
         soft: 'border-transparent bg-(--bubble-color)/10 text-(--bubble-color)',
       } satisfies Record<BubbleVariant, string>,
@@ -56,7 +50,7 @@ export const bubbleContentVariants = cva(
         class: 'hover:bg-(--bubble-color)/90 active:bg-(--bubble-color)/80',
       },
       {
-        variant: ['outline', 'plain'],
+        variant: 'outline',
         interactive: true,
         class: 'hover:bg-(--bubble-color)/10 active:bg-(--bubble-color)/20',
       },
@@ -101,5 +95,3 @@ export const bubbleReactionsVariants = cva(
     },
   },
 )
-
-export const bubbleGroupVariants = cva('flex w-full flex-col gap-1')

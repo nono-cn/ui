@@ -7,6 +7,7 @@ import {
   bubbleReactionsSides,
   bubbleVariantNames,
   Button,
+  Link,
   themeColors,
   themeRadii,
 } from '@nono/ui'
@@ -26,16 +27,42 @@ const bubble: ComponentDocConfig = {
     },
     {
       title: 'Any content',
-      description: 'Put anything else, such as formatted text, in the default slot.',
+      description:
+        'Put anything in the default slot, such as formatted text or a link. It renders inside the bubble and keeps its own look.',
       props: () => ({ variant: 'soft', color: 'neutral' }),
-      slot: { text: 'Sure, it is in the shared folder.' },
+      slot: [
+        { text: 'The report is ready. ' },
+        {
+          name: 'Link',
+          component: Link,
+          props: { href: '#bubble', label: 'Open it' },
+        },
+      ],
+    },
+    {
+      title: 'Interactive',
+      description:
+        'Set interactive to make the whole bubble a native button, such as a suggested reply. It takes hover, press and focus styles from its variant. Listen with @click.',
+      props: () => ({
+        text: 'Yes, schedule it',
+        variant: 'outline',
+        align: 'end',
+        interactive: true,
+      }),
+      handlers: [
+        {
+          event: 'click',
+          name: 'reply',
+          source: "const reply = () => console.log('Replied')",
+          handler: () => console.log('Replied'),
+        },
+      ],
     },
   ],
   examples: [
     {
       title: 'Variant',
-      description:
-        'Choose how much visual weight the bubble has. plain drops the background, the padding and the 80% width cap, for prose that spans the row.',
+      description: 'Choose how much visual weight the bubble has.',
       controls: [
         {
           key: 'variant',
@@ -133,11 +160,11 @@ const bubble: ComponentDocConfig = {
         text,
         variant: 'soft',
         color: 'neutral',
-        reactions: '👍 🔥',
         reactionsSide: state.reactionsSide!,
         reactionsAlign: state.reactionsAlign!,
         ui: { reactions: () => ({ role: 'img', 'aria-label': 'Reactions: thumbs up, fire' }) },
       }),
+      slot: { slot: 'reactions', text: '👍 🔥' },
     },
     {
       title: 'Reaction action',
@@ -154,47 +181,12 @@ const bubble: ComponentDocConfig = {
         },
       ],
     },
-    {
-      title: 'Clickable',
-      description:
-        'Listen to click and the content becomes a native button, for quick replies. Pass href instead and it becomes a link.',
-      props: () => ({ text: 'Yes, schedule it', variant: 'soft', align: 'end' }),
-      handlers: [
-        {
-          event: 'click',
-          name: 'reply',
-          source: "const reply = () => console.log('Yes, schedule it')",
-          handler: () => console.log('Yes, schedule it'),
-        },
-      ],
-    },
-    {
-      title: 'Link',
-      description: 'Set href to render the content as a link. Pass target or rel with ui.content.',
-      props: () => ({
-        text: 'Open the report',
-        variant: 'outline',
-        color: 'neutral',
-        href: '#bubble',
-      }),
-    },
   ],
   accessibility: [
     {
       title: 'Roles and attributes',
       description:
-        'Bubble renders native divs with no role, so the message is read as part of the conversation. Attributes passed to Bubble reach the root.',
-      table: {
-        columns: ['Attribute', 'Element', 'Value'],
-        rows: [
-          ['a', 'Content', 'Used when href is set. The text is its accessible name.'],
-          [
-            'button',
-            'Content',
-            'Used when there is a click listener and no href, with type="button".',
-          ],
-        ],
-      },
+        'Bubble renders native divs with no role, so the message is read as part of the conversation. With interactive, the content is a native button with type="button", read with its text as the label. Attributes passed to Bubble reach the root; pass attributes for the button, such as aria-label, with ui.content.',
     },
     {
       title: 'Reactions',
@@ -203,15 +195,8 @@ const bubble: ComponentDocConfig = {
     },
     {
       title: 'Keyboard',
-      description: 'Only a link or button bubble, or a control in its reactions, takes focus.',
-      table: {
-        columns: ['Key', 'Action'],
-        rows: [
-          ['Tab', 'Moves focus to the bubble or to the control in its reactions.'],
-          ['Enter', 'Follows the link or presses the button.'],
-          ['Space', 'Presses the button.'],
-        ],
-      },
+      description:
+        'The bubble does not take focus. A control in the default slot or in its reactions does, with its own keys. With interactive, the content takes focus, shows a focus ring and runs @click with Enter or Space. Do not put links or buttons inside an interactive bubble: use the reactions slot for them.',
     },
     {
       title: 'Meaning',
@@ -230,8 +215,7 @@ const bubble: ComponentDocConfig = {
         name: 'variant',
         type: bubbleVariantNames.map((variant) => `'${variant}'`).join(' | '),
         default: `'${bubbleDefaults.variant}'`,
-        description:
-          'Visual weight of the bubble. plain has no background or padding and may take the full row.',
+        description: 'Visual weight of the bubble.',
       },
       {
         name: 'color',
@@ -251,18 +235,7 @@ const bubble: ComponentDocConfig = {
         name: 'align',
         type: bubbleAligns.map((align) => `'${align}'`).join(' | '),
         default: `'${bubbleDefaults.align}'`,
-        description:
-          'Side of the row the bubble sits on. Without it, the bubble takes the align of its BubbleGroup.',
-      },
-      {
-        name: 'href',
-        type: 'string',
-        description: 'Renders the content as a link to this URL.',
-      },
-      {
-        name: 'reactions',
-        type: 'string',
-        description: 'Text of the reactions, such as emoji. The reactions slot replaces it.',
+        description: 'Side of the row the bubble sits on.',
       },
       {
         name: 'reactionsSide',
@@ -277,6 +250,13 @@ const bubble: ComponentDocConfig = {
         description: 'End of that edge the reactions sit at.',
       },
       {
+        name: 'interactive',
+        type: 'boolean',
+        default: 'false',
+        description:
+          'Renders the content as a native button with hover, press and focus styles. Listen with @click.',
+      },
+      {
         name: 'ui',
         type: 'BubbleUi',
         typeLink: '#ui',
@@ -286,22 +266,26 @@ const bubble: ComponentDocConfig = {
     emits: [
       {
         name: 'click',
-        type: '(event: MouseEvent) => unknown',
-        description:
-          'Runs when the content is pressed. A listener renders the content as a native button, unless href is set.',
+        type: '(event: MouseEvent) => void',
+        description: 'Runs on press when interactive.',
       },
     ],
     ui: [
       { node: 'root', tag: 'div' },
-      { node: 'content', tag: 'div | a | button' },
+      { node: 'content', tag: 'div | button' },
       { node: 'reactions', tag: 'div' },
     ],
     slots: [
-      { name: 'default', type: '-', description: 'Content of the message; overrides the text.' },
+      {
+        name: 'default',
+        type: '-',
+        description:
+          'Content of the message inside the bubble; overrides the text. With interactive, only phrasing content such as text, strong or code.',
+      },
       {
         name: 'reactions',
         type: '-',
-        description: 'Content on the edge of the bubble; overrides the reactions text.',
+        description: 'Content on the edge of the bubble, such as emoji or a control.',
       },
     ],
     expose: [],

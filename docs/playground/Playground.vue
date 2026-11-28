@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Bubble, BubbleGroup, bubbleVariantNames, Button, themeColors } from '@nono/ui'
+import { Bubble, bubbleVariantNames, Button, Link, Popover, themeColors } from '@nono/ui'
 import { dark } from '@docs/components/useDocsTheme'
 
 const replies = ['Tomorrow at 10', 'Friday afternoon', 'Next week']
 const picked = ref('')
 const likes = ref(2)
 const expanded = ref(false)
+const lastAction = ref('')
+const messageActions = ['Reply', 'Copy', 'Delete']
+const lastClicked = ref('')
+const clicks = ref(0)
+const retryStatus = ref('Not sent')
+
+function press(label: string) {
+  lastClicked.value = label
+  clicks.value++
+}
+
+async function retry() {
+  retryStatus.value = 'Sending...'
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+  retryStatus.value = 'Sent'
+}
 
 const answer =
   'The build failed because the lockfile was out of date. Run npm install, commit the new lockfile and push again. If it still fails, clear the CI cache: old dependencies can survive between runs and hide the real error.'
@@ -23,24 +39,28 @@ const answer =
       <h2 class="font-medium">Conversation</h2>
       <div class="flex max-w-md flex-col gap-4 rounded-xl border p-4">
         <Bubble variant="soft" color="neutral" text="Hi! When can we review the release?" />
-        <BubbleGroup align="end">
-          <Bubble text="Let me check my calendar." />
+        <div class="flex flex-col gap-1">
+          <Bubble align="end" text="Let me check my calendar." />
           <Bubble
+            align="end"
             text="Any of these work for me:"
-            reactions="👍"
             reactions-align="start"
             :ui="{ reactions: () => ({ role: 'img', 'aria-label': 'Reactions: thumbs up' }) }"
-          />
-        </BubbleGroup>
-        <BubbleGroup align="end">
+          >
+            <template #reactions>👍</template>
+          </Bubble>
+        </div>
+        <div class="flex flex-wrap justify-end gap-2">
           <Bubble
             v-for="reply in replies"
             :key="reply"
-            variant="soft"
+            class="m-0"
+            variant="outline"
+            interactive
             :text="reply"
             @click="picked = reply"
           />
-        </BubbleGroup>
+        </div>
         <Bubble v-if="picked" variant="soft" color="neutral" :text="`${picked} it is.`">
           <template #reactions>
             <Button
@@ -52,6 +72,61 @@ const answer =
               @click="likes++"
             />
           </template>
+        </Bubble>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Interactive</h2>
+      <p class="text-sm text-muted-foreground">
+        Last clicked: <strong>{{ lastClicked || 'none' }}</strong> · {{ clicks }} clicks
+      </p>
+
+      <h3 class="text-sm font-medium">Variants</h3>
+      <div class="flex flex-wrap items-center gap-2">
+        <Bubble
+          v-for="variant in bubbleVariantNames"
+          :key="variant"
+          class="m-0"
+          :variant="variant"
+          interactive
+          :text="variant"
+          @click="press(variant)"
+        />
+      </div>
+
+      <h3 class="text-sm font-medium">Colors (soft)</h3>
+      <div class="flex flex-wrap gap-2">
+        <Bubble
+          v-for="color in [...themeColors, '#ff00ff']"
+          :key="color"
+          class="m-0"
+          variant="soft"
+          :color="color"
+          interactive
+          :text="color"
+          @click="press(color)"
+        />
+      </div>
+
+      <h3 class="text-sm font-medium">Retry</h3>
+      <div class="flex max-w-md flex-col gap-2">
+        <Bubble
+          align="end"
+          variant="soft"
+          color="error"
+          interactive
+          text="The message failed. Tap to retry."
+          @click="retry"
+        />
+        <p class="text-end text-sm text-muted-foreground">{{ retryStatus }}</p>
+      </div>
+
+      <h3 class="text-sm font-medium">With rich text and reactions</h3>
+      <div class="flex max-w-md flex-col gap-4">
+        <Bubble variant="outline" color="neutral" interactive @click="press('rich text')">
+          Run <code class="font-mono text-xs">npm install</code> and <strong>push again</strong>.
+          <template #reactions>👍 2</template>
         </Bubble>
       </div>
     </section>
@@ -75,14 +150,12 @@ const answer =
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">Reactions</h2>
       <div class="flex max-w-md flex-col gap-4">
-        <Bubble variant="soft" color="neutral" text="Bottom end (default)" reactions="👀 🚀 +2" />
-        <Bubble
-          align="end"
-          text="Top start"
-          reactions="🎉 👏"
-          reactions-side="top"
-          reactions-align="start"
-        />
+        <Bubble variant="soft" color="neutral" text="Bottom end (default)">
+          <template #reactions>👀 🚀 +2</template>
+        </Bubble>
+        <Bubble align="end" text="Top start" reactions-side="top" reactions-align="start">
+          <template #reactions>🎉 👏</template>
+        </Bubble>
         <Bubble color="error" variant="soft" text="The deploy failed on step 3.">
           <template #reactions>
             <Button label="Retry" size="xs" radius="full" variant="plain" color="error" />
@@ -92,48 +165,86 @@ const answer =
     </section>
 
     <section class="flex flex-col gap-3">
-      <h2 class="font-medium">Slot, link, plain and show more</h2>
+      <h2 class="font-medium">Slots and show more</h2>
       <div class="flex max-w-md flex-col gap-4">
         <Bubble variant="outline" color="neutral">
-          Run <code class="font-mono text-xs">npm install</code> and <strong>push again</strong>.
+          <p>
+            Run <code class="font-mono text-xs">npm install</code> and <strong>push again</strong>.
+          </p>
         </Bubble>
-        <Bubble
-          align="end"
-          href="#report"
-          variant="outline"
-          text="Open the report"
-          :ui="{ content: () => ({ target: '_blank', rel: 'noopener' }) }"
-        />
-        <Bubble variant="plain" color="neutral" :text="answer" />
+        <Bubble align="end" variant="outline">
+          <Link href="#report" label="Open the report" target="_blank" rel="noopener" />
+        </Bubble>
+        <Bubble align="end" variant="solid" color="error" text="The deploy failed on step 3.">
+          <Button label="Retry" />
+        </Bubble>
         <Bubble variant="soft" color="neutral">
-          <p>{{ expanded ? answer : `${answer.slice(0, 80)}...` }}</p>
-          <Button
-            variant="link"
-            size="xs"
-            color="neutral"
-            class="px-0"
-            :label="expanded ? 'Show less' : 'Show more'"
-            @click="expanded = !expanded"
-          />
+          <div>
+            <p>{{ expanded ? answer : `${answer.slice(0, 80)}...` }}</p>
+            <Button
+              variant="link"
+              size="xs"
+              color="neutral"
+              class="px-0"
+              :label="expanded ? 'Show less' : 'Show more'"
+              @click="expanded = !expanded"
+            />
+          </div>
         </Bubble>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Popover</h2>
+      <div class="flex max-w-md flex-col gap-4">
+        <Popover side="top" align="start">
+          <Bubble
+            variant="soft"
+            color="neutral"
+            text="Press this message to see its actions."
+            interactive
+          />
+          <template #content="{ close }">
+            <div class="flex flex-col">
+              <Button
+                v-for="action in messageActions"
+                :key="action"
+                variant="plain"
+                size="sm"
+                :color="action === 'Delete' ? 'error' : 'neutral'"
+                :label="action"
+                @click="
+                  () => {
+                    lastAction = action
+                    close()
+                  }
+                "
+              />
+            </div>
+          </template>
+        </Popover>
+        <p v-if="lastAction" class="text-sm text-muted-foreground">Last action: {{ lastAction }}</p>
       </div>
     </section>
 
     <section class="flex flex-col gap-3">
       <h2 class="font-medium">RTL and ui</h2>
       <div class="flex max-w-md flex-col gap-4" dir="rtl">
-        <Bubble variant="soft" color="neutral" text="مرحبا" reactions="👋" />
+        <Bubble variant="soft" color="neutral" text="مرحبا">
+          <template #reactions>👋</template>
+        </Bubble>
         <Bubble align="end" text="أهلا" />
       </div>
       <Bubble
         text="Custom ui"
-        reactions="✨"
         :ui="{
           root: () => ({ class: 'max-w-xs' }),
           content: () => ({ class: 'italic shadow-md' }),
           reactions: () => ({ class: 'bg-primary text-primary-foreground' }),
         }"
-      />
+      >
+        <template #reactions>✨</template>
+      </Bubble>
     </section>
   </main>
 </template>

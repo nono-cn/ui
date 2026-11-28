@@ -27,28 +27,17 @@ export interface BubbleProps {
   color?: string
   radius?: Radius
   align?: BubbleAlign
-  href?: string
-  reactions?: string
   reactionsSide?: BubbleReactionsSide
   reactionsAlign?: BubbleReactionsAlign
-  onClick?: (event: MouseEvent) => unknown
+  interactive?: boolean
   ui?: BubbleUi
+}
+
+export interface BubbleEmits {
+  click: [event: MouseEvent]
 }
 
 export interface BubbleSlots {
   default?(): unknown
   reactions?(): unknown
-}
-
-export interface BubbleGroupUi {
-  root?: UiResolver
-}
-
-export interface BubbleGroupProps {
-  align?: BubbleAlign
-  ui?: BubbleGroupUi
-}
-
-export interface BubbleGroupSlots {
-  default?(): unknown
 }
