@@ -3,6 +3,7 @@ import accordion from '@docs/config/components/accordion'
 import alert from '@docs/config/components/alert'
 import avatar from '@docs/config/components/avatar'
 import badge from '@docs/config/components/badge'
+import bubble from '@docs/config/components/bubble'
 import button from '@docs/config/components/button'
 import buttonGroup from '@docs/config/components/button-group'
 import checkbox from '@docs/config/components/checkbox'
@@ -36,6 +37,7 @@ export const docsComponents: ComponentDocConfig[] = [
   alert,
   avatar,
   badge,
+  bubble,
   button,
   buttonGroup,
   checkbox,
