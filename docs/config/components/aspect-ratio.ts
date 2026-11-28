@@ -16,12 +16,14 @@ function ratio(text: string): ExampleValue {
   return withSource(text, numerator! / denominator)
 }
 
-function image(className = 'size-full rounded-md object-cover'): ExampleSlotContent {
-  return {
-    name: 'img',
-    component: 'img',
-    props: { src: landscapeImage, alt: 'Mountains at sunset', class: className },
-  }
+const image: ExampleSlotContent = {
+  name: 'img',
+  component: 'img',
+  props: {
+    src: landscapeImage,
+    alt: 'Mountains at sunset',
+    class: 'size-full rounded-md object-cover',
+  },
 }
 
 const aspectRatio: ComponentDocConfig = {
@@ -29,7 +31,7 @@ const aspectRatio: ComponentDocConfig = {
   title: 'AspectRatio',
   description: 'Displays content within a desired ratio.',
   component: AspectRatio,
-  slot: image(),
+  slot: image,
   usage: [
     {
       title: 'Basic usage',
@@ -53,13 +55,6 @@ const aspectRatio: ComponentDocConfig = {
         },
       ],
       props: (state) => ({ ratio: ratio(state.ratio!), class: 'w-56' }),
-    },
-    {
-      title: 'Rounded corners',
-      description:
-        'Round the box and hide its overflow, so the content is clipped to the corners without its own radius.',
-      props: () => ({ ratio: ratio('4 / 3'), class: `${width} overflow-hidden rounded-xl` }),
-      slot: image('size-full object-cover'),
     },
     {
       title: 'Any content',
