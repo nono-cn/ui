@@ -1,5 +1,6 @@
 export * from '@/components/Accordion'
 export * from '@/components/Alert'
+export * from '@/components/AspectRatio'
 export * from '@/components/Avatar'
 export * from '@/components/Badge'
 export * from '@/components/Bubble'
